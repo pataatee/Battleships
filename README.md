@@ -129,6 +129,7 @@ Note :
 
 - il ne faut pas afficher les coordonnées modifiées sur l'interface car il ne faut pas qu'il sache où il va réellement tirer.
 - le tir est consideré valide si la case initiale est valide, même si la nouvelle case de destination modifiée par la tornade a déjà été visée.
+- l'adversaire doit être informé de la case qu'il touche réellement, c'est-à-dire avec les coordonnées classiques.
 
 Par défaut, chaque joueur possède une tornade à placer en début de partie, après ses bâteaux.
 
@@ -254,7 +255,7 @@ Missile, bombe, sonar.
 E - L'interface graphique
 -------------------------
 
-Votre application doit proposer 3 écrans :
+Votre application doit proposer 4 écrans :
 
 - un **écran de configuration** pour choisir les paramètres de la partie,
 - un **écran de placement** pour choisir l'emplacement des bâteaux et pièges du joueur humain,
@@ -273,7 +274,7 @@ Un bouton doit permettre de passer à l'écran de placement.
 
 ### E2 - Écran de placement
 
-Il doit proposer eu joueur humain :
+Il doit proposer au joueur humain :
 
 - un placement fixe intial (fonctionnalité [D4](#d4-le-placement-des-bâteaux-du-joueur-humain))
 - un bouton pour générer un nouveau placement aléatoire (si niveau 2 de la fonctionnalité [D4](#d4-le-placement-des-bâteaux-du-joueur-humain))
@@ -297,7 +298,7 @@ L'écran principal doit afficher :
 
 **La grille doit permettre de visualiser** s'il s'agit d'une case :
 
-- qui n'a pas encore été touchée,
+- qui n'a pas encore été touchée
 - touchée d'un bâteau qui n'est pas coulé
 - touchée d'un bâteau qui est coulé
 - où les deux armes supplémentaires et les pièges ont été utilisé (si fonctionnalité [D8](#d8-lajout-des-armes-supplémentaires-et-pièges) implémentée)
