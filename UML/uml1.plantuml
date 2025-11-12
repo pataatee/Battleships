@@ -1,0 +1,108 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+
+
+
+
+class UI implements grid_observer{
+
+
+}
+
+class game_controller implements boat_observer{
+
+}
+
+
+
+
+class grid_controller{
+
+}
+
+class cell <<abstract>>{
+    -list_observer[]:cell_observer
+    -notify_observer():void
+}
+
+
+class trap implements cell_observer{
+    -name
+    -func()
+}
+
+class black_hole extends trap{
+}
+
+
+class touched implements cell{
+
+}
+
+class couled implements cell{
+
+}
+
+class boat_cell implements cell{
+
+}
+
+interface cell_observer{
+    +change_state():void
+}
+
+interface grid_observer{
+
+}
+
+
+class boat <<abstract>> implements cell_observer {
+    -size:int
+    -name:String
+    -is_alive:bool
+    +notify_observer(life:bool)
+
+}
+class boat_observer{
+    +notify_life(life:bool)
+}
+
+
+class croiseur extends boat{
+
+}
+
+class grid{
+
+}
+
+
+
+
+
+
+
+game_controller *--> grid_controller :"lst_grid"
+cell *--> cell_observer
+boat *-->grid_controller : <<uses>>
+boat *-->boat_observer : "-observer"
+
+grid_controller *-> grid :"-grille"
+
+UI *--> grid_controller :"-gc"
+
+
+grid *--> grid_observer : "-observer"
+
+
+grid *->cell : "-grid"
+
+trap*-->game_controller : "-gc"
+
+
+
+
+@enduml
