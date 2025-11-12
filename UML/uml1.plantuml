@@ -4,105 +4,80 @@ skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide enum methods
 
+package controllers {
+    class game_controller implements .models.boats.boat_observer {
+    }
 
-
-
-class UI implements grid_observer{
-
-
+    class grid_controller {
+    }
 }
 
-class game_controller implements boat_observer{
+package models {
+    class grid {
+    }
 
+    package boats{
+
+        class boat <<abstract>> implements .models.cell_observer {
+            -size:int
+            -name:String
+            -is_alive:bool
+            +notify_observer(life:bool)
+        }
+
+        class boat_observer {
+            +notify_life(life:bool)
+        }
+
+
+        class submarine extends boat{
+        }
+
+
+        boat "1" *--> "1" boat_observer : "-observer"
+
+
+
+    }
+
+    interface grid_observer {
+    }
+
+    class cell <<abstract>> {
+        -list_observer[]:cell_observer
+        cell_State:State
+        -notify_observer():void
+    }
+
+    interface cell_observer {
+        +change_state():void
+    }
+
+    class trap implements cell_observer {
+        -name
+        -func()
+    }
 }
 
-
-
-
-class grid_controller{
-
-}
-
-class cell <<abstract>>{
-    -list_observer[]:cell_observer
-    -notify_observer():void
-}
-
-
-class trap implements cell_observer{
-    -name
-    -func()
-}
-
-class black_hole extends trap{
-}
-
-
-class touched implements cell{
-
-}
-
-class couled implements cell{
-
-}
-
-class boat_cell implements cell{
-
-}
-
-interface cell_observer{
-    +change_state():void
-}
-
-interface grid_observer{
-
-}
-
-
-class boat <<abstract>> implements cell_observer {
-    -size:int
-    -name:String
-    -is_alive:bool
-    +notify_observer(life:bool)
-
-}
-class boat_observer{
-    +notify_life(life:bool)
+package views {
+    class UI implements models.grid_observer {
+    }
 }
 
 
-class croiseur extends boat{
+game_controller "1" *--> "1..*" grid_controller : "lst_grid"
 
-}
+cell "1" o--> "0..*" cell_observer
 
-class grid{
+boat "1" *--> "1" grid_controller : "<<uses>>"
 
-}
+grid_controller "1" *--> "1" models.grid : "-grille"
 
+UI "1" *--> "1" controllers.grid_controller : "-gc"
 
+grid "1" *--> "1..*" grid_observer : "-observer"
+grid "1" *--> "1..*" cell : "-grid"
 
-
-
-
-
-game_controller *--> grid_controller :"lst_grid"
-cell *--> cell_observer
-boat *-->grid_controller : <<uses>>
-boat *-->boat_observer : "-observer"
-
-grid_controller *-> grid :"-grille"
-
-UI *--> grid_controller :"-gc"
-
-
-grid *--> grid_observer : "-observer"
-
-
-grid *->cell : "-grid"
-
-trap*-->game_controller : "-gc"
-
-
-
+trap "1" o---> "1" game_controller : "-game_controller"
 
 @enduml
