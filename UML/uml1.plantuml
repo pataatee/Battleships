@@ -1,83 +1,251 @@
 @startuml
-skinparam style strictuml
-skinparam classAttributeIconSize 0
+!option handwritten true
+skinparam classAttributeIconSize 3
 skinparam classFontStyle Bold
 hide enum methods
 
-package controllers {
-    class game_controller implements .models.boats.boat_observer {
-    }
-
-    class grid_controller {
-    }
-}
 
 package models {
-    class grid {
+
+
+
+    package grid{
+        class Grid {
+            +<<create>>Grid(size:Integer[2])
+            -int size
+            +changeStateOfTile(x:Integer,y:Integer,state:State)
+        }
+
+        interface GridObserver {
+            +updateGrid()
+        }
+        Grid "1" *--> "1..* -observer[]" GridObserver
+
+        class Tile <<abstract>> {
+            +<<create>>Tile()
+            +set_State(newState:State)
+            -notify_observer()
+        }
+
+        interface Tile_observer {
+            +update_tile(tile:Tile)
+        }
+
+        Tile "1" o--> "0..* -list_observer" .models.grid.Tile_observer
+        Grid "1" *--> "1..*" Tile : "-TilesMap[]"
+
     }
 
     package boats{
-
-        class boat <<abstract>> implements .models.cell_observer {
-            -size:int
+        class Boats <<abstract>> implements .models.grid.Tile_observer {
+            +<<create>>Boats(name:String,size:Integer,tile:TopTile,rotation:bool)
+            -size:Integer
             -name:String
             -is_alive:bool
             +notify_observer(life:bool)
+            +update_tile(tile:Tile)
         }
 
-        class boat_observer {
+        class Submarine extends Boats{
+            +<<create>>Submarine()
+        }
+
+        class AircraftCarrier extends Boats{
+            +<<create>>AircraftCarrier()
+        }
+
+        class Cruiser extends Boats{
+            +<<create>>Cruiser
+        }
+
+        class Destroyer extends Boats{
+            +<<create>>Destroyer()
+        }
+
+        class TorpedoBoat extends Boats{
+            +<<create>>Torpedo_boat()
+        }
+
+        class Boats_observer {
             +notify_life(life:bool)
         }
+        Boats "1" -> "1..* -observer[]" Boats_observer
+    }
 
-
-        class submarine extends boat{
+    package state{
+        interface State {
+            +onHit():State
         }
 
+        class Boat_tile implements State{
+            +<<create>> Boat_tile()
+            +onHit():State
+        }
 
-        boat "1" *--> "1" boat_observer : "-observer"
+        class Boat_hit_tile implements State{
+            +<<create>> Boat_tile()
+            +onHit():null
+        }
 
+        class Empty_tile implements State{
+            +<<create>> Empty_tile()
+            +onHit():State
+        }
 
+        class Miss_tile implements State{
+            +<<create>> Miss_tile()
+            +onHit():null
+        }
+
+        class Island_tile implements State{
+            +<<create>> Island_tile()
+            +onHit():Island_Searched_tile
+        }
+
+        class Island_Searched_tile implements State{
+            +<<create Island_Searched_tile()
+            +onHit():null
+        }
+        class Trap_tile implements State{
+            +<<create Trap_tile()
+            +onHit():Trap_used_tile
+        }
+
+        class Trap_used_tile implements State{
+            +<<create Trap_tile()
+            +onHit():null
+        }
 
     }
 
-    interface grid_observer {
+    Tile "select" *-right-> "1 -state" state.State
+
+    package trap{
+        class Trap <<abstract>> implements .models.grid.Tile_observer {
+            +<<create>>Trap(int:OwnerId)
+            -name:String
+            +update_tile(tile:Tile)
+            +effect_onHit()
+        }
+
+        class Black_hole extends Trap{
+            +<<create>>BlackHole(int:OwnerId)
+            -name:String
+            +update_tile(tile:Tile)
+            +effect_onHit()
+        }
+        Black_hole ->.Controllers.GameController :<<use>>
+
+        class Tornado extends Trap{
+            +<<create>>Tornado(int:OwnerId)
+            -name:String
+            +update_tile(tile:Tile)
+            +effect_onHit()
+        }
+        Tornado ->GameController :<<use>>
     }
 
-    class cell <<abstract>> {
-        -list_observer[]:cell_observer
-        cell_State:State
-        -notify_observer():void
+    package player{
+        class Player <<abstract>> implements models.boats.Boats_observer{
+            +<<create>>Player(grid:Grid)
+            -id:Integer
+            -isAlive :bool
+            +addBoat(boat:Boat)
+            +addTrap(trap:Trap)
+            +reactToDeathOfBoat(live:Bool)
+        }
+
+        class AI extends Player{
+            +<<create>>AI()
+            +randomPlace()
+        }
+
+        class HumanPlayer extends Player{
+            +<<create>>HumanPlayer()
+        }
+
+        Player "*"o-->"1 -playerGrid" models.grid.Grid
+        Player "*"*-->"* -playerBoats[]" models.boats.Boats
+        Player "*"*--> "2 -playerTraps[]" models.trap.Trap
     }
 
-    interface cell_observer {
-        +change_state():void
+    package weapon{
+            enum EffectType {
+                HIT=1
+                SCAN=0
+            }
+            class Effect{
+                +<<create>>Effect(x:Integer,y:Integer,effect:EffectType)
+                -x: Integer
+                -y: Integer
+                +getPos():Integer[]
+                +getDamage():Integer
+            }
+            interface Weapon {
+                +use(x:Integer, y:Integer):Effect[]
+            }
+
+            class Missile implements Weapon {
+                +use(x, y):Effect[]
+            }
+
+            class Bomber implements Weapon {
+                +use(x, y):Effect[]
+            }
+
+            class Sonar implements Weapon {
+                +use(x, y):Effect[]
+            }
+            Effect *-->"1 -effect" EffectType
+            Weapon "1" ..> "*" Effect : <<returns>>
+
+        }
+
+}
+
+package Controllers {
+
+    interface GameController{
+        +<<create>>GameController()
+        +startGame()
+        +endGame()
+        +requestAttack(attackerID:Integer,x:Integer,y:Integer,weapon:Weapon)
     }
 
-    class trap implements cell_observer {
-        -name
-        -func()
+    class ConcreteGameController implements GameController{
+        +<<create>>GameController()
+        +requestAttack(attackerID:Integer,x:Integer,y:Integer,weapon:Weapon)
+        +attackPlayer(player:PlayerController,x:Integer,y:Integer,weapon:Weapon)
     }
+
+    class GridController {
+        +<<create>>GridController(grid:Grid)
+        +onHit(x,y,weapon:Weapon)
+    }
+
+    class PlayerController{
+        +<<create>>PlayerController()
+        +setPlayer(player:Player)
+        +attack(x:Integer,y:Integer,weapon:Weapon)
+        +getAttacked(x:Integer;y:Integer;weapon:Weapon)
+        +changeWeapon(weapon:Weapon)
+    }
+
+    PlayerController "1" *-> "1 -player" .models.player.Player
+    PlayerController "1" --> "1 -gameController" GameController
+    PlayerController "1" *-left-> "1 -gridController" GridController
+    ConcreteGameController "1" o--> "2 -playerControllers" PlayerController
+    GridController "1" .left.> .models.weapon.Weapon:<<use>>
+
 }
 
 package views {
-    class UI implements models.grid_observer {
+    class UI implements models.grid.GridObserver {
     }
 }
 
-
-game_controller "1" *--> "1..*" grid_controller : "lst_grid"
-
-cell "1" o--> "0..*" cell_observer
-
-boat "1" *--> "1" grid_controller : "<<uses>>"
-
-grid_controller "1" *--> "1" models.grid : "-grille"
-
-UI "1" *--> "1" controllers.grid_controller : "-gc"
-
-grid "1" *--> "1..*" grid_observer : "-observer"
-grid "1" *--> "1..*" cell : "-grid"
-
-trap "1" o---> "1" game_controller : "-game_controller"
+GameController "1" *--> "1..*" GridController : "lst_Grid"
+GridController "1" o--> "1 -grid" models.grid.Grid
+UI "1" *--> "1" Controllers.PlayerController : "2 -playerControllers"
 
 @enduml
