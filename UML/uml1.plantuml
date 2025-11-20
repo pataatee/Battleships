@@ -10,7 +10,7 @@ package models {
 
         enum GameState{
             CONFIG
-            PLACEMEN,
+            PLACEMENT
             IN_GAME
             ENDGAME
         }
@@ -33,7 +33,7 @@ package models {
         Game ..> ConfigData:<<uses>>
 
         class ConfigData{
-            -size:Integer[2]
+            -gridSize:Integer[2]
             +<<create>>ConfigData()
             +setGridSize(x:Integer;y:Integer)
             +setGameMod(gameMode:GameMode)
@@ -43,8 +43,29 @@ package models {
             +getGameMode()
 
         }
-        ConfigData "1"*-->"1-gameMode"GameMode
-        ConfigData "1"o-->"*-boats" .models.placeable.boats.Boats
+
+       class Placement{
+           +<<create>>Placement(algo:PlacementAlgo,grid:Grid[2])
+           +applyPlacement()
+           +setPlacementAlgo(algo:PlacementAlgo)
+       }
+
+
+       Placement "1" *--> "1 -placementAlgo" PlacementAlgo
+
+       abstract class PlacementAlgo{
+            +placeBoats(boats:Boat[])
+            +placeTraps(traps:Trap[])
+       }
+
+
+       class StaticPlacementAlgo extends PlacementAlgo
+       class RandomPlacementAlgo extends PlacementAlgo
+       class ManualPlacementAlgo extends PlacementAlgo
+
+
+       ConfigData "1"*-->"1-gameMode"GameMode
+       ConfigData "1"o-->"*-boats" .models.placeable.boats.Boats
 
 
     }
@@ -66,7 +87,9 @@ package models {
         }
         Grid "1" o--> "1..* -observer[]" GridObserver
 
-        class Tile <<abstract>> {
+         class Tile{
+            -x:Integer
+            -y:Integer
             +<<create>>Tile()
             +setState(newState:State)
             +addObserver(observer:TileObserver)
@@ -96,7 +119,16 @@ package models {
 
 
     package boats{
-        class Boats <<abstract>> extends .models.placeable.Placeable{
+
+        Enum BoatType{
+            AIRCRAFTCARRIER=5
+            CRUISER=4
+            DESTROYER=3
+            SUBMARINE=3
+            TORPEDOBOAT=2
+        }
+        Boats ..> BoatType:<<use>>
+        abstract class Boats <<abstract>> extends .models.placeable.Placeable{
             +<<create>>Boats(name:String,size:Integer,tile:TopTile,rotation:bool)
             -is_alive:bool
             +notify_observer(life:bool)
@@ -105,26 +137,32 @@ package models {
 
         class Submarine extends Boats{
             +<<create>>Submarine()
+            +updateTileState(state:State)
         }
 
         class AircraftCarrier extends Boats{
             +<<create>>AircraftCarrier()
+            +updateTileState(state:State)
         }
 
         class Cruiser extends Boats{
             +<<create>>Cruiser
+            +updateTileState(state:State)
         }
 
         class Destroyer extends Boats{
             +<<create>>Destroyer()
+            +updateTileState(state:State)
         }
 
         class TorpedoBoat extends Boats{
             +<<create>>Torpedo_boat()
+            +updateTileState(state:State)
         }
 
-        class Boats_observer {
-            +notify_life(life:bool)
+        interface Boats_observer {
+            +notifyOnDeath(life:bool)
+            +updateTileState(state:State)
         }
 
         Boats "1" -> "1..* -observer[]" Boats_observer
@@ -133,10 +171,13 @@ package models {
     }
 
         package trap{
-            class Trap <<abstract>> extends .models.placeable.Placeable{
+            abstract class Trap <<abstract>> extends .models.placeable.Placeable{
+                -hasBeenActivated:bool
+                -hasBeenUse:bool
                 +<<create>>Trap(int:OwnerId)
                 +{abstract}updateTileState(state:State)
-                +effect_onHit()
+                +{abstract}effect_onHit()
+                +setUsed(used:bool):bool
             }
 
             class Black_hole extends Trap{
@@ -165,6 +206,8 @@ package models {
             +createTorpedoBoat():Boats
             +createSubmarine():Boats
             +createAircraftCarrier():Boats
+            +createBlackHole():Trap
+            +createTornado():Trap
         }
 
 
@@ -262,12 +305,12 @@ package models {
 
 
     package player{
-        class Player <<abstract>> implements models.placeable.boats.Boats_observer{
+        abstract class Player <<abstract>> implements models.placeable.boats.Boats_observer{
             +<<create>>Player(name:String,grid:Grid)
             -name:String
             -id:Integer
             -isAlive :bool
-            +playerTurn()
+            +<<abstract>>playerTurn()
             +addBoat(boat:Boat)
             +addTrap(trap:Trap)
             +reactToDeathOfBoat(live:Bool)
@@ -420,14 +463,13 @@ package controller {
 
 
     class PlacementController{
-        +<<create>>PlacementController()
-        +staticPlacement()
-        +randomPlacement()
-        +tryPlacing(placeable:Placeable):bool
-        +setIslandWeapon(weapon:Weapon)
+        +<<create>>PlacementController(player[2]:Player,grid:Grid[2])
+        +generateRandomPlacement()
+        +applyStaticPlacement()
+        +enableManualPlacement()
     }
-    PlacementController "1"o--> "-lstPlayer".models.player.Player
-    PlacementController "1"o-->"2 -lstGrid" Grid
+    PlacementController "1" o-left-> "2 -lstPlayer" models.player.Player
+    PlacementController "1"o-left->"2 -lstGrid" Grid
 
 }
 
@@ -443,31 +485,42 @@ package views {
         +show()
     }
 
-    class ConfigScreen extends UserScreen {
-        +<<create>>ConfigScreen(controller : ConfigController)
+    class ConfigScreen extends UserScreen{
+        +<<create>>ConfigScreen(controller:ConfigController)
         +setGridSize(size:Integer[2])
         +chooseGameMode(gameMode:GameMode)
+        +setBoatCount(type:String,count:Integer)
+        +confirm()
     }
 
-    ConfigScreen "1"o-->"1 -configController".controller.ConfigController
+    ConfigScreen --> "1 -configController" controller.ConfigController
     ConfigScreen ..>.models.game.GameMode:<<use>>
 
 
 
     class PlacementScreen extends UserScreen{
-        +<<create>>PlacementScreen(controller : PlacementController)
+        +<<create>>PlacementScreen(controller:PlacementController)
+        +displayInitialStaticPlacement()
+        +requestRandomPlacement()
+        +enableManualPlacementMode()
     }
+    PlacementScreen --> controller.PlacementController : "1 -placementController"
     PlacementScreen "1"o-->"1 -placementController".controller.PlacementController
 
-    class MainScreen extends UserScreen{
+    class MainScreen extends UserScreen implements .models.grid.Grid.GridObserver{
         +<<create>>MainScreen()
         +chooseWeapon():Weapon
         +displayWeaponChoice()
     }
 
+
     class EndGameScreen extends UserScreen{
         +<<create>>EndGameScreen()
+        +setUpLogs()
+        +showLogs()
+        +restartTheGame()
     }
+    EndGameScreen ..> .models.controller.stat.Stat
 
 
 
