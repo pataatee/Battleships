@@ -6,48 +6,93 @@ hide enum methods
 
 package models {
 
+    package game{
 
+        enum GameState{
+            CONFIG
+            PLACEMEN,
+            IN_GAME
+            ENDGAME
+        }
+
+        enum GameMode{
+            NORMAL
+            ISLAND
+        }
+
+        class Game implements .models.player.PlayerObserver{
+            -currentPlayer:Integer
+            +<<create>>Game()
+            +setUpGameMode(gameMode:GameMode)
+            +setUpPlayer(player[2]:Player)
+            +playerAttack(x:Integer;y:Integer,weapon:Weapon)
+            +nextTurn()
+        }
+        Game "1"-->"1 -gameState" GameState
+        Game "1" *-->"2 -playerList" .models.player.Player
+        Game ..> ConfigData:<<uses>>
+
+        class ConfigData{
+            -size:Integer[2]
+            +<<create>>ConfigData()
+            +setGridSize(x:Integer;y:Integer)
+            +setGameMod(gameMode:GameMode)
+            +addBoat(boat:Boat)
+            +getGridSize()
+            +getChosenBoats()
+            +getGameMode()
+
+        }
+        ConfigData "1"*-->"1-gameMode"GameMode
+        ConfigData "1"o-->"*-boats" .models.placeable.boats.Boats
+
+
+    }
 
     package grid {
         class Grid {
+            -size : Integer[2]
             +<<create>>Grid(size:Integer[2])
-            -int size
+            +setSize(size:Integer[2])
             +changeStateOfTile(x:Integer,y:Integer,state:State)
-            +tryPlacingBoat(x:Integer;y:Integer):bool
+            +isTileFree(x:Integer;y:Integer):bool
+            +placeObject(placeable:Placeable):bool
         }
+
+        Grid ...> .models.placeable.Placeable:<<use>>;
 
         interface GridObserver {
             +updateGrid()
         }
-        Grid "1" *--> "1..* -observer[]" GridObserver
+        Grid "1" o--> "1..* -observer[]" GridObserver
 
         class Tile <<abstract>> {
             +<<create>>Tile()
-            +set_State(newState:State)
+            +setState(newState:State)
+            +addObserver(observer:TileObserver)
             -notify_observer()
         }
 
-        interface Tile_observer {
+        interface TileObserver {
             +update_tile(state:State)
         }
 
-        Tile "1" o--> "0..* -list_observer" .models.grid.Tile_observer
+        Tile "1" o--> "0..* -list_observer" .models.grid.TileObserver
         Grid "1" *--> "1..*" Tile : "-TilesMap[]"
 
     }
     package placeable{
 
-        class Placeable implements .models.grid.Tile_observer {
+
+        class Placeable implements .models.grid.TileObserver {
             +<<create>>Placeable(name:String,position:Integer[2],size:Integer,rotation:bool)
             -size:Integer
             -name:String
+            +calculatePosition():Integer[*][2]
             +{abstract}updateTileState(state:State)
         }
 
-
-
-
-
+        Placeable "1"o-->"-tiles[*]" .models.grid.Tile
 
 
     package boats{
@@ -100,7 +145,6 @@ package models {
                 +update_tile(tile:Tile)
                 +effect_onHit()
             }
-            Black_hole ->.Controllers.GameController :<<use>>
 
             class Tornado extends Trap{
                 +<<create>>Tornado(int:OwnerId)
@@ -108,7 +152,6 @@ package models {
                 +update_tile(tile:Tile)
                 +effect_onHit()
             }
-            Tornado ->GameController :<<use>>
         }
 
 
@@ -150,6 +193,7 @@ package models {
 
 
         interface State {
+            +<<create>>State(state:StateName)
             getCurrentState():StateName
             +onHit():State
         }
@@ -170,8 +214,9 @@ package models {
         class Island_tile implements .models.state.State{
             +<<create>> Island_tile()
             +onHit():Island_Searched_tile
-
+            +setWeapon(weapon:Weapon)
         }
+        Island_tile "1"o-->"1" .models.weapon.Weapon
 
         class Trap_tile implements .models.state.State{
             +<<create>> Trap_tile()
@@ -184,6 +229,11 @@ package models {
         package usedTiles{
 
         class Boat_hit_tile implements .models.state.State{
+            +<<create>> Boat_tile()
+            +onHit():null
+        }
+
+        class Boat_dead implements .models.state.State{
             +<<create>> Boat_tile()
             +onHit():null
         }
@@ -205,15 +255,6 @@ package models {
 
         }
 
-
-
-
-
-
-
-
-
-
     }
 
     Tile "select" *-right-> "1 -state" state.State
@@ -222,27 +263,45 @@ package models {
 
     package player{
         class Player <<abstract>> implements models.placeable.boats.Boats_observer{
-            +<<create>>Player(grid:Grid)
+            +<<create>>Player(name:String,grid:Grid)
+            -name:String
             -id:Integer
             -isAlive :bool
+            +playerTurn()
             +addBoat(boat:Boat)
             +addTrap(trap:Trap)
             +reactToDeathOfBoat(live:Bool)
+            +attack(x:Integer,y:Integer,weapon:Weapon)
+            +getAttacked(x:Integer,y:Integer,weapon:Weapon)
+            +addObserver(player:PlayerObserver)
+        }
+
+        Player "1"o-->"-lstObserver"PlayerObserver
+        interface PlayerObserver{
+            +<<create>>PlayerObserver()
+
         }
 
         class AI extends Player{
             +<<create>>AI()
+            +playerTurn()
             +randomPlace()
         }
 
         class HumanPlayer extends Player{
             +<<create>>HumanPlayer()
+            +playerTurn()
         }
+
 
         Player "*"o-->"1 -playerGrid" models.grid.Grid
         Player "*"*-->"* -playerBoats[]" models.placeable.boats.Boats
-        .Controllers.PlacementController ..> models.placeable.PlaceableFactory : <<use>>
+        .controller.PlacementController ..> models.placeable.PlaceableFactory : <<use>>
         Player "*"*--> "2 -playerTraps[]" models.placeable.trap.Trap
+        Player ..> .models.weapon.Weapon : <<use>>
+        Player "1" *--> "1-stat" .models.log.Stats
+        Player  ..> .models.log.Turn :<<create>>
+        Player ..> .models.log.Log : <<use>>
     }
 
     package weapon{
@@ -277,64 +336,142 @@ package models {
 
         }
 
+    package log{
+        class Log <<static>>{
+            +{static}addLog(turn:Turn)
+        }
+        Log *--> "*-lstTurn"Turn
+        class Turn{
+            +<<create>>turn(player:string,x:Integer;y:Integer,weapon:string,re:string)
+        }
+
+        Stats o--> "-lastTurn" Turn
+        class Stats{
+            -boat:Integer
+            -boatHit: Integer
+            -boatSunk: Integer
+
+            +<<create>>Stats()
+
+        }
+
+    }
+
+
+
 }
 
-package Controllers #A0F {
 
-    interface GameController{
-        +<<create>>GameController()
-        +startGame()
-        +endGame()
-        +requestAttack(attackerID:Integer,x:Integer,y:Integer,weapon:Weapon)
+package App{
+   class App{
+    +main(args:String[])
+   }
+
+
+
+   App ..> .controller.ApplicationController : <<create>>
+
+
+}
+
+
+
+package controller {
+
+    class ApplicationController{
+        +<<create>>ApplicationController()
+        +switchToScreen()
     }
 
-    class ConcreteGameController implements GameController{
-        +<<create>>GameController()
-        +requestAttack(attackerID:Integer,x:Integer,y:Integer,weapon:Weapon)
-        +attackPlayer(player:PlayerController,x:Integer,y:Integer,weapon:Weapon)
-    }
+    ApplicationController "1"-->"* -screens" .views.UserScreen
+    ApplicationController ..> .models.grid.Grid : <<create>>
+    ApplicationController ..> .models.player.Player : <<create>>
+    ApplicationController ..> .models.game.Game :<<create>>
 
-    class GridController {
-        +<<create>>GridController(grid:Grid)
-        +onHit(x,y,weapon:Weapon)
-        +placeBoat(lstTiles : Integer[]) :bool
-    }
+    ApplicationController ..> .controller.ConfigController : <<create>>
+    ApplicationController ..> .controller.PlacementController : <<create>>
+    ApplicationController ..> .controller.PlayerController : <<create>>
+    ApplicationController ..> .controller.EndController : <<create>>
+
+
+    ApplicationController ..> .views.ConfigScreen : <<create>>
+    ApplicationController ..> .views.PlacementScreen : <<create>>
+    ApplicationController ..> .views.MainScreen : <<create>>
+    ApplicationController ..> .views.EndGameScreen : <<create>>
 
     class PlayerController{
         +<<create>>PlayerController()
-        +setPlayer(player:Player)
-        +addBoat(boat:Boat)
-        +attack(x:Integer,y:Integer,weapon:Weapon)
-        +getAttacked(x:Integer;y:Integer;weapon:Weapon)
-        +chooseWeapon(weapon:Weapon)
+        +requestAttackFromPlayer(x:Integer;y:Integer)
+        +selectWeapon(weapon:Weapon)
+
     }
 
-    PlayerController "1" *-> "1 -player" .models.player.Player
-    PlayerController "1" --> "1 -gameController" GameController
-    PlayerController "1" *-left-> "1 -gridController" GridController
-    ConcreteGameController "1" o--> "2 \n -playerControllers" PlayerController
-    GridController "1" .left.> .models.weapon.Weapon:<<use>>
+    PlayerController "1"o-->"2 -lstPlayer" .models.player.Player
 
+    class ConfigController{
+        +<<create>>ConfigController(grid:Grid[2])
+        +selectGameMode(gameMode:GameMode)
+        +getAvailableBoats():Boat[]
+        +selectBoats(boat:Boat)
+    }
+
+    ConfigController "1"-->"1-config" ConfigData
+    ConfigController "1"-->"2 -lstGrid" .models.grid.Grid
 
 
     class PlacementController{
         +<<create>>PlacementController()
-        +startPlacement()
-
+        +staticPlacement()
+        +randomPlacement()
+        +tryPlacing(placeable:Placeable):bool
+        +setIslandWeapon(weapon:Weapon)
     }
-
-    PlacementController ..> GridController :<<use>>
-
-
+    PlacementController "1"o--> "-lstPlayer".models.player.Player
+    PlacementController "1"o-->"2 -lstGrid" Grid
 
 }
+
+
 
 package views {
-    class UI implements models.grid.GridObserver {
+
+
+    class UserScreen <<abstract>> {
+        -name:String
+        +<<create>>UserScreen(name:String)
+        +hide()
+        +show()
     }
+
+    class ConfigScreen extends UserScreen {
+        +<<create>>ConfigScreen(controller : ConfigController)
+        +setGridSize(size:Integer[2])
+        +chooseGameMode(gameMode:GameMode)
+    }
+
+    ConfigScreen "1"o-->"1 -configController".controller.ConfigController
+    ConfigScreen ..>.models.game.GameMode:<<use>>
+
+
+
+    class PlacementScreen extends UserScreen{
+        +<<create>>PlacementScreen(controller : PlacementController)
+    }
+    PlacementScreen "1"o-->"1 -placementController".controller.PlacementController
+
+    class MainScreen extends UserScreen{
+        +<<create>>MainScreen()
+        +chooseWeapon():Weapon
+        +displayWeaponChoice()
+    }
+
+    class EndGameScreen extends UserScreen{
+        +<<create>>EndGameScreen()
+    }
+
+
+
 }
 
-GridController "1" o--> "1 -grid" models.grid.Grid
-UI "1" *--> "1" Controllers.PlayerController : "\t 2 \n -playerControllers"
 
 @enduml
