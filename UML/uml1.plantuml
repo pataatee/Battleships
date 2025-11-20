@@ -1,8 +1,11 @@
+
 @startuml
 skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide enum methods
-
+skinparam Padding 3
+skinparam ClassFontSize 11
+skinparam PackageFontSize 13
 
 package models {
 
@@ -20,13 +23,23 @@ package models {
             ISLAND
         }
 
+        interface GameObserver{
+            +UpdateNewTurn(turn:Integer)
+            +UpdateCurrentPlayerIndex(index:Integer)
+        }
+
+        Game "1"o-->"* -observer" GameObserver
+
         class Game implements .models.player.PlayerObserver{
-            -currentPlayer:Integer
+            -currentPlayerIndex:Integer
+            -currentTurn:Integer
             +<<create>>Game()
             +setUpGameMode(gameMode:GameMode)
             +setUpPlayer(player[2]:Player)
             +playerAttack(x:Integer;y:Integer,weapon:Weapon)
             +nextTurn()
+            +notifyObserverNewTurn()
+            +notifyObserverCurrentPlayerIndex()
         }
         Game "1"-->"1 -gameState" GameState
         Game "1" *-->"2 -playerList" .models.player.Player
@@ -45,23 +58,48 @@ package models {
         }
 
        class Placement{
-           +<<create>>Placement(algo:PlacementAlgo,grid:Grid[2])
-           +applyPlacement()
+           +<<create>>Placement(grids:Grid[2],players:Player[2])
+           +applyPlacement(boats:Boat[])
            +setPlacementAlgo(algo:PlacementAlgo)
+           +randomPlacement(boats:Boat[])
+           +staticPlacement(boats:Boat[])
+           +manualPlacement(boats:Boat[])
        }
 
 
        Placement "1" *--> "1 -placementAlgo" PlacementAlgo
+       Placement "1" o--> "2 -grids" .models.grid.Grid
+       Placement "1" o--> "2 -players" .models.player.Player
 
        abstract class PlacementAlgo{
-            +placeBoats(boats:Boat[])
-            +placeTraps(traps:Trap[])
+            #grid:Grid
+            #player:Player
+            +<<create>>PlacementAlgo(grid:Grid,player:Player)
+            +{abstract}placeBoats(boats:Boat[])
+            +{abstract}placeTraps(traps:Trap[])
        }
 
+       PlacementAlgo o--> "1" .models.grid.Grid
+       PlacementAlgo o--> "1" .models.player.Player
 
-       class StaticPlacementAlgo extends PlacementAlgo
-       class RandomPlacementAlgo extends PlacementAlgo
-       class ManualPlacementAlgo extends PlacementAlgo
+       class StaticPlacementAlgo extends PlacementAlgo{
+           +<<create>>StaticPlacementAlgo(grid:Grid,player:Player)
+           +placeBoats(boats:Boat[])
+           +placeTraps(traps:Trap[])
+       }
+
+       class RandomPlacementAlgo extends PlacementAlgo{
+           +<<create>>RandomPlacementAlgo(grid:Grid,player:Player)
+           +placeBoats(boats:Boat[])
+           +placeTraps(traps:Trap[])
+       }
+
+       class ManualPlacementAlgo extends PlacementAlgo{
+           +<<create>>ManualPlacementAlgo(grid:Grid,player:Player)
+           +placeBoats(boats:Boat[])
+           +placeTraps(traps:Trap[])
+           +waitForUserInput()
+       }
 
 
        ConfigData "1"*-->"1-gameMode"GameMode
@@ -78,12 +116,14 @@ package models {
             +changeStateOfTile(x:Integer,y:Integer,state:State)
             +isTileFree(x:Integer;y:Integer):bool
             +placeObject(placeable:Placeable):bool
+            +addObserver(observer:GridObserver)
+            +notifyObserver()
         }
 
         Grid ...> .models.placeable.Placeable:<<use>>;
 
         interface GridObserver {
-            +updateGrid()
+            +updateTileState(x:Integer,y:Integer,state:State)
         }
         Grid "1" o--> "1..* -observer[]" GridObserver
 
@@ -339,7 +379,6 @@ package models {
 
         Player "*"o-->"1 -playerGrid" models.grid.Grid
         Player "*"*-->"* -playerBoats[]" models.placeable.boats.Boats
-        .controller.PlacementController ..> models.placeable.PlaceableFactory : <<use>>
         Player "*"*--> "2 -playerTraps[]" models.placeable.trap.Trap
         Player ..> .models.weapon.Weapon : <<use>>
         Player "1" *--> "1-stat" .models.log.Stats
@@ -421,55 +460,127 @@ package App{
 
 package controller {
 
-    class ApplicationController{
-        +<<create>>ApplicationController()
-        +switchToScreen()
+    interface ControllerObserver{
+        +onControllerComplete(nextScreen:ScreenType)
     }
 
-    ApplicationController "1"-->"* -screens" .views.UserScreen
-    ApplicationController ..> .models.grid.Grid : <<create>>
-    ApplicationController ..> .models.player.Player : <<create>>
-    ApplicationController ..> .models.game.Game :<<create>>
+    enum ScreenType{
+        CONFIG
+        PLACEMENT
+        MAIN_GAME
+        END_GAME
+    }
 
-    ApplicationController ..> .controller.ConfigController : <<create>>
-    ApplicationController ..> .controller.PlacementController : <<create>>
-    ApplicationController ..> .controller.PlayerController : <<create>>
-    ApplicationController ..> .controller.EndController : <<create>>
+    abstract class BaseController{
+        +addObserver(observer:ControllerObserver)
+        #notifyCompletion(nextScreen:ScreenType)
+    }
 
+    BaseController "1" o--> "* -observers" ControllerObserver
 
-    ApplicationController ..> .views.ConfigScreen : <<create>>
-    ApplicationController ..> .views.PlacementScreen : <<create>>
-    ApplicationController ..> .views.MainScreen : <<create>>
-    ApplicationController ..> .views.EndGameScreen : <<create>>
+    class ApplicationController implements ControllerObserver{
+        +<<create>>ApplicationController()
+        +start()
+        +onControllerComplete(nextScreen:ScreenType)
+    }
 
-    class PlayerController{
-        +<<create>>PlayerController()
+    ApplicationController "1" --> "1 -screenManager" ScreenManager
+    ApplicationController "1" --> "1 -gameFactory" GameFactory
+    ApplicationController "1" --> "1 -screenFactory" ScreenFactory
+    ApplicationController "1" --> "1 -controllerFactory" ControllerFactory
+
+    class ScreenManager{
+        +<<create>>ScreenManager()
+        +switchToScreen(screenType:ScreenType)
+        +registerScreen(type:ScreenType,screen:UserScreen)
+        +getCurrentScreen():UserScreen
+    }
+
+    ScreenManager "1" o--> "* -screens" .views.UserScreen
+    ScreenManager ..> ScreenType : <<use>>
+
+    class GameFactory{
+        +<<create>>GameFactory()
+        +createGame(configData:ConfigData):Game
+        +createGrids(size:Integer[2]):Grid[2]
+        +createPlayers(grids:Grid[2]):Player[2]
+        +createPlacement(grids:Grid[2],players:Player[2]):Placement
+    }
+
+    GameFactory ..> .models.game.Game : <<creates>>
+    GameFactory ..> .models.grid.Grid : <<creates>>
+    GameFactory ..> .models.player.Player : <<creates>>
+    GameFactory ..> .models.game.Placement : <<creates>>
+
+    class ScreenFactory{
+        +<<create>>ScreenFactory()
+        +createConfigScreen(controller:ConfigController):ConfigScreen
+        +createPlacementScreen(controller:PlacementController):PlacementScreen
+        +createMainScreen(controller:PlayerController):MainScreen
+        +createEndGameScreen(controller:EndController):EndGameScreen
+    }
+
+    ScreenFactory ..> .views.ConfigScreen : <<creates>>
+    ScreenFactory ..> .views.PlacementScreen : <<creates>>
+    ScreenFactory ..> .views.MainScreen : <<creates>>
+    ScreenFactory ..> .views.EndGameScreen : <<creates>>
+
+    class ControllerFactory{
+        +<<create>>ControllerFactory()
+        +createConfigController(grids:Grid[2]):ConfigController
+        +createPlacementController(placement:Placement):PlacementController
+        +createPlayerController(player:Player,game:Game):PlayerController
+        +createEndController():EndController
+    }
+
+    ControllerFactory ..> ConfigController : <<creates>>
+    ControllerFactory ..> PlacementController : <<creates>>
+    ControllerFactory ..> PlayerController : <<creates>>
+    ControllerFactory ..> EndController : <<creates>>
+
+    class PlayerController extends BaseController{
+        +<<create>>PlayerController(player:Player,game:Game)
         +requestAttackFromPlayer(x:Integer;y:Integer)
         +selectWeapon(weapon:Weapon)
-
+        +onGameEnd()
     }
 
-    PlayerController "1"o-->"2 -lstPlayer" .models.player.Player
+    PlayerController "1"o-->"1 -humanPlayer" .models.player.Player
+    PlayerController "1"o-->"1 -game" .models.game.Game
 
-    class ConfigController{
-        +<<create>>ConfigController(grid:Grid[2])
+    class ConfigController extends BaseController{
+        +<<create>>ConfigController(grids:Grid[2])
         +selectGameMode(gameMode:GameMode)
         +getAvailableBoats():Boat[]
         +selectBoats(boat:Boat)
+        +confirmConfiguration()
     }
 
-    ConfigController "1"-->"1-config" ConfigData
+    ConfigController "1"-->"1 -configData" .models.game.ConfigData
     ConfigController "1"-->"2 -lstGrid" .models.grid.Grid
 
 
-    class PlacementController{
-        +<<create>>PlacementController(player[2]:Player,grid:Grid[2])
+    class PlacementController extends BaseController{
+        +<<create>>PlacementController(placement:Placement)
         +generateRandomPlacement()
         +applyStaticPlacement()
         +enableManualPlacement()
+        +confirmPlacement()
     }
-    PlacementController "1" o-left-> "2 -lstPlayer" models.player.Player
-    PlacementController "1"o-left->"2 -lstGrid" Grid
+
+    PlacementController "1" o--> "1 -placement" .models.game.Placement
+    PlacementController ..> .models.placeable.PlaceableFactory : <<use>>
+    PlacementController ..> .models.game.StaticPlacementAlgo : <<creates>>
+    PlacementController ..> .models.game.RandomPlacementAlgo : <<creates>>
+    PlacementController ..> .models.game.ManualPlacementAlgo : <<creates>>
+
+    class EndController extends BaseController{
+        +<<create>>EndController()
+        +restartGame()
+        +quitGame()
+    }
+
+
 
 }
 
@@ -478,11 +589,12 @@ package controller {
 package views {
 
 
-    class UserScreen <<abstract>> {
+    abstract class UserScreen <<abstract>> {
         -name:String
         +<<create>>UserScreen(name:String)
         +hide()
         +show()
+        +onScreenComplete()
     }
 
     class ConfigScreen extends UserScreen{
@@ -503,26 +615,37 @@ package views {
         +displayInitialStaticPlacement()
         +requestRandomPlacement()
         +enableManualPlacementMode()
+        +confirmPlacement()
     }
-    PlacementScreen --> controller.PlacementController : "1 -placementController"
     PlacementScreen "1"o-->"1 -placementController".controller.PlacementController
 
-    class MainScreen extends UserScreen implements .models.grid.Grid.GridObserver{
-        +<<create>>MainScreen()
+    class MainScreen extends UserScreen implements .models.game.GameObserver{
+        +<<create>>MainScreen(controller:PlayerController)
         +chooseWeapon():Weapon
         +displayWeaponChoice()
+        +onGameEnd()
     }
+
+    MainScreen "1" --> "1 -playerController" controller.PlayerController
+
 
 
     class EndGameScreen extends UserScreen{
-        +<<create>>EndGameScreen()
+        +<<create>>EndGameScreen(controller:EndController)
         +setUpLogs()
         +showLogs()
         +restartTheGame()
     }
-    EndGameScreen ..> .models.controller.stat.Stat
+    EndGameScreen ..> .models.log.Stats :<<use>>
+    EndGameScreen ..> .models.log.Log :<<use>>
+    EndGameScreen "1"-->"1 -endController" .controller.EndController
 
-
+    class GridDisplay implements .models.grid.GridObserver{
+        +<<create>>GridDisplay(grid:Grid)
+        +updateTileState(x:Integer,y:Integer,state:State)
+    }
+    MainScreen "1"*-->"2 -gridDisplay" GridDisplay
+    PlacementScreen "1"*-->"1 playerGrid" GridDisplay
 
 }
 
