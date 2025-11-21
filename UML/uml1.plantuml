@@ -1,11 +1,13 @@
-
 @startuml
+!option handwritten true
 skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide enum methods
 skinparam Padding 3
 skinparam ClassFontSize 11
 skinparam PackageFontSize 13
+skinparam linetype ortho
+
 
 package models {
 
@@ -72,8 +74,8 @@ package models {
        Placement "1" o--> "2 -players" .models.player.Player
 
        abstract class PlacementAlgo{
-            #grid:Grid
-            #player:Player
+            -grid:Grid
+            -player:Player
             +<<create>>PlacementAlgo(grid:Grid,player:Player)
             +{abstract}placeBoats(boats:Boat[])
             +{abstract}placeTraps(traps:Trap[])
@@ -147,7 +149,7 @@ package models {
     package placeable{
 
 
-        class Placeable implements .models.grid.TileObserver {
+        abstract class Placeable implements .models.grid.TileObserver {
             +<<create>>Placeable(name:String,position:Integer[2],size:Integer,rotation:bool)
             -size:Integer
             -name:String
@@ -280,7 +282,7 @@ package models {
             getCurrentState():StateName
             +onHit():State
         }
-        StateName<-- State :-currentState
+        StateName<--* State :-currentState
 
         package unusedTiles{
 
@@ -357,12 +359,15 @@ package models {
             +attack(x:Integer,y:Integer,weapon:Weapon)
             +getAttacked(x:Integer,y:Integer,weapon:Weapon)
             +addObserver(player:PlayerObserver)
+            +notifyEndTurn()
+            +notifyDeath(death:bool)
         }
 
         Player "1"o-->"-lstObserver"PlayerObserver
         interface PlayerObserver{
             +<<create>>PlayerObserver()
-
+            +notifyEndTurn()
+            +notifyDeath(death:bool)
         }
 
         class AI extends Player{
@@ -398,6 +403,19 @@ package models {
                 +getPos():Integer[]
                 +getDamage():Integer
             }
+
+            class WeaponFactory{
+                +<<create>>WeaponFactory()
+                +createMissile():Weapon
+                +createBomber():Weapon
+                +createSonar():Weapon
+            }
+
+            WeaponFactory ..> Missile :<<create>>
+            WeaponFactory ..> Bombe :<<create>>
+            WeaponFactory ..> Sonar :<<create>>
+
+
             interface Weapon {
                 +use(x:Integer, y:Integer):Effect[]
             }
@@ -406,7 +424,7 @@ package models {
                 +use(x, y):Effect[]
             }
 
-            class Bomber implements Weapon {
+            class Bombe implements Weapon {
                 +use(x, y):Effect[]
             }
 
@@ -473,7 +491,7 @@ package controller {
 
     abstract class BaseController{
         +addObserver(observer:ControllerObserver)
-        #notifyCompletion(nextScreen:ScreenType)
+        -notifyCompletion(nextScreen:ScreenType)
     }
 
     BaseController "1" o--> "* -observers" ControllerObserver
@@ -484,10 +502,10 @@ package controller {
         +onControllerComplete(nextScreen:ScreenType)
     }
 
-    ApplicationController "1" --> "1 -screenManager" ScreenManager
-    ApplicationController "1" --> "1 -gameFactory" GameFactory
-    ApplicationController "1" --> "1 -screenFactory" ScreenFactory
-    ApplicationController "1" --> "1 -controllerFactory" ControllerFactory
+    ApplicationController "1" *--> "1 -screenManager" ScreenManager
+    ApplicationController "1" *--> "1 -gameFactory" GameFactory
+    ApplicationController "1" *--> "1 -screenFactory" ScreenFactory
+    ApplicationController "1" *--> "1 -controllerFactory" ControllerFactory
 
     class ScreenManager{
         +<<create>>ScreenManager()
@@ -556,8 +574,8 @@ package controller {
         +confirmConfiguration()
     }
 
-    ConfigController "1"-->"1 -configData" .models.game.ConfigData
-    ConfigController "1"-->"2 -lstGrid" .models.grid.Grid
+    ConfigController "1"o-->"1 -configData" .models.game.ConfigData
+    ConfigController "1"o-->"2 -lstGrid" .models.grid.Grid
 
 
     class PlacementController extends BaseController{
@@ -605,7 +623,7 @@ package views {
         +confirm()
     }
 
-    ConfigScreen --> "1 -configController" controller.ConfigController
+    ConfigScreen "1" o--> "1 -configController" controller.ConfigController
     ConfigScreen ..>.models.game.GameMode:<<use>>
 
 
@@ -626,7 +644,8 @@ package views {
         +onGameEnd()
     }
 
-    MainScreen "1" --> "1 -playerController" controller.PlayerController
+    MainScreen "1" o--> "1 -playerController" controller.PlayerController
+    MainScreen "1"*-->"1 -weaponFactory" .models.weapon.WeaponFactory
 
 
 
@@ -638,7 +657,7 @@ package views {
     }
     EndGameScreen ..> .models.log.Stats :<<use>>
     EndGameScreen ..> .models.log.Log :<<use>>
-    EndGameScreen "1"-->"1 -endController" .controller.EndController
+    EndGameScreen "1"o-->"1 -endController" .controller.EndController
 
     class GridDisplay implements .models.grid.GridObserver{
         +<<create>>GridDisplay(grid:Grid)
