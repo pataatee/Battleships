@@ -136,6 +136,8 @@ package models {
             +<<create>>Tile()
             +setState(newState:State)
             +addObserver(observer:TileObserver)
+            +isFree():bool
+            +onHit()
             -notify_observer()
         }
 
