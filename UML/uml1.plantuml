@@ -48,9 +48,9 @@ package models {
         Game ..> ConfigData:<<uses>>
 
         class ConfigData{
-            -gridSize:Integer[2]
+            -gridSize:Integer
             +<<create>>ConfigData()
-            +setGridSize(x:Integer;y:Integer)
+            +setGridSize(size:Integer)
             +setGameMod(gameMode:GameMode)
             +addBoat(boat:Boat)
             +getGridSize()
@@ -112,9 +112,10 @@ package models {
 
     package grid {
         class Grid {
-            -size : Integer[2]
-            +<<create>>Grid(size:Integer[2])
-            +setSize(size:Integer[2])
+            -size : Integer
+            +<<create>>Grid(size:Integer)
+            +setSize(size:Integer)
+            +generateGrid()
             +changeStateOfTile(x:Integer,y:Integer,state:State)
             +isTileFree(x:Integer;y:Integer):bool
             +placeObject(placeable:Placeable):bool
@@ -520,7 +521,7 @@ package controller {
     class GameFactory{
         +<<create>>GameFactory()
         +createGame(configData:ConfigData):Game
-        +createGrids(size:Integer[2]):Grid[2]
+        +createGrids(size:Integer):Grid[2]
         +createPlayers(grids:Grid[2]):Player[2]
         +createPlacement(grids:Grid[2],players:Player[2]):Placement
     }
@@ -617,7 +618,7 @@ package views {
 
     class ConfigScreen extends UserScreen{
         +<<create>>ConfigScreen(controller:ConfigController)
-        +setGridSize(size:Integer[2])
+        +setGridSize(size:Integer)
         +chooseGameMode(gameMode:GameMode)
         +setBoatCount(type:String,count:Integer)
         +confirm()
