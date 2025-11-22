@@ -278,33 +278,33 @@ package models {
         }
 
 
-        interface State {
+        abstract class State {
             +<<create>>State(state:StateName)
-            getCurrentState():StateName
-            +onHit():State
+            +getCurrentState():StateName
+            +{abstract}onHit():State
         }
         StateName<--* State :-currentState
 
         package unusedTiles{
 
-        class Boat_tile implements .models.state.State{
+        class Boat_tile extends .models.state.State{
             +<<create>> Boat_tile()
             +onHit():Boat_hit_tile
         }
 
-        class Empty_tile implements .models.state.State{
+        class Empty_tile extends .models.state.State{
             +<<create>> Empty_tile()
             +onHit():Miss_Tile
         }
 
-        class Island_tile implements .models.state.State{
+        class Island_tile extends .models.state.State{
             +<<create>> Island_tile()
             +onHit():Island_Searched_tile
             +setWeapon(weapon:Weapon)
         }
         Island_tile "1"o-->"1" .models.weapon.Weapon
 
-        class Trap_tile implements .models.state.State{
+        class Trap_tile extends .models.state.State{
             +<<create>> Trap_tile()
             +onHit():Trap_used_tile
         }
@@ -314,27 +314,27 @@ package models {
 
         package usedTiles{
 
-        class Boat_hit_tile implements .models.state.State{
+        class Boat_hit_tile extends .models.state.State{
             +<<create>> Boat_tile()
             +onHit():null
         }
 
-        class Boat_dead implements .models.state.State{
+        class Boat_dead extends .models.state.State{
             +<<create>> Boat_tile()
             +onHit():null
         }
 
-       class Miss_tile implements .models.state.State{
+       class Miss_tile extends .models.state.State{
            +<<create>> Miss_tile()
            +onHit():null
        }
 
-        class Island_Searched_tile implements .models.state.State{
+        class Island_Searched_tile extends .models.state.State{
             +<<create>> Island_Searched_tile()
             +onHit():null
         }
 
-        class Trap_used_tile implements .models.state.State{
+        class Trap_used_tile extends .models.state.State{
             +<<create>> Trap_tile()
             +onHit():null
         }
