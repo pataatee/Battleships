@@ -120,6 +120,7 @@ package models {
             +isTileFree(x:Integer;y:Integer):bool
             +placeObject(placeable:Placeable):bool
             +addObserver(observer:GridObserver)
+            +hitTile(x:Integer,y:Integer)
             +notifyObserver()
         }
 
