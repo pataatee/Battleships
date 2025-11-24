@@ -10,6 +10,6 @@ public class TrapUsedTile extends State {
 
     @Override
     public State onHit() {
-
+        return this;
     }
 }

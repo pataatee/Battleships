@@ -47,7 +47,7 @@ public class Grid {
      * @param newState new state of the tile
      */
     public void changeStateOfTile(int x,int y , State newState){
-
+        _tilesMap[x][y].setState(newState);
     }
 
 
