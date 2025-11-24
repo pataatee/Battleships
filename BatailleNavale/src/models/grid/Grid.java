@@ -47,7 +47,7 @@ public class Grid {
      * @param newState new state of the tile
      */
     public void changeStateOfTile(int x,int y , State newState){
-        _tilesMap[x][y].setState(newState);
+
     }
 
 
@@ -74,5 +74,19 @@ public class Grid {
         return false;
     }
 
+    /**
+     * Subscribe a new observer
+     * @param ob the new subscriber
+     */
+    public void addObserver(GridObserver ob){
+        _observer.add(ob);
+    }
+
+
+    public void notifyObserver(Tile tile){
+        for(GridObserver ob : _observer){
+            continue;//to do later
+        }
+    }
 
 }
