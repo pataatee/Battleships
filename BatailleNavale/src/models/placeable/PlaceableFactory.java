@@ -23,11 +23,11 @@ public class PlaceableFactory {
         return new TopedoBoat();
     }
 
-    public Trap createBlackHole() {
-        return new BlackHole();
+    public Trap createBlackHole(int ownerId) {
+        return new BlackHole(ownerId);
     }
 
-    public Trap createTornado() {
-        return new Tornado();
+    public Trap createTornado(int ownerId) {
+        return new Tornado(ownerId);
     }
 }
