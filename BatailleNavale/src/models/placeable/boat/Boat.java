@@ -1,4 +1,7 @@
 package models.placeable.boat;
 
-public class Boat {
+import models.placeable.Placeable;
+
+public abstract class Boat extends Placeable {
+    private Boolean isAlive;
 }
