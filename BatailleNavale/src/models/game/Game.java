@@ -20,7 +20,7 @@ public class Game {
         _observer = new ArrayList<GameObserver>();
     }
 
-    public void setUpGame(GameMode gameMode){
+    public void setUpGameMode(GameMode gameMode){
         _gameMode =gameMode;
     }
 
@@ -41,6 +41,19 @@ public class Game {
             ob.updateCurrentPlayerIndex(_currentPlayerIndex);
         }
     }
+
+    public GameMode getGameMode(){
+        return _gameMode;
+    }
+
+    public int getCurrentTurn(){
+        return _currentTurn;
+    }
+
+    public int getCurrentPlayerIndex(){
+        return _currentPlayerIndex;
+    }
+
 
 
 
