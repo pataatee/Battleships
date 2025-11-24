@@ -2,16 +2,16 @@ package models.state.unusedTiles;
 
 import models.state.State;
 import models.state.StateName;
-import models.state.usedTile.Miss_tile;
+import models.state.usedTile.MissTile;
 
-public class Empty_tile extends State {
+public class EmptyTile extends State {
 
-    public Empty_tile(){
+    public EmptyTile(){
         super(StateName.EMPTY);
     }
 
     @Override
     public State onHit() {
-        return  new Miss_tile();
+        return  new MissTile();
     }
 }
