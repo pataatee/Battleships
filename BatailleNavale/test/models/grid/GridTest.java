@@ -1,6 +1,6 @@
 package models.grid;
 
-import models.state.usedTile.Miss_tile;
+import models.state.usedTile.MissTile;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +18,7 @@ class GridTest {
     @Test
     void changeStateOfTile() {
         var g = new Grid(5);
-        g.changeStateOfTile(0,0,new Miss_tile());
+        g.changeStateOfTile(0,0,new MissTile());
         assertFalse(g.isTileFree(0,0));
     }
 

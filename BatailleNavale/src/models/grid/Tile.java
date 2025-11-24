@@ -2,7 +2,7 @@ package models.grid;
 
 import models.state.State;
 import models.state.StateName;
-import models.state.unusedTiles.Empty_tile;
+import models.state.unusedTiles.EmptyTile;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class Tile {
     private ArrayList<TileObserver> _observer;
     public Tile(int x, int y)
     {
-        _currentState = new Empty_tile();
+        _currentState = new EmptyTile();
         _x=x;
         _y=y;
         _observer = new ArrayList<TileObserver>();
