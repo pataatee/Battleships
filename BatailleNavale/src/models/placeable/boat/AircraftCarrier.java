@@ -1,4 +1,4 @@
 package models.placeable.boat;
 
-public class AircraftCarrier {
+public class AircraftCarrier extends Boat {
 }

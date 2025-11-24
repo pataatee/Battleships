@@ -1,6 +1,6 @@
 package models.placeable;
 
 public abstract class Placeable {
-    private int size;
-    private String name;
+    private int _size;
+    private String _name;
 }
