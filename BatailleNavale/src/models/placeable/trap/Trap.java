@@ -1,0 +1,4 @@
+package models.placeable.trap;
+
+public class Trap {
+}
