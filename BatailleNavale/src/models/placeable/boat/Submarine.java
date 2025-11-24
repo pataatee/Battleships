@@ -1,4 +1,4 @@
 package models.placeable.boat;
 
-public class Submarine {
+public class Submarine extends Boat {
 }

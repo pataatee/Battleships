@@ -1,4 +1,6 @@
 package models.placeable;
 
-public class Placeable {
+public abstract class Placeable {
+    private int size;
+    private String name;
 }

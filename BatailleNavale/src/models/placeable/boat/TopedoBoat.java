@@ -1,4 +1,4 @@
 package models.placeable.boat;
 
-public class TopedoBoat {
+public class TopedoBoat extends Boat {
 }
