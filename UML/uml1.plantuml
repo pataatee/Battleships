@@ -62,42 +62,42 @@ package models {
        class Placement{
            +<<create>>Placement(grids:Grid[2],players:Player[2])
            +applyPlacement(boats:Boat[])
-           +setPlacementAlgo(algo:PlacementAlgo)
+           +setPlacementStrat(algo:PlacementStrategy)
            +randomPlacement(boats:Boat[])
            +staticPlacement(boats:Boat[])
            +manualPlacement(boats:Boat[])
        }
 
 
-       Placement "1" *--> "1 -placementAlgo" PlacementAlgo
+       Placement "1" *--> "1 -placementAlgo" PlacementStrategy
        Placement "1" o--> "2 -grids" .models.grid.Grid
        Placement "1" o--> "2 -players" .models.player.Player
 
-       abstract class PlacementAlgo{
+       abstract class PlacementStrategy{
             -grid:Grid
             -player:Player
-            +<<create>>PlacementAlgo(grid:Grid,player:Player)
+            +<<create>>PlacementStrategy(grid:Grid,player:Player)
             +{abstract}placeBoats(boats:Boat[])
             +{abstract}placeTraps(traps:Trap[])
        }
 
-       PlacementAlgo o--> "1" .models.grid.Grid
-       PlacementAlgo o--> "1" .models.player.Player
+       PlacementStrategy o--> "1" .models.grid.Grid
+       PlacementStrategy o--> "1" .models.player.Player
 
-       class StaticPlacementAlgo extends PlacementAlgo{
-           +<<create>>StaticPlacementAlgo(grid:Grid,player:Player)
+       class StaticPlacementStrategy extends PlacementStrategy{
+           +<<create>>StaticPlacementStrategy(grid:Grid,player:Player)
            +placeBoats(boats:Boat[])
            +placeTraps(traps:Trap[])
        }
 
-       class RandomPlacementAlgo extends PlacementAlgo{
-           +<<create>>RandomPlacementAlgo(grid:Grid,player:Player)
+       class RandomPlacementStrategy extends PlacementStrategy{
+           +<<create>>RandomPlacementStrategy(grid:Grid,player:Player)
            +placeBoats(boats:Boat[])
            +placeTraps(traps:Trap[])
        }
 
-       class ManualPlacementAlgo extends PlacementAlgo{
-           +<<create>>ManualPlacementAlgo(grid:Grid,player:Player)
+       class ManualPlacementStrategy extends PlacementStrategy{
+           +<<create>>ManualPlacementStrategy(grid:Grid,player:Player)
            +placeBoats(boats:Boat[])
            +placeTraps(traps:Trap[])
            +waitForUserInput()
@@ -117,6 +117,7 @@ package models {
             +setSize(size:Integer)
             +generateGrid()
             +changeStateOfTile(x:Integer,y:Integer,state:State)
+            +hitTile(x:Integer,y:Integer)
             +isTileFree(x:Integer;y:Integer):bool
             +placeObject(placeable:Placeable):bool
             +addObserver(observer:GridObserver)
@@ -135,24 +136,30 @@ package models {
             -y:Integer
             +<<create>>Tile()
             +setState(newState:State)
-            +addObserver(observer:TileObserver)
             +isFree():bool
             + {abstract} onHit()
             -notify_observer()
         }
 
         class IslandTile extends Tile {
+            +<<create>>IslandTile()
             + onHit()
+            + addWeapon(weapon:Weapon)
+            + addTrap(trap:Trap)
         }
 
+
         class SeaTile extends Tile {
+            +<<create>>SeaTile()
             + onHit()
+            + addPlaceable(placeable:Placeable)
         }
 
         SeaTile o--> "-_object" .models.placeable.Placeable
         SeaTile *--> "-_state" SeaTileState
 
         IslandTile o--> "-_object" .models.placeable.Placeable
+         IslandTile -->"1 -weapon" .models.weapon.Weapon
         IslandTile *--> "-_state" IslandTileState
 
         enum SeaTileState {
@@ -169,11 +176,6 @@ package models {
             NOTSEARCHED
         }
 
-        interface TileObserver {
-            +update_tile(state:State)
-        }
-
-        Tile "1" o--> "0..* -list_observer" .models.grid.TileObserver
         Grid "1" *--> "1..*" Tile : "-TilesMap[]"
 
     }
@@ -189,7 +191,6 @@ package models {
         }
 
         Placeable "1"o-->"-tiles[*]" .models.grid.Tile
-
 
     package boats{
 
@@ -420,20 +421,12 @@ package App{
     +main(args:String[])
    }
 
-
-
-   App ..> .controller.ApplicationController : <<create>>
-
-
 }
 
 
 
 package controller {
 
-    interface ControllerObserver{
-        +onControllerComplete(nextScreen:ScreenType)
-    }
 
     enum ScreenType{
         CONFIG
@@ -442,74 +435,23 @@ package controller {
         END_GAME
     }
 
-    abstract class BaseController{
-        +addObserver(observer:ControllerObserver)
-        -notifyCompletion(nextScreen:ScreenType)
-    }
+    .App.App ..> .models.game.Game : <<creates>>
+    .App.App..> .models.grid.Grid : <<creates>>
+    .App.App ..> .models.player.Player : <<creates>>
+    .App.App ..> .models.game.Placement : <<creates>>
 
-    BaseController "1" o--> "* -observers" ControllerObserver
+    .App.App ..> .views.ConfigScreen : <<creates>>
+    .App.App ..> .views.PlacementScreen : <<creates>>
+    .App.App ..> .views.MainScreen : <<creates>>
+    .App.App ..> .views.EndGameScreen : <<creates>>
 
-    class ApplicationController implements ControllerObserver{
-        +<<create>>ApplicationController()
-        +start()
-        +onControllerComplete(nextScreen:ScreenType)
-    }
 
-    ApplicationController "1" *--> "1 -screenManager" ScreenManager
-    ApplicationController "1" *--> "1 -gameFactory" GameFactory
-    ApplicationController "1" *--> "1 -screenFactory" ScreenFactory
-    ApplicationController "1" *--> "1 -controllerFactory" ControllerFactory
+    .App.App ..> ConfigController : <<creates>>
+    .App.App ..> PlacementController : <<creates>>
+    .App.App ..> PlayerController : <<creates>>
+    .App.App ..> EndController : <<creates>>
 
-    class ScreenManager{
-        +<<create>>ScreenManager()
-        +switchToScreen(screenType:ScreenType)
-        +registerScreen(type:ScreenType,screen:UserScreen)
-        +getCurrentScreen():UserScreen
-    }
-
-    ScreenManager "1" o--> "* -screens" .views.UserScreen
-    ScreenManager ..> ScreenType : <<use>>
-
-    class GameFactory{
-        +<<create>>GameFactory()
-        +createGame(configData:ConfigData):Game
-        +createGrids(size:Integer):Grid[2]
-        +createPlayers(grids:Grid[2]):Player[2]
-        +createPlacement(grids:Grid[2],players:Player[2]):Placement
-    }
-
-    GameFactory ..> .models.game.Game : <<creates>>
-    GameFactory ..> .models.grid.Grid : <<creates>>
-    GameFactory ..> .models.player.Player : <<creates>>
-    GameFactory ..> .models.game.Placement : <<creates>>
-
-    class ScreenFactory{
-        +<<create>>ScreenFactory()
-        +createConfigScreen(controller:ConfigController):ConfigScreen
-        +createPlacementScreen(controller:PlacementController):PlacementScreen
-        +createMainScreen(controller:PlayerController):MainScreen
-        +createEndGameScreen(controller:EndController):EndGameScreen
-    }
-
-    ScreenFactory ..> .views.ConfigScreen : <<creates>>
-    ScreenFactory ..> .views.PlacementScreen : <<creates>>
-    ScreenFactory ..> .views.MainScreen : <<creates>>
-    ScreenFactory ..> .views.EndGameScreen : <<creates>>
-
-    class ControllerFactory{
-        +<<create>>ControllerFactory()
-        +createConfigController(grids:Grid[2]):ConfigController
-        +createPlacementController(placement:Placement):PlacementController
-        +createPlayerController(player:Player,game:Game):PlayerController
-        +createEndController():EndController
-    }
-
-    ControllerFactory ..> ConfigController : <<creates>>
-    ControllerFactory ..> PlacementController : <<creates>>
-    ControllerFactory ..> PlayerController : <<creates>>
-    ControllerFactory ..> EndController : <<creates>>
-
-    class PlayerController extends BaseController{
+    class PlayerController{
         +<<create>>PlayerController(player:Player,game:Game)
         +requestAttackFromPlayer(x:Integer;y:Integer)
         +selectWeapon(weapon:Weapon)
@@ -519,7 +461,7 @@ package controller {
     PlayerController "1"o-->"1 -humanPlayer" .models.player.Player
     PlayerController "1"o-->"1 -game" .models.game.Game
 
-    class ConfigController extends BaseController{
+    class ConfigController{
         +<<create>>ConfigController(grids:Grid[2])
         +selectGameMode(gameMode:GameMode)
         +getAvailableBoats():Boat[]
@@ -531,7 +473,7 @@ package controller {
     ConfigController "1"o-->"2 -lstGrid" .models.grid.Grid
 
 
-    class PlacementController extends BaseController{
+    class PlacementController{
         +<<create>>PlacementController(placement:Placement)
         +generateRandomPlacement()
         +applyStaticPlacement()
@@ -541,11 +483,11 @@ package controller {
 
     PlacementController "1" o--> "1 -placement" .models.game.Placement
     PlacementController ..> .models.placeable.PlaceableFactory : <<use>>
-    PlacementController ..> .models.game.StaticPlacementAlgo : <<creates>>
-    PlacementController ..> .models.game.RandomPlacementAlgo : <<creates>>
-    PlacementController ..> .models.game.ManualPlacementAlgo : <<creates>>
+    PlacementController ..> .models.game.StaticPlacementStrategy : <<creates>>
+    PlacementController ..> .models.game.RandomPlacementStrategy : <<creates>>
+    PlacementController ..> .models.game.ManualPlacementStrategy : <<creates>>
 
-    class EndController extends BaseController{
+    class EndController {
         +<<create>>EndController()
         +restartGame()
         +quitGame()
