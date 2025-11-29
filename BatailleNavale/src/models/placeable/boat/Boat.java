@@ -20,4 +20,8 @@ public abstract class Boat extends Placeable {
             obs.notifyOnDeath(life);
         }
     }
+
+    public void onHit() {
+        this._pvs--;
+    }
 }
