@@ -13,4 +13,18 @@ public abstract class Trap extends Placeable {
         this._hasBeenUsed=false;
         this._hasBeenActivated=false;
     }
+
+    public abstract void effectOnHit();
+
+    public void setUsed(Boolean used) {
+        this._hasBeenUsed=used;
+    }
+
+    public void setActivated(Boolean activation) {
+        this._hasBeenActivated=activation;
+    }
+
+    public Boolean getActivation() {
+        return this._hasBeenActivated;
+    }
 }
