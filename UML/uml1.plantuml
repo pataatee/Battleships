@@ -20,6 +20,15 @@ package models {
             ENDGAME
         }
 
+        enum shotResult{
+            TOUCHED,
+            COULED,
+            MISSED,
+            TRAPPED,
+            ISLANDED,
+            ISLANDEDFOUNDED
+        }
+
         enum GameMode{
             NORMAL
             ISLAND
@@ -62,14 +71,14 @@ package models {
        class Placement{
            +<<create>>Placement(grids:Grid[2],players:Player[2])
            +applyPlacement(boats:Boat[])
-           +setPlacementStrat(algo:PlacementStrategy)
+           +setPlacementStrategy(algo:PlacementStrategy)
            +randomPlacement(boats:Boat[])
            +staticPlacement(boats:Boat[])
            +manualPlacement(boats:Boat[])
        }
 
 
-       Placement "1" *--> "1 -placementAlgo" PlacementStrategy
+       Placement "1" *--> "1 -placementStrategy" PlacementStrategy
        Placement "1" o--> "2 -grids" .models.grid.Grid
        Placement "1" o--> "2 -players" .models.player.Player
 
@@ -159,19 +168,16 @@ package models {
         SeaTile *--> "-_state" SeaTileState
 
         IslandTile o--> "-_object" .models.placeable.Placeable
-         IslandTile -->"1 -weapon" .models.weapon.Weapon
+        IslandTile -->"1 -weapon" .models.weapon.Weapon
         IslandTile *--> "-_state" IslandTileState
 
-        enum SeaTileState {
+        enum TileState {
             EMPTY
             MISS
             BOAT
             BOATHIT
             TRAP
             TRAPHIT
-        }
-
-        enum IslandTileState {
             SEARCHED
             NOTSEARCHED
         }
@@ -182,15 +188,21 @@ package models {
     package placeable{
 
 
-        abstract class Placeable implements .models.grid.TileObserver {
-            +<<create>>Placeable(name:String,position:Integer[2],size:Integer,rotation:bool)
-            -size:Integer
-            -name:String
-            +calculatePosition():Integer[*][2]
-            +{abstract}updateTileState(state:State)
-        }
+    abstract class Placeable implements .models.grid.TileObserver {
+        +<<create>>Placeable(name:String,position:Integer[2],size:Integer,rotation:bool)
+        -size:Integer
+        -name:String
+        +calculatePosition():Integer[*][2]
+        +{abstract}onHit()
+    }
 
-        Placeable "1"o-->"-tiles[*]" .models.grid.Tile
+    Placeable "1"o-->"-tiles[*]" .models.grid.Tile
+
+   class emptyTile extends Placeable{
+        +<<create>>emptyTile();
+        +onHit()
+   }
+
 
     package boats{
 
@@ -206,32 +218,27 @@ package models {
             +<<create>>Boats(name:String,size:Integer,tile:TopTile,rotation:bool)
             -is_alive:bool
             +notify_observer(life:bool)
-            +{abstract}updateTileState(state:State)
+            +onHit()
         }
 
         class Submarine extends Boats{
             +<<create>>Submarine()
-            +updateTileState(state:State)
         }
 
         class AircraftCarrier extends Boats{
             +<<create>>AircraftCarrier()
-            +updateTileState(state:State)
         }
 
         class Cruiser extends Boats{
             +<<create>>Cruiser
-            +updateTileState(state:State)
         }
 
         class Destroyer extends Boats{
             +<<create>>Destroyer()
-            +updateTileState(state:State)
         }
 
         class TorpedoBoat extends Boats{
             +<<create>>Torpedo_boat()
-            +updateTileState(state:State)
         }
 
         interface Boats_observer {
@@ -293,6 +300,7 @@ package models {
 
         PlaceableFactory ..> trap.Tornado : <<uses>>
         PlaceableFactory ..> trap.Black_hole : <<uses>>
+        PlaceableFactory ..> emptyTile : <<uses>>
 
 
 
@@ -320,6 +328,8 @@ package models {
         Player "1"o-->"-lstObserver"PlayerObserver
         interface PlayerObserver{
             +<<create>>PlayerObserver()
+            +notifyShoot(x:Integer;y:Integer,weapon:Weapon)
+            +notifyHit(result:ShotResult)
             +notifyEndTurn()
             +notifyDeath(death:bool)
         }

@@ -1,6 +1,5 @@
 package models.grid;
 
-import models.state.State;
 
 import java.util.ArrayList;
 
@@ -35,18 +34,18 @@ public class Grid {
 
         for (int i = 0; i < _size; i++) {
             for (int j = 0; j < _size; j++) {
-                _tilesMap[i][j] = new Tile(i,j);
+                _tilesMap[i][j] = new SeaTile();
             }
         }
     }
 
     /**
-     * Change the State of the Tile
+     * Change the TileState of the Tile
      * @param x position X of  the tile
      * @param y position Y of the tile
      * @param newState new state of the tile
      */
-    public void changeStateOfTile(int x,int y , State newState){
+    public void changeStateOfTile(int x,int y , TileState newState){
         _tilesMap[x][y].setState(newState);
     }
 
@@ -62,7 +61,7 @@ public class Grid {
 
 
     /**
-     * Check if the tile x,y is free (State = Empty)
+     * Check if the tile x,y is free (TileState = Empty)
      * @param x
      * @param y
      * @return false if tile is not free or if the asked cord are of grid
