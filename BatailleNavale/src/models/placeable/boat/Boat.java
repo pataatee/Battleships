@@ -7,17 +7,17 @@ import java.util.ArrayList;
 public abstract class Boat extends Placeable {
     private Boolean _isAlive;
     private int _pvs;
-    private ArrayList<BoatsObserver> boatObservers;
+    private ArrayList<BoatsObserver> _boatObservers;
 
     public Boat(String name,int size) {
         super(name,size);
         this._isAlive=true;
         this._pvs=size;
-        this.boatObservers = new ArrayList<>();
+        this._boatObservers = new ArrayList<>();
     }
 
     public void notifyObserver(Boolean life) {
-        for (BoatsObserver obs : boatObservers) {
+        for (BoatsObserver obs : _boatObservers) {
             obs.notifyOnDeath(life);
         }
     }
