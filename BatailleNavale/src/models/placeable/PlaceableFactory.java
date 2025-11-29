@@ -30,4 +30,6 @@ public class PlaceableFactory {
     public Trap createTornado(int ownerId) {
         return new Tornado(ownerId);
     }
+
+    public Placeable createEmptyObject() { return new EmptyObject(); }
 }
