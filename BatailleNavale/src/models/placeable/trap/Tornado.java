@@ -9,7 +9,7 @@ public class Tornado extends Trap {
     }
 
     @Override
-    public void effectOnHit() {
+    public void onHit() {
         //TODO: code tornado's effect
         super.setActivated(true);
     }

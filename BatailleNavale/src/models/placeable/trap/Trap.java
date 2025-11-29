@@ -14,7 +14,8 @@ public abstract class Trap extends Placeable {
         this._hasBeenActivated=false;
     }
 
-    public abstract void effectOnHit();
+    @Override
+    public abstract void onHit();
 
     public void setUsed(Boolean used) {
         this._hasBeenUsed=used;

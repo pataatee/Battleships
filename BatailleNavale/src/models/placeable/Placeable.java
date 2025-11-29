@@ -8,4 +8,6 @@ public abstract class Placeable {
         this._name=name;
         this._size=size;
     }
+
+    public abstract void onHit();
 }

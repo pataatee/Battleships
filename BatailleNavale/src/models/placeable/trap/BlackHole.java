@@ -9,7 +9,7 @@ public class BlackHole extends Trap {
     }
 
     @Override
-    public void effectOnHit() {
+    public void onHit() {
         //TODO: code BlackHole's effect
         super.setActivated(true);
     }
