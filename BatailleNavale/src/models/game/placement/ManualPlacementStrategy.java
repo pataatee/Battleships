@@ -1,4 +1,4 @@
 package models.game.placement;
 
-public class ManualPlacementStrategy {
+public class ManualPlacementStrategy extends PlacementStrategy {
 }
