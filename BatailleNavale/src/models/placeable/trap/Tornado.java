@@ -1,5 +1,7 @@
 package models.placeable.trap;
 
+import models.grid.Tile;
+
 public class Tornado extends Trap {
 
     public Tornado(int ownerId) {
@@ -10,5 +12,9 @@ public class Tornado extends Trap {
     public void effectOnHit() {
         //TODO: code tornado's effect
         super.setActivated(true);
+    }
+
+    public void updateTile(Tile tile) {
+        //TODO: complete this method
     }
 }
