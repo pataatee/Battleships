@@ -13,6 +13,7 @@ public abstract class Boat extends Placeable {
         super(name,size);
         this._isAlive=true;
         this._pvs=size;
+        this.boatObservers = new ArrayList<>();
     }
 
     public void notifyObserver(Boolean life) {
