@@ -23,10 +23,13 @@ public class Placement {
         this._placementStrategy = strat;
     }
 
+
+    /*
     // default values version
-    public Placement() {
+    // doesn't work but there's no point focusing on that rn
+    public Placement(int playerId) {
         this._grids = new Grid[2];
         this._players = new Player[2];
-        this._placementStrategy = new ManualPlacementStrategy();
-    }
+        this._placementStrategy = new ManualPlacementStrategy(_grids[playerId], _players[playerId]);
+    } */
 }
