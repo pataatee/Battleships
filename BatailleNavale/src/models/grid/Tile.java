@@ -1,23 +1,16 @@
 package models.grid;
 
-import models.state.State;
-import models.state.StateName;
-import models.state.unusedTiles.EmptyTile;
-
 import java.util.ArrayList;
 
 
-public class Tile {
+public abstract class Tile {
 
-    private int _x,_y;
-    private State _currentState;
     private ArrayList<TileObserver> _observer;
-    public Tile(int x, int y)
+    private TileState _currentState;
+    public Tile(TileState def)
     {
-        _currentState = new EmptyTile();
-        _x=x;
-        _y=y;
         _observer = new ArrayList<TileObserver>();
+        _currentState = def;
     }
 
 
@@ -25,31 +18,27 @@ public class Tile {
      * Change the _currentState of the tile
      * @param state
      */
-    public void setState(State state)
+    public void setState(TileState state)
     {
         this._currentState = state;
     }
 
-    public StateName getStateName(){
-        return _currentState.getCurrentState();
+    public TileState getStateName(){
+        return _currentState;
     }
 
     /**
      *Check if the tile is empty
-     * @return return true if the current State is Empty
+     * @return return true if the current TileState is Empty
      */
     public boolean isFree(){
-        return _currentState.getCurrentState() == StateName.EMPTY;
+        return _currentState == TileState.EMPTY;
     }
 
     /**
-     * Call the OnHit event of the current State
+     * Call the OnHit event of the current TileState
      */
-    public void onHit(){
-        _currentState = _currentState.onHit();
-        notify_observer();
-    }
-
+    public abstract void onHit();
 
     /**
      * Notify the observer that the state has change
