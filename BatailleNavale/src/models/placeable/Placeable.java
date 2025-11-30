@@ -10,4 +10,9 @@ public abstract class Placeable {
     }
 
     public abstract void onHit();
+
+    public int getSize(){
+        return _size;
+    }
+
 }

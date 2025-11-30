@@ -15,6 +15,10 @@ public class PlaceableFactory {
         return new Destroyer();
     }
 
+    public Boat createAircraftCarrier() {
+        return new Destroyer();
+    }
+
     public Boat createSubmarine() {
         return new Submarine();
     }
