@@ -3,8 +3,8 @@ package models.player;
 import models.grid.Grid;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
-import models.weapon.Effect;
-import models.weapon.Weapon;
+//import models.weapon.Effect;
+//import models.weapon.Weapon;
 
 import java.util.ArrayList;
 
@@ -48,12 +48,12 @@ public abstract class Player {
         }
     }
 
-    public void attack(int x, int y, Weapon weapon){
-        for (PlayerObserver playerObserver : _lstObserver) {
-            playerObserver.notifyShoot(x, y, weapon);
-        }
-    }
-
+//    public void attack(int x, int y, Weapon weapon){
+//        for (PlayerObserver playerObserver : _lstObserver) {
+//            playerObserver.notifyShoot(x, y, weapon);
+//        }
+//    }
+//
 //    public void getAttacked(int x, int y, Weapon weapon){
 //        Effect[] effect = weapon.use(x,y);
 //        ShortResult[] res = new ShortResult[];
@@ -68,7 +68,7 @@ public abstract class Player {
 //            playerObserver.notifyHit();
 //        }
 //    }
-
+//
 
 
     public void notifyDeath(){
