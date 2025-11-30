@@ -8,12 +8,14 @@ public abstract class Boat extends Placeable {
     private Boolean _isAlive;
     private int _pvs;
     private ArrayList<BoatsObserver> _boatObservers;
+    private BoatType _type;
 
-    public Boat(String name,int size) {
-        super(name,size);
+    public Boat(String name,BoatType type) {
+        super(name,type.getSize());
         this._isAlive=true;
-        this._pvs=size;
+        this._pvs=type.getSize();
         this._boatObservers = new ArrayList<>();
+        this._type = type;
     }
 
     public void notifyObserver(Boolean life) {
@@ -25,4 +27,9 @@ public abstract class Boat extends Placeable {
     public void onHit() {
         this._pvs--;
     }
+
+    public BoatType getType(){
+        return _type;
+    }
+
 }
