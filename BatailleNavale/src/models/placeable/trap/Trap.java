@@ -1,6 +1,7 @@
 package models.placeable.trap;
 
 import models.placeable.Placeable;
+import models.placeable.PlaceableType;
 
 public abstract class Trap extends Placeable {
     private Boolean _hasBeenActivated;
@@ -8,7 +9,7 @@ public abstract class Trap extends Placeable {
     int _ownerId;
 
     public Trap(int ownerId, String name, int size) {
-        super(name, size);
+        super(name, size, PlaceableType.TRAP);
         this._ownerId=ownerId;
         this._hasBeenUsed=false;
         this._hasBeenActivated=false;

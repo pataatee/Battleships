@@ -1,6 +1,7 @@
 package models.game.placement;
 
 import models.grid.Grid;
+import models.placeable.Placeable;
 import models.placeable.PlaceableFactory;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
@@ -15,7 +16,13 @@ public abstract class PlacementStrategy extends PlaceableFactory {
         this._player = player;
     }
 
-    public abstract void placeBoats(Boat[] boats);
+    public abstract void placeObjects(Placeable[] placeable, Grid grid);
 
-    public abstract void placeTraps(Trap[] traps);
+    public Grid getGrid() {
+        return this._grid;
+    }
+
+    public int getGridSize() {
+        return this._grid.getSize();
+    }
 }

@@ -1,6 +1,9 @@
 package models.grid;
 
 
+import models.game.placement.Orientation;
+import models.placeable.Placeable;
+
 import java.util.ArrayList;
 
 public class Grid {
@@ -88,4 +91,11 @@ public class Grid {
         }
     }
 
+    public Boolean placeObject(Placeable object, int x, int y, Orientation orientation) {
+        return false;
+    }
+
+    public int getSize() {
+        return this._size;
+    }
 }
