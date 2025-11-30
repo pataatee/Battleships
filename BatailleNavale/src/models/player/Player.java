@@ -3,8 +3,8 @@ package models.player;
 import models.grid.Grid;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
-import models.weapon.Effect;
-import models.weapon.Weapon;
+//import models.weapon.Effect;
+//import models.weapon.Weapon;
 
 import java.util.ArrayList;
 
@@ -48,27 +48,27 @@ public abstract class Player {
         }
     }
 
-    public void attack(int x, int y, Weapon weapon){
-        for (PlayerObserver playerObserver : _lstObserver) {
-            playerObserver.notifyShoot(x, y, weapon);
-        }
-    }
-
-    public void getAttacked(int x, int y, Weapon weapon){
-        Effect[] effect = weapon.use(x,y);
-        ShortResult[] res = new ShortResult[];
-        for (int i = 0; i <effect.length ; i++) {
-            if(effect[i].getDammage()>0){
-                _grid.hitTile(x,y);
-            }else{
-                continue;
-            }
-        }
-        for (PlayerObserver playerObserver : _lstObserver) {
-            playerObserver.notifyHit();
-        }
-    }
-
+//    public void attack(int x, int y, Weapon weapon){
+//        for (PlayerObserver playerObserver : _lstObserver) {
+//            playerObserver.notifyShoot(x, y, weapon);
+//        }
+//    }
+//
+//    public void getAttacked(int x, int y, Weapon weapon){
+//        Effect[] effect = weapon.use(x,y);
+//        ShortResult[] res = new ShortResult[];
+//        for (int i = 0; i <effect.length ; i++) {
+//            if(effect[i].getDammage()>0){
+//                _grid.hitTile(x,y);
+//            }else{
+//                continue;
+//            }
+//        }
+//        for (PlayerObserver playerObserver : _lstObserver) {
+//            playerObserver.notifyHit();
+//        }
+//    }
+//
 
 
     public void notifyDeath(){
