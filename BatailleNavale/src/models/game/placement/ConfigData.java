@@ -47,7 +47,7 @@ public class ConfigData {
     public boolean removeBoat(BoatType boatType) {
         for (int i = _boatList.size() - 1; i >= 0; i--) {
             Boat boat = _boatList.get(i);
-            if (boat.getBoatType() == boatType) {
+            if (boat.getType() == boatType) {
                 _boatList.remove(i);
                 _sumCell -= boat.getSize();
                 return true;
@@ -63,7 +63,7 @@ public class ConfigData {
     public int getBoatCountByType(BoatType boatType) {
         int count = 0;
         for (Boat boat : _boatList) {
-            if (boat.getBoatType() == boatType) {
+            if (boat.getType() == boatType) {
                 count++;
             }
         }
