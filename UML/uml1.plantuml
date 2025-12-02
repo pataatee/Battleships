@@ -41,7 +41,7 @@ package models {
 
         Game "1"o-->"* -observer" GameObserver
 
-        class Game implements .models.player.PlayerObserver{
+        class Game{
             -currentPlayerIndex:Integer
             -currentTurn:Integer
             +<<create>>Game()
@@ -141,8 +141,6 @@ package models {
         Grid "1" o--> "1..* -observer[]" GridObserver
 
          abstract class Tile{
-            -x:Integer
-            -y:Integer
             +<<create>>Tile()
             +setState(newState:State)
             +isFree():bool
@@ -191,7 +189,7 @@ package models {
     package placeable{
 
 
-    abstract class Placeable implements .models.grid.TileObserver {
+    abstract class Placeable {
         +<<create>>Placeable(name:String,position:Integer[2],size:Integer,rotation:bool)
         -size:Integer
         -name:String
@@ -323,16 +321,6 @@ package models {
             +reactToDeathOfBoat(live:Bool)
             +attack(x:Integer,y:Integer,weapon:Weapon)
             +getAttacked(x:Integer,y:Integer,weapon:Weapon)
-            +addObserver(player:PlayerObserver)
-            +notifyEndTurn()
-            +notifyDeath(death:bool)
-        }
-
-        Player "1"o-->"-lstObserver"PlayerObserver
-        interface PlayerObserver{
-            +<<create>>PlayerObserver()
-            +notifyShoot(x:Integer;y:Integer,weapon:Weapon)
-            +notifyHit(result:ShotResult)
             +notifyEndTurn()
             +notifyDeath(death:bool)
         }
