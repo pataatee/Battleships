@@ -1,5 +1,9 @@
 package models.placeable;
 
+import models.game.placement.Orientation;
+
+import java.util.ArrayList;
+
 public abstract class Placeable {
     private int _size;
     private String _name;
@@ -24,4 +28,25 @@ public abstract class Placeable {
     public PlaceableType getPlaceableType() {
         return this._type;
     }
+
+
+    public int[][] getPositionSiIlÉtaisPlacerLa(int x, int y, Orientation orientation){
+
+        int[][] tiles = new int[_size][2];
+        for(int i = 0;i<_size;i++){
+            int newX =x;
+            int newY =y;
+            if (orientation == Orientation.HORIZONTAL){
+                newX =i;
+            }
+            if (orientation == Orientation.VERTICAL){
+                newY =i;
+            }
+            tiles[i] = new int[]{newX,newY};
+        }
+        return  tiles;
+    }
+
+
+
 }

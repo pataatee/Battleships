@@ -1,16 +1,19 @@
 package models.grid;
 
+import models.placeable.EmptyObject;
+import models.placeable.Placeable;
+
 import java.util.ArrayList;
 
 
 public abstract class Tile {
 
-    private ArrayList<TileObserver> _observer;
     private TileState _currentState;
+    private Placeable _obj;
     public Tile(TileState def)
     {
-        _observer = new ArrayList<TileObserver>();
         _currentState = def;
+        _obj = new EmptyObject();
     }
 
 
@@ -40,25 +43,12 @@ public abstract class Tile {
      */
     public abstract void onHit();
 
-    /**
-     * Notify the observer that the state has change
-     * Side note : this function is only call when the state change after an OnHit event
-     */
-    private void notify_observer(){
-        for(TileObserver ob :_observer){
-            ob.update_tile(_currentState);
-        }
+    public void setObject(Placeable object){
+        _obj = object;
     }
 
-
-    /**
-     * Subscribe a new Observer to the list of observers
-     * @param ob
-     */
-    public void addObserver(TileObserver ob){
-        _observer.add(ob);
+    public Placeable getObject(){
+        return  _obj;
     }
-
-
 
 }
