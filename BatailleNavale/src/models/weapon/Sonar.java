@@ -1,4 +1,9 @@
 package models.weapon;
 
-public class Sonar {
+public class Sonar implements Weapon {
+
+    public Sonar() {
+
+    }
+
 }

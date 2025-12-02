@@ -1,4 +1,9 @@
 package models.weapon;
 
-public class Bomb {
+public class Bomb implements Weapon {
+
+    public Bomb() {
+
+    }
+
 }

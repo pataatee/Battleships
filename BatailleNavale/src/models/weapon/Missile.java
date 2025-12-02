@@ -1,4 +1,9 @@
 package models.weapon;
 
-public class Missile {
+public class Missile implements Weapon {
+
+    public Missile() {
+
+    }
+
 }
