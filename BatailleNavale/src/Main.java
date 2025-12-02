@@ -1,7 +1,8 @@
 import controllers.ConfigController;
 import models.game.placement.ConfigData;
 import models.grid.Grid;
-import views.ConfigScreen;
+import views.ConfigPanel;
+import views.MainView;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,8 +17,11 @@ public class Main {
         ConfigController configController = new ConfigController(conf);
 
 
-        ConfigScreen configScreen = new ConfigScreen(configController);
-        configScreen.setVisible(true);
+        ConfigPanel configScreen = new ConfigPanel(configController);
+        MainView main = new MainView();
+        main.setConfig(configScreen);
+        main.setVisible(true);
+        main.displayConfig();
 
 
     }
