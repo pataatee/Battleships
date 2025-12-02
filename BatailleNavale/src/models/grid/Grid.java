@@ -3,6 +3,7 @@ package models.grid;
 
 import models.game.placement.Orientation;
 import models.placeable.Placeable;
+import models.placeable.PlaceableType;
 
 import java.util.ArrayList;
 
@@ -49,7 +50,9 @@ public class Grid {
      * @param newState new state of the tile
      */
     public void changeStateOfTile(int x,int y , TileState newState){
-        _tilesMap[x][y].setState(newState);
+        if(x>=0 && x<_size && y>=0 && y<_size) {
+            _tilesMap[x][y].setState(newState);
+        }
     }
 
 
@@ -92,6 +95,22 @@ public class Grid {
     }
 
     public Boolean placeObject(Placeable object, int x, int y, Orientation orientation) {
+        int[][] positions = object.getPositionSiIlÉtaisPlacerLa(x,y,orientation);
+        for(int[] position :positions){
+            if(!isTileFree(position[0],position[1])){
+                return false;
+            }
+        }
+        for(int[] position :positions){
+            if(object.getPlaceableType()== PlaceableType.BOAT){
+                changeStateOfTile(position[0],position[1],TileState.BOAT);
+            }
+            if(object.getPlaceableType()== PlaceableType.TRAP){
+                changeStateOfTile(position[0],position[1],TileState.TRAP);
+
+            }
+            _tilesMap[x][y].setObject(object);
+        }
         return false;
     }
 
