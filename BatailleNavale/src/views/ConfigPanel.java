@@ -8,7 +8,7 @@ import models.placeable.boat.BoatType;
 import javax.swing.*;
 import java.awt.*;
 
-public class ConfigScreen extends JFrame {
+public class ConfigPanel extends JPanel {
 
     private final ConfigController controller;
     private final PlaceableFactory factory = new PlaceableFactory();
@@ -23,31 +23,23 @@ public class ConfigScreen extends JFrame {
 
     private int nbCruiser = 0, nbDestroyer = 0, nbSub = 0, nbTorpedo = 0,nbAircraft=0;
 
-    public ConfigScreen(ConfigController controller) {
-        super("Écran de configuration");
+    public ConfigPanel(ConfigController controller) {
         this.controller = controller;
 
         spinnerCruiser = new JSpinner(new SpinnerNumberModel(1,1,3,1));
-        spinnerDestroyer = new JSpinner(new SpinnerNumberModel(1,0,15,1));
+        spinnerDestroyer = new JSpinner(new SpinnerNumberModel(1,1,3,1));
         spinnerSub = new JSpinner(new SpinnerNumberModel(1,1,3,1));
         spinnerTorpedo = new JSpinner(new SpinnerNumberModel(1,1,3,1));
         spinnerAircraftCarrier = new JSpinner(new SpinnerNumberModel(1,1,3,1));
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 500);
-        setLocationRelativeTo(null);
-
+        this.setSize(600,600);
         initUI();
-        setVisible(true);
     }
 
     private void initUI() {
-        JPanel main = new JPanel(new BorderLayout(10, 10));
-        main.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
+        this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         JLabel title = new JLabel("Configuration de la partie", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 24));
-        main.add(title, BorderLayout.NORTH);
+        this.add(title, BorderLayout.NORTH);
 
         JPanel center = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -103,14 +95,13 @@ public class ConfigScreen extends JFrame {
         gbc.gridx = 0; gbc.gridy = y; gbc.gridwidth = 2;
         center.add(lblCasesUsed, gbc);
 
-        main.add(center, BorderLayout.CENTER);
+        this.add(center, BorderLayout.CENTER);
 
         JButton nextBtn = new JButton("Passer au placement");
         JPanel bottom = new JPanel();
         bottom.add(nextBtn);
-        main.add(bottom, BorderLayout.SOUTH);
+        this.add(bottom, BorderLayout.SOUTH);
 
-        setContentPane(main);
 
         spinnerCruiser.addChangeListener(e -> updateBoatCount(BoatType.CRUISER,(int)spinnerCruiser.getValue(), factory.createCruiser()));
         spinnerDestroyer.addChangeListener(e -> updateBoatCount(BoatType.DESTROYER,(int) spinnerDestroyer.getValue(), factory.createDestroyer()));
