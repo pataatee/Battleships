@@ -1,6 +1,7 @@
 package models.game.placement;
 
 import models.grid.Grid;
+import models.placeable.Placeable;
 import models.player.Player;
 
 public class Placement {
@@ -21,6 +22,10 @@ public class Placement {
         this._grids = new Grid[2];
         this._players = new Player[2];
         this._placementStrategy = strat;
+    }
+
+    public void placeObject(Placeable[] placeables, Grid grid) {
+        this._placementStrategy.placeObjects(placeables, grid);
     }
 
 
