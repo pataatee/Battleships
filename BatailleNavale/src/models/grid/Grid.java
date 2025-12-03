@@ -62,6 +62,9 @@ public class Grid {
      * @param y
      */
     public void hitTile(int x,int y){
+        if(!isTileFree(x,y)){
+            return;
+        }
         _tilesMap[x][y].onHit();
     }
 
