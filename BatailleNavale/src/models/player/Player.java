@@ -19,15 +19,17 @@ public abstract class Player {
     private int _pv;
     private Grid _grid;
     private Weapon _currentWeapon;
+    private PlayerType _type;
 
 
-    public Player(String name,int id,Grid grid){
+    public Player(String name,int id,Grid grid,PlayerType type){
         _id=id;
         _name=name;
         _grid= grid;
         _boatList = new ArrayList<Boat>();
         _trapList = new ArrayList<Trap>();
         _currentWeapon=new Missile();
+        _type = type;
     }
 
     public void addBoat(Boat boat){
@@ -46,15 +48,15 @@ public abstract class Player {
         }
     }
 
-    public abstract Attack attack(int x, int y, Weapon weapon);
+    public Attack createAttack(int x, int y) {
+        return new Attack(x, y, _currentWeapon);
+    }
 
     public void getAttacked(Attack attack){
         int x = attack.getX();
         int y =  attack.getY();
         Weapon weapon = attack.getWeapon();
         Effect[] effect = weapon.use(x,y);
-        System.out.println(weapon);
-        System.out.println(effect.length);
         ShotResult res = new ShotResult();
         for (Effect value : effect) {
             if (value.getEffectType() == EffectType.HIT) {
@@ -81,5 +83,11 @@ public abstract class Player {
     }
 
 
+    public boolean isAlive() {
+        return _isAlive;
+    }
 
+    public PlayerType getType() {
+        return _type;
+    }
 }
