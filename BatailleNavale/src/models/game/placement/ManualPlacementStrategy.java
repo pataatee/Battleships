@@ -8,8 +8,7 @@ import models.player.Player;
 
 public class ManualPlacementStrategy extends PlacementStrategy {
 
-    public ManualPlacementStrategy(Grid grid, Player player) {
-        super(grid, player);
+    public ManualPlacementStrategy() {
     }
 
     @Override

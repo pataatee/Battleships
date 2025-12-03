@@ -2,7 +2,7 @@ package models.placeable;
 
 public class EmptyObject extends Placeable{
     public EmptyObject() {
-        super("Empty Object", 1);
+        super("Empty Object", 1,PlaceableType.EMPTY);
     }
 
     @Override

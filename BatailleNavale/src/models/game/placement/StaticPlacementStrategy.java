@@ -14,8 +14,7 @@ import java.util.Optional;
 public class StaticPlacementStrategy extends PlacementStrategy {
 
 
-    public StaticPlacementStrategy(Grid grid, Player player) {
-        super(grid, player);
+    public StaticPlacementStrategy() {
     }
 
 

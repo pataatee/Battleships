@@ -7,20 +7,17 @@ import models.player.Player;
 public class Placement {
 
     private Grid[] _grids;
-    private Player[] _players;
     private PlacementStrategy _placementStrategy;
 
     //choose everything version
-    public Placement(Grid[] grids, Player[] players, PlacementStrategy strat) {
+    public Placement(Grid[] grids, PlacementStrategy strat) {
         this._grids = grids;
-        this._players = players;
         this._placementStrategy = strat;
     }
 
     // only choose strategy version
     public Placement(PlacementStrategy strat) {
         this._grids = new Grid[2];
-        this._players = new Player[2];
         this._placementStrategy = strat;
     }
 

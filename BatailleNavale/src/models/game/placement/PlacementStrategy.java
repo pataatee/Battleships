@@ -8,21 +8,10 @@ import models.placeable.trap.Trap;
 import models.player.Player;
 
 public abstract class PlacementStrategy extends PlaceableFactory {
-    private Grid _grid;
-    private Player _player;
 
-    public PlacementStrategy(Grid grid, Player player) {
-        this._grid = grid;
-        this._player = player;
+    public PlacementStrategy() {
     }
 
     public abstract void placeObjects(Placeable[] placeable, Grid grid);
 
-    public Grid getGrid() {
-        return this._grid;
-    }
-
-    public int getGridSize() {
-        return this._grid.getSize();
-    }
 }

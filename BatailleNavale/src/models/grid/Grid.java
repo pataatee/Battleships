@@ -111,7 +111,7 @@ public class Grid {
             }
             _tilesMap[x][y].setObject(object);
         }
-        return false;
+        return true;
     }
 
     public int getSize() {

@@ -6,15 +6,24 @@ import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
 import models.player.Player;
 
+import java.util.Random;
+
 public class RandomPlacementStrategy extends PlacementStrategy {
 
-    public RandomPlacementStrategy(Grid grid, Player player) {
-        super(grid, player);
+    public RandomPlacementStrategy() {
+
     }
 
     @Override
     public void placeObjects(Placeable[] placeable, Grid grid) {
+        Random rd = new Random();
 
+        for (Placeable pl : placeable) {
+            Boolean ok = false;
+            do {
+                ok = grid.placeObject(pl, rd.nextInt(grid.getSize()), rd.nextInt(grid.getSize()),Orientation.values()[rd.nextInt(Orientation.values().length)]);
+            } while (!ok);
+        }
     }
 
 }

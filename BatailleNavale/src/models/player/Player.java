@@ -54,20 +54,20 @@ public abstract class Player {
         }
     }
 
-    public void getAttacked(int x, int y, Weapon weapon){
-        Effect[] effect = weapon.use(x,y);
-        ShortResult[] res = new ShortResult[];
-        for (int i = 0; i <effect.length ; i++) {
-            if(effect[i].getDammage()>0){
-                _grid.hitTile(x,y);
-            }else{
-                continue;
-            }
-        }
-        for (PlayerObserver playerObserver : _lstObserver) {
-            playerObserver.notifyHit();
-        }
-    }
+//    public void getAttacked(int x, int y, Weapon weapon){
+//        Effect[] effect = weapon.use(x,y);
+//        ShortResult[] res = new ShortResult[];
+//        for (int i = 0; i <effect.length ; i++) {
+//            if(effect[i].getDammage()>0){
+//                _grid.hitTile(x,y);
+//            }else{
+//                continue;
+//            }
+//        }
+//        for (PlayerObserver playerObserver : _lstObserver) {
+//            playerObserver.notifyHit();
+//        }
+//    }
 
 
 
