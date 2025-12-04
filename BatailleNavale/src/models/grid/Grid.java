@@ -120,4 +120,8 @@ public class Grid {
     public int getSize() {
         return this._size;
     }
+    public TileState getTileTileState(int x,int y) {
+        if(x>=0 && x<_size && y>=0 && y<_size) {return TileState.EMPTY;}
+        return _tilesMap[x][y].getStateName();
+    }
 }
