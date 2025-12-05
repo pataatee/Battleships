@@ -166,19 +166,16 @@ package models {
         SeaTile *--> "-_state" SeaTileState
 
         IslandTile o--> "-_object" .models.placeable.Placeable
-         IslandTile -->"1 -weapon" .models.weapon.Weapon
+        IslandTile -->"1 -weapon" .models.weapon.Weapon
         IslandTile *--> "-_state" IslandTileState
 
-        enum SeaTileState {
+        enum TileState {
             EMPTY
             MISS
             BOAT
             BOATHIT
             TRAP
             TRAPHIT
-        }
-
-        enum IslandTileState {
             SEARCHED
             NOTSEARCHED
         }
