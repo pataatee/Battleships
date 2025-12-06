@@ -7,50 +7,52 @@ import java.awt.*;
 
 public class WeaponPanel extends JPanel {
 
-    private JButton _rdbSonar;
-    private JRadioButton _rdbMissile;
-    private JRadioButton _rdbBomb;
+    private WeaponButton _btnSonar;
+    private WeaponButton _btnMissile;
+    private WeaponButton _btnBomb;
 
     private JPanel _panel;
 
     private WeaponController _controller;
 
     public WeaponPanel(WeaponController controller) {
-        this._panel = new JPanel();
 
-        this._panel.setLayout(new FlowLayout());
-        this.add(_panel);
         this._controller = controller;
+        this.initWeaponPanel();
+        this.initWeaponButtons();
 
+    }
 
-        ImageIcon icon = new ImageIcon("a31-bataille-navale/BatailleNavale/assets/sonar.jpg");
-        Image img = icon.getImage();
-        Image newImg = img.getScaledInstance(30,30,Image.SCALE_DEFAULT);
-        ImageIcon newIcon = new ImageIcon(newImg);
+    public void initWeaponPanel() {
 
+        this._panel = new JPanel();
+        this._panel.setLayout(new FlowLayout());
+        this._panel.setPreferredSize(new Dimension(300, 300));
+        this.add(_panel);
 
-        _panel.setPreferredSize(new Dimension(300, 300));
-        this._rdbBomb = new JRadioButton("Bombe");
-        this._rdbMissile = new JRadioButton("Missile");
-        this._rdbSonar = new JButton(newIcon);
-        ButtonGroup group = new ButtonGroup();
-        group.add(_rdbBomb);
-        group.add(_rdbMissile);
-        group.add(_rdbSonar);
-        this._panel.add(_rdbBomb);
-        this._panel.add(_rdbMissile);
-        this._panel.add(_rdbSonar);
+    }
 
-        this._rdbSonar.addActionListener(act -> {
+    public void initWeaponButtons() {
+
+        this._btnBomb = new WeaponButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/bomb.png");
+        this._btnSonar = new WeaponButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/sonar.jpg");
+        this._btnMissile = new WeaponButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/missile.png");
+
+        this._panel.add(_btnBomb);
+        this._panel.add(_btnMissile);
+        this._panel.add(_btnSonar);
+
+        this._btnSonar.addActionListener(act -> {
             this._controller.setSonar();
         });
 
-        this._rdbBomb.addActionListener(act -> {
+        this._btnBomb.addActionListener(act -> {
             this._controller.setBomb();
         });
 
-        this._rdbMissile.addActionListener(act -> {
+        this._btnMissile.addActionListener(act -> {
             this._controller.setMissile();
         });
+
     }
 }
