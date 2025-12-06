@@ -5,6 +5,7 @@ import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
 import models.placeable.boat.BoatsObserver;
+import models.player.ShotResultType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,9 +45,10 @@ public class Grid implements BoatsObserver {
         }
     }
 
-    public void hitTile(int x,int y){
-        _tilesMap[x][y].onHit();
+    public ShotResultType hitTile(int x, int y){
+        ShotResultType res =  _tilesMap[x][y].onHit();
         notifyObserver(x,y,_tilesMap[x][y].getStateName());
+        return res;
     }
 
     public boolean isTileFree(int x ,int y){

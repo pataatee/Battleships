@@ -1,6 +1,7 @@
 package models.placeable;
 
 import models.game.placement.Orientation;
+import models.player.ShotResultType;
 
 public abstract class Placeable {
     private int _size;
@@ -13,7 +14,7 @@ public abstract class Placeable {
         this._type = type;
     }
 
-    public abstract void onHit();
+    public abstract ShotResultType onHit();
 
     public int getSize() {
         return this._size;

@@ -43,7 +43,8 @@ public class Game {
         if (_gameState != GameState.IN_GAME) return;
         Attack attack = attacker.createAttack(x, y);
         Player opponent = getOpponent();
-        opponent.getAttacked(attack);
+        ShotResultType[] res = opponent.getAttacked(attack);
+        _players[_currentPlayerIndex].handelShotResult(res);
 
         notifyAttackExecuted(attack, opponent);
 
@@ -62,7 +63,8 @@ public class Game {
 
         Attack attack = aiPlayer.generateAttack();
         Player opponent = getOpponent();
-        opponent.getAttacked(attack);
+        ShotResultType[] res = opponent.getAttacked(attack);
+        _players[_currentPlayerIndex].handelShotResult(res);
 
         notifyAttackExecuted(attack, opponent);
 

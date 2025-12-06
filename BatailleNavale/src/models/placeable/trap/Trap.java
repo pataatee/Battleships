@@ -2,6 +2,7 @@ package models.placeable.trap;
 
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
+import models.player.ShotResultType;
 
 public abstract class Trap extends Placeable {
     private Boolean _hasBeenActivated;
@@ -16,7 +17,7 @@ public abstract class Trap extends Placeable {
     }
 
     @Override
-    public abstract void onHit();
+    public abstract ShotResultType onHit();
 
     public void setUsed(Boolean used) {
         this._hasBeenUsed=used;

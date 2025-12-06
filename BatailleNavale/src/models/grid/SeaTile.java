@@ -1,16 +1,18 @@
 package models.grid;
 
+import models.player.ShotResultType;
+
 public class SeaTile extends Tile{
 
     public SeaTile(){
         super(TileState.EMPTY);
     }
     @Override
-    public void onHit() {
+    public ShotResultType onHit() {
         switch (this.getStateName()){
             case BOAT -> {
                 this.setState(TileState.BOATHIT);
-                getObject().onHit();
+                return getObject().onHit();
             }
             case EMPTY ->{
                 this.setState(TileState.MISS);
@@ -21,5 +23,7 @@ public class SeaTile extends Tile{
                 getObject().onHit();
             }
         }
+        return ShotResultType.MISS;
     }
+
 }
