@@ -5,6 +5,7 @@ public enum TileState {
     MISS,
     BOAT,
     BOATHIT,
+    BOATDEAD,
     TRAP,
     TRAPHIT,
     SEARCHED,

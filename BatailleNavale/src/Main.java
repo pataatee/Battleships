@@ -1,82 +1,70 @@
-import controllers.ConfigController;
-import models.game.placement.ConfigData;
+import controllers.GameController;
+import models.game.Game;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
 import models.game.placement.StaticPlacementStrategy;
 import models.grid.Grid;
 import models.placeable.Placeable;
 import models.placeable.PlaceableFactory;
-import views.ConfigPanel;
+import models.player.AIPlayer;
+import models.player.HumanPlayer;
+import models.player.Player;
+import views.GridPanel;
 import views.MainView;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
 
-//        Grid[] grids = new Grid[2];
-//        grids[0] = new Grid(5);
-//        grids[1] = new Grid(5);
-//
-//        ConfigData conf = new ConfigData(grids);
-//
-//        ConfigController configController = new ConfigController(conf);
-//
-//
-//        ConfigPanel configScreen = new ConfigPanel(configController);
-//        MainView main = new MainView(grids[0]);
-//        main.setConfig(configScreen);
-//        main.setVisible(true);
-//        main.displayConfig();
+        Grid[] g = new Grid[2];
+        g[0] = new Grid(10);
+        g[1] = new Grid(10);
 
-
-
-        Grid[] g = new Grid[1];
-        g[0]=new Grid(10);
         var p = new Placement(new StaticPlacementStrategy());
-
         var fac = new PlaceableFactory();
-        var boat = fac.createTorpedoBoat();
-        var boat2 = fac.createAircraftCarrier();
-        var boat3 = fac.createCruiser();
-        var boat4 = fac.createDestroyer();
-        var boat5 = fac.createSubmarine();
-        var boat6 = fac.createAircraftCarrier();
-        var boat7 = fac.createTorpedoBoat();
-        var boat8 = fac.createBlackHole(0);
-        var boat9 = fac.createTornado(0);
-        var boat10 = fac.createTorpedoBoat();
-        var pla = new Placeable[10];
 
-        pla[0]=boat;
-        pla[1]=boat2;
-        pla[2]=boat3;
-        pla[3]=boat4;
-        pla[4]=boat5;
-        pla[5]=boat6;
-        pla[6]=boat7;
-        pla[7]=boat8;
-        pla[8]=boat9;
-        pla[9]=boat10;
+        var pla1 = new Placeable[10];
+        pla1[0] = fac.createTorpedoBoat();
+        pla1[1] = fac.createAircraftCarrier();
+        pla1[2] = fac.createCruiser();
+        pla1[3] = fac.createDestroyer();
+        pla1[4] = fac.createSubmarine();
+        pla1[5] = fac.createAircraftCarrier();
+        pla1[6] = fac.createTorpedoBoat();
+        pla1[7] = fac.createBlackHole(0);
+        pla1[8] = fac.createTornado(0);
+        pla1[9] = fac.createTorpedoBoat();
 
+        var pla2 = new Placeable[10];
+        pla2[0] = fac.createTorpedoBoat();
+        pla2[1] = fac.createAircraftCarrier();
+        pla2[2] = fac.createCruiser();
+        pla2[3] = fac.createDestroyer();
+        pla2[4] = fac.createSubmarine();
+        pla2[5] = fac.createAircraftCarrier();
+        pla2[6] = fac.createTorpedoBoat();
+        pla2[7] = fac.createBlackHole(0);
+        pla2[8] = fac.createTornado(0);
+        pla2[9] = fac.createTorpedoBoat();
 
+        p.setPlacementStrategy(new RandomPlacementStrategy());
+        p.placeObject(pla1, g[0]);
+        p.placeObject(pla2, g[1]);
 
+        Player p2 = new AIPlayer("Ai", 1, g[0]);
+        Player p1 = new HumanPlayer("human", 0, g[1]);
+        Game game = new Game(p1, p2);
+        GameController gc = new GameController(game);
 
-        p.placeObject(pla,g[0]);
-        int count =0;
-        for (int i = 0; i < g[0].getSize(); i++) {
-            for (int j = 0; j < g[0].getSize(); j++) {
-                if(!g[0].isTileFree(i,j)){
-                    count++;
-                };
+        GridPanel[] panels = new GridPanel[2];
+        panels[0] = new GridPanel(gc, g[0], false);
+        panels[1] = new GridPanel(gc, g[1], true);
 
-            }
+        g[0].addObserver(panels[0]);
+        g[1].addObserver(panels[1]);
+        game.startGame();
 
-        }
-        System.out.println(count);
-
-        MainView main = new MainView(g[0]);
+        MainView main = new MainView(panels);
         main.setVisible(true);
-
-
     }
 }

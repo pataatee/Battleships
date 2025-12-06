@@ -15,22 +15,30 @@ public abstract class Boat extends Placeable {
         super(name,type.getSize(), PlaceableType.BOAT);
         this._isAlive=true;
         this._pvs=type.getSize();
-        this._boatObservers = new ArrayList<>();
+        this._boatObservers=new ArrayList<BoatsObserver>();
         this._type = type;
     }
 
-    public void notifyObserver(Boolean life) {
+    public void notifyObserver() {
         for (BoatsObserver obs : _boatObservers) {
-            obs.notifyOnDeath(life);
+            obs.reactOnDeath(this);
         }
     }
 
     public void onHit() {
         this._pvs--;
+        if(_pvs<=0){
+            notifyObserver();
+        }
+        System.out.println(_pvs);
     }
 
-    public BoatType getType(){
-        return _type;
+    public void addObserver(BoatsObserver ob) {
+        _boatObservers.add(ob);
+
     }
 
+    public BoatType getType() {
+        return this._type;
+    }
 }

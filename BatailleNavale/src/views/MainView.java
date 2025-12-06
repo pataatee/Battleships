@@ -12,15 +12,21 @@ public class MainView extends JFrame {
     private JPanel mainPanel;
     private ConfigPanel config;
 
-    public MainView(Grid grid) {
+    public MainView(GridPanel[] g) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 500);
         setLocationRelativeTo(null);
         mainPanel = new JPanel(new BorderLayout());
         add(mainPanel);
-//        mainPanel.add(new GridPanel(grid));
-        mainPanel.add(new WeaponPanel(new WeaponController(new AIPlayer("AI",1,new Grid(10)))));
+
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2));
+        centerPanel.add(g[0]);
+        centerPanel.add(g[1]);
+
+        mainPanel.add(centerPanel,BorderLayout.CENTER);
+
+        //mainPanel.add(new WeaponPanel(new WeaponController(new AIPlayer("AI",1,new Grid(10)))),BorderLayout.SOUTH);
     }
 
     public void setConfig(ConfigPanel configPanel) {
