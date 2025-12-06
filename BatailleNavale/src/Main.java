@@ -32,7 +32,7 @@ public class Main {
 
         Grid[] g = new Grid[1];
         g[0]=new Grid(10);
-        var p = new Placement(g,new StaticPlacementStrategy());
+        var p = new Placement(new StaticPlacementStrategy());
 
         var fac = new PlaceableFactory();
         var boat = fac.createTorpedoBoat();
