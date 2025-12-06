@@ -3,9 +3,6 @@ package models.grid;
 import models.placeable.EmptyObject;
 import models.placeable.Placeable;
 
-import java.util.ArrayList;
-
-
 public abstract class Tile {
 
     private TileState _currentState;

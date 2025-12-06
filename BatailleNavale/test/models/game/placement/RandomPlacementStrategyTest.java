@@ -13,7 +13,7 @@ class RandomPlacementStrategyTest {
     void placeObjects() {
         Grid[] g = new Grid[1];
         g[0]=new Grid(10);
-        var p = new  Placement(g,new RandomPlacementStrategy());
+        var p = new  Placement(new RandomPlacementStrategy());
         
         var fac = new PlaceableFactory();
         var boat = fac.createTorpedoBoat();
@@ -39,7 +39,7 @@ class RandomPlacementStrategyTest {
     void placeMoreObjects() {
         Grid[] g = new Grid[1];
         g[0]=new Grid(10);
-        var p = new  Placement(g,new RandomPlacementStrategy());
+        var p = new  Placement(new RandomPlacementStrategy());
 
         var fac = new PlaceableFactory();
         var boat = fac.createTorpedoBoat();

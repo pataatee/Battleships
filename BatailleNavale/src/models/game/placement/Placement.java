@@ -2,23 +2,18 @@ package models.game.placement;
 
 import models.grid.Grid;
 import models.placeable.Placeable;
-import models.player.Player;
 
 public class Placement {
 
-    private Grid[] _grids;
     private PlacementStrategy _placementStrategy;
 
     //choose everything version
-    public Placement(Grid[] grids, PlacementStrategy strat) {
-        this._grids = grids;
+    public Placement(PlacementStrategy strat) {
         this._placementStrategy = strat;
     }
 
-    // only choose strategy version
-    public Placement(PlacementStrategy strat) {
-        this._grids = new Grid[2];
-        this._placementStrategy = strat;
+    public void setPlacementStrategy(PlacementStrategy strat){
+        _placementStrategy=strat;
     }
 
     public void placeObject(Placeable[] placeables, Grid grid) {

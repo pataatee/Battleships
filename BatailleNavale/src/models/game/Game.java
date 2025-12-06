@@ -1,14 +1,11 @@
 package models.game;
 
-import models.player.Player;
-import models.player.AIPlayer;
-import models.player.Attack;
+import models.player.*;
 
 import java.util.ArrayList;
 import javax.swing.Timer;
 
-import static models.player.PlayerType.AI;
-import static models.player.PlayerType.HUMAN;
+import static models.player.PlayerType.*;
 
 public class Game {
     public static final int NB_PLAYER = 2;

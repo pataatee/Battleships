@@ -35,8 +35,11 @@ package models {
         }
 
         interface GameObserver{
-            +UpdateNewTurn(turn:Integer)
-            +UpdateCurrentPlayerIndex(index:Integer)
+            +updateNewTurn(turnNumber:Integer)
+            +updateCurrentPlayerIndex(playerIndex:Integer)
+            +updateAttackExecuted(attack:Attack,target:Player)
+            +updateGameState(state:GameState)
+            +updateGameOver(winner:Player)
         }
 
         Game "1"o-->"* -observer" GameObserver
@@ -44,17 +47,34 @@ package models {
         class Game{
             -currentPlayerIndex:Integer
             -currentTurn:Integer
-            +<<create>>Game()
+            +<<create>>Game(player1:Player,player2:Player)
             +setUpGameMode(gameMode:GameMode)
-            +setUpPlayer(player[2]:Player)
-            +playerAttack(x:Integer;y:Integer,weapon:Weapon)
+            +startGame()
+            +executeHumanAttack(x:Integer;y:Integer)
+            +executeAITurn()
+            +AITurnDelayer()
             +nextTurn()
-            +notifyObserverNewTurn()
-            +notifyObserverCurrentPlayerIndex()
+            +getOpponent():Player
+            +endGame(winner:Player)
+            +getCurrentPlayer():Player
+            +isHumanTurn():Boolean
+            +getGameMode():GameMode
+            +getCurrentTurn():Integer
+            +getCurrentPlayerIndex():Integer
+            +getGameState():GameState
+            +addObserver(observer:GameObserver)
+            +notifyNextTurn()
+            +notifyNextPlayer()
+            +notifyAttackExecuted()
+            +notifyGameStateChanged()
+            +notifyGameOver(winner:Player)
         }
+
         Game "1"-->"1 -gameState" GameState
+        Game "1"-->"1 -gameMode" GameMode
+        Game "1"-->"2 -players" Player
         Game "1" *-->"2 -playerList" .models.player.Player
-        Game ..> ConfigData:<<uses>>
+        Game ..>.models.player.PlayerType:<<use>>
 
         class ConfigData{
             -gridSize:Integer
@@ -69,47 +89,53 @@ package models {
         }
 
        class Placement{
-           +<<create>>Placement(grids:Grid[2],players:Player[2])
-           +applyPlacement(boats:Boat[])
+           +<<create>>Placement(strat:PlacementStrategy)
            +setPlacementStrategy(algo:PlacementStrategy)
-           +randomPlacement(boats:Boat[])
-           +staticPlacement(boats:Boat[])
-           +manualPlacement(boats:Boat[])
+           +placeObject(placeable:Placeable[*],grid:Grid)
+       }
+
+       enum Orientation{
+        HORIZONTAL,
+        VERTICAL
+       }
+
+       enum StaticPositions{
+        AIRCRAFTCARRIERDEFAULTPOS,
+        CRUISERDEFAULTPOS,
+        DESTROYERDEFAULTPOS,
+        SUBMARINEDEFAULTPOS,
+        TORPEDOBOATDEFAULTPOS,
+        BLACKHOLEDEFAULTPOS,
+        TORNADODEFAULTPOS
        }
 
 
        Placement "1" *--> "1 -placementStrategy" PlacementStrategy
-       Placement "1" o--> "2 -grids" .models.grid.Grid
-       Placement "1" o--> "2 -players" .models.player.Player
+       Placement "1" o--> "1" .models.grid.Grid:<<uses>>
 
        abstract class PlacementStrategy{
-            -grid:Grid
-            -player:Player
-            +<<create>>PlacementStrategy(grid:Grid,player:Player)
-            +{abstract}placeBoats(boats:Boat[])
-            +{abstract}placeTraps(traps:Trap[])
+            +<<create>>PlacementStrategy()
+            +{{abstract}}placeObjects(placeable:Placeable[*],grid:Grid)
        }
 
-       PlacementStrategy o--> "1" .models.grid.Grid
-       PlacementStrategy o--> "1" .models.player.Player
+       PlacementStrategy ..> .models.grid.Grid
+       PlacementStrategy o--> "1" .models.placeable.Placeable
+       PlacementStrategy ..>StaticPositions:<<use>>
+       PlacementStrategy ..>Orientation:<<uses>>
 
        class StaticPlacementStrategy extends PlacementStrategy{
-           +<<create>>StaticPlacementStrategy(grid:Grid,player:Player)
-           +placeBoats(boats:Boat[])
-           +placeTraps(traps:Trap[])
+           +<<create>>PlacementStrategy()
+           +placeObjects(placeable:Placeable[*],grid:Grid)
        }
 
        class RandomPlacementStrategy extends PlacementStrategy{
-           +<<create>>RandomPlacementStrategy(grid:Grid,player:Player)
-           +placeBoats(boats:Boat[])
-           +placeTraps(traps:Trap[])
+           +<<create>>PlacementStrategy()
+           +placeObjects(placeable:Placeable[*],grid:Grid)
        }
 
        class ManualPlacementStrategy extends PlacementStrategy{
-           +<<create>>ManualPlacementStrategy(grid:Grid,player:Player)
-           +placeBoats(boats:Boat[])
-           +placeTraps(traps:Trap[])
-           +waitForUserInput()
+          +<<create>>PlacementStrategy()
+          +placeObjects(placeable:Placeable[*],grid:Grid)
        }
 
 
@@ -125,26 +151,34 @@ package models {
             +<<create>>Grid(size:Integer)
             +setSize(size:Integer)
             +generateGrid()
-            +changeStateOfTile(x:Integer,y:Integer,state:State)
+            +changeStateOfTile(x:Integer,y:Integer,newState:TileState)
             +hitTile(x:Integer,y:Integer)
             +isTileFree(x:Integer;y:Integer):bool
-            +placeObject(placeable:Placeable):bool
+            +placeObject(placeable:Placeable,x:(x:Integer;y:Integer)):bool
             +addObserver(observer:GridObserver)
             +notifyObserver()
+            +getSize():Integer
+            +getTileTileState():TileState
         }
 
-        Grid ...> .models.placeable.Placeable:<<use>>;
+        Grid ...> .models.placeable.Placeable:<<use>>
+        Grid "1" o--> "1..* -observer[]" GridObserver
+        Grid "1" -->"1" .models.game.placement.Orientation
+        Grid "1" --> "1".models.placeable.Placeable
+        Grid "1" -->"1" .models.placeable.PlaceableType
 
         interface GridObserver {
             +updateTileState(x:Integer,y:Integer,state:State)
         }
-        Grid "1" o--> "1..* -observer[]" GridObserver
 
          abstract class Tile{
             +<<create>>Tile()
-            +setState(newState:State)
-            +isFree():bool
-            + {abstract} onHit()
+            +setState(state:TileState)
+            +isFree():Boolean
+            +getStateName():TileState
+            + {abstract}onHit()
+            +setObject(object:Placeable)
+            +getObject():Placeable
             -notify_observer()
         }
 

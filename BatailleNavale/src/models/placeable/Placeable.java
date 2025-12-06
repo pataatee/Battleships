@@ -2,8 +2,6 @@ package models.placeable;
 
 import models.game.placement.Orientation;
 
-import java.util.ArrayList;
-
 public abstract class Placeable {
     private int _size;
     private String _name;
@@ -30,7 +28,7 @@ public abstract class Placeable {
     }
 
 
-    public int[][] getPositionSiIlÉtaisPlacerLa(int x, int y, Orientation orientation){
+    public int[][] skibidiRizzler(int x, int y, Orientation orientation){
 
         int[][] tiles = new int[_size][2];
         for(int i = 0;i<_size;i++){

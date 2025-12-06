@@ -71,8 +71,8 @@ public class Grid {
 
     /**
      * Check if the tile x,y is free (TileState = Empty)
-     * @param x
-     * @param y
+     * @param x Position X
+     * @param y Ta mère
      * @return false if tile is not free or if the asked cord are of grid
      */
     public boolean isTileFree(int x ,int y){
@@ -98,7 +98,7 @@ public class Grid {
     }
 
     public Boolean placeObject(Placeable object, int x, int y, Orientation orientation) {
-        int[][] positions = object.getPositionSiIlÉtaisPlacerLa(x,y,orientation);
+        int[][] positions = object.skibidiRizzler(x,y,orientation);
         for(int[] position :positions){
             if(!isTileFree(position[0],position[1])){
                 return false;
