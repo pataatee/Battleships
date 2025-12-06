@@ -7,9 +7,9 @@ import java.awt.*;
 
 public class WeaponPanel extends JPanel {
 
-    private WeaponBox _btnSonar;
-    private WeaponBox _btnMissile;
-    private WeaponBox _btnBomb;
+    private ButtonBox _btnSonar;
+    private ButtonBox _btnMissile;
+    private ButtonBox _btnBomb;
 
     private JLayeredPane _panel;
 
@@ -34,23 +34,23 @@ public class WeaponPanel extends JPanel {
 
     public void initWeaponButtons() {
 
-        this._btnBomb = new WeaponBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/bomb.png"), "Bomb");
-        this._btnSonar = new WeaponBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/sonar.jpg"), "Sonar");
-        this._btnMissile = new WeaponBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/missile.png"), "Missile");
+        this._btnBomb = new ButtonBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/bomb.png"), "Bomb");
+        this._btnSonar = new ButtonBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/sonar.jpg"), "Sonar");
+        this._btnMissile = new ButtonBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/missile.png"), "Missile");
 
         this._panel.add(_btnBomb);
         this._panel.add(_btnMissile);
         this._panel.add(_btnSonar);
 
-        this._btnSonar.getBtnWeapon().addActionListener(act -> {
+        this._btnSonar.getBtnImg().addActionListener(act -> {
             this._controller.setSonar();
         });
 
-        this._btnBomb.getBtnWeapon().addActionListener(act -> {
+        this._btnBomb.getBtnImg().addActionListener(act -> {
             this._controller.setBomb();
         });
 
-        this._btnMissile.getBtnWeapon().addActionListener(act -> {
+        this._btnMissile.getBtnImg().addActionListener(act -> {
             this._controller.setMissile();
         });
 
