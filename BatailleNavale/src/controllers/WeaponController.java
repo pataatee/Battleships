@@ -1,6 +1,9 @@
 package controllers;
 
 import models.player.Player;
+import models.weapon.Bomb;
+import models.weapon.Missile;
+import models.weapon.Sonar;
 import models.weapon.Weapon;
 
 public class WeaponController {
@@ -10,7 +13,17 @@ public class WeaponController {
         this._player = player;
     }
 
-    public void setWeapon(Weapon weapon) {
-        this._player.setWeapon(weapon);
+
+    public void setBomb() {
+        this._player.setWeapon(new Bomb());
     }
+
+    public void setMissile() {
+        this._player.setWeapon(new Missile());
+    }
+
+    public void setSonar() {
+        this._player.setWeapon(new Sonar());
+    }
+
 }

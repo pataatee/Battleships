@@ -1,6 +1,8 @@
 package views;
 
+import controllers.WeaponController;
 import models.grid.Grid;
+import models.player.AIPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +19,8 @@ public class MainView extends JFrame {
         setLocationRelativeTo(null);
         mainPanel = new JPanel(new BorderLayout());
         add(mainPanel);
-        mainPanel.add(new GridPanel(grid));
+//        mainPanel.add(new GridPanel(grid));
+        mainPanel.add(new WeaponPanel(new WeaponController(new AIPlayer("AI",1,new Grid(10)))));
     }
 
     public void setConfig(ConfigPanel configPanel) {
