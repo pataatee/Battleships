@@ -1,6 +1,8 @@
 package models.player;
 
 import models.grid.Grid;
+import models.grid.TileState;
+import models.weapon.Missile;
 
 import java.util.Random;
 
@@ -12,6 +14,7 @@ public class AIPlayer extends Player {
         super(name, id, grid,PlayerType.AI);
         _gSize = grid.getSize();
         _random = new Random();
+        super.setWeapon(new Missile());
     }
 
     public int[] generateAttackCoordinates() {

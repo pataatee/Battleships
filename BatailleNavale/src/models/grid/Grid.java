@@ -1,38 +1,33 @@
 package models.grid;
 
-
 import models.game.placement.Orientation;
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
+import models.placeable.boat.Boat;
+import models.placeable.boat.BoatsObserver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Grid {
+public class Grid implements BoatsObserver {
 
     private int _size;
     private Tile[][] _tilesMap;
     private ArrayList<GridObserver> _observer;
+    private HashMap<Boat, ArrayList<int[]>> _boatPositions;
 
     public Grid(int size){
         _observer = new ArrayList<GridObserver>();
+        _boatPositions = new HashMap<Boat, ArrayList<int[]>>();
         _size = size;
         generateGrid();
-
     }
 
-    /**
-     * Set the grid size and regenerate it
-     * @param size
-     */
     public void setSize(int size){
         _size = size;
         generateGrid();
     }
 
-
-    /**
-     * Generate the grid with size: _size
-     */
     public void generateGrid(){
         _tilesMap = new Tile[_size][_size];
 
@@ -43,38 +38,17 @@ public class Grid {
         }
     }
 
-    /**
-     * Change the TileState of the Tile
-     * @param x position X of  the tile
-     * @param y position Y of the tile
-     * @param newState new state of the tile
-     */
     public void changeStateOfTile(int x,int y , TileState newState){
         if(x>=0 && x<_size && y>=0 && y<_size) {
             _tilesMap[x][y].setState(newState);
         }
     }
 
-
-    /**
-     * Trigger the event of hit on a tile
-     * @param x
-     * @param y
-     */
     public void hitTile(int x,int y){
-        if(!isTileFree(x,y)){
-            return;
-        }
         _tilesMap[x][y].onHit();
+        notifyObserver(x,y,_tilesMap[x][y].getStateName());
     }
 
-
-    /**
-     * Check if the tile x,y is free (TileState = Empty)
-     * @param x Position X
-     * @param y Ta mère
-     * @return false if tile is not free or if the asked cord are of grid
-     */
     public boolean isTileFree(int x ,int y){
         if(x>=0 && x<_size && y>=0 && y<_size) {
             return _tilesMap[x][y].isFree();
@@ -82,45 +56,63 @@ public class Grid {
         return false;
     }
 
-    /**
-     * Subscribe a new observer
-     * @param ob the new subscriber
-     */
     public void addObserver(GridObserver ob){
         _observer.add(ob);
     }
 
-
-    public void notifyObserver(Tile tile){
+    public void notifyObserver(int x, int y,TileState state){
         for(GridObserver ob : _observer){
-            continue;//to do later
+            ob.updateTileState(x,y,state);
         }
     }
 
     public Boolean placeObject(Placeable object, int x, int y, Orientation orientation) {
         int[][] positions = object.skibidiRizzler(x,y,orientation);
+
         for(int[] position :positions){
             if(!isTileFree(position[0],position[1])){
                 return false;
             }
         }
-        for(int[] position :positions){
-            if(object.getPlaceableType()== PlaceableType.BOAT){
-                changeStateOfTile(position[0],position[1],TileState.BOAT);
-            }
-            if(object.getPlaceableType()== PlaceableType.TRAP){
-                changeStateOfTile(position[0],position[1],TileState.TRAP);
 
+        if(object.getPlaceableType()== PlaceableType.BOAT){
+            ArrayList<int[]> boatPos = new ArrayList<int[]>();
+            Boat boat = (Boat)object;
+            boat.addObserver(this);
+
+            for(int[] position :positions){
+                changeStateOfTile(position[0],position[1],TileState.BOAT);
+                _tilesMap[position[0]][position[1]].setObject(object);
+                boatPos.add(new int[]{position[0], position[1]});
             }
-            _tilesMap[x][y].setObject(object);
+            _boatPositions.put(boat, boatPos);
         }
+        else if(object.getPlaceableType()== PlaceableType.TRAP){
+            for(int[] position :positions){
+                changeStateOfTile(position[0],position[1],TileState.TRAP);
+                _tilesMap[position[0]][position[1]].setObject(object);
+            }
+        }
+
         return true;
     }
 
     public int getSize() {
         return this._size;
     }
+
     public TileState getTileTileState(int x,int y) {
         return _tilesMap[x][y].getStateName();
+    }
+
+    @Override
+    public void reactOnDeath(Boat boat) {
+        ArrayList<int[]> positions = _boatPositions.get(boat);
+        if(positions != null){
+            for(int[] pos : positions){
+                changeStateOfTile(pos[0], pos[1], TileState.BOATDEAD);
+                notifyObserver(pos[0], pos[1], TileState.BOATDEAD);
+            }
+        }
     }
 }

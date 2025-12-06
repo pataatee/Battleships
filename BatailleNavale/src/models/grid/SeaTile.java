@@ -8,9 +8,18 @@ public class SeaTile extends Tile{
     @Override
     public void onHit() {
         switch (this.getStateName()){
-            case BOAT -> this.setState(TileState.BOATHIT);
-            case EMPTY -> this.setState(TileState.MISS);
+            case BOAT -> {
+                this.setState(TileState.BOATHIT);
+                getObject().onHit();
+            }
+            case EMPTY ->{
+                this.setState(TileState.MISS);
+                getObject().onHit();
+            }
+            case TRAP -> {
+                this.setState(TileState.TRAPHIT);
+                getObject().onHit();
+            }
         }
-        getObject().onHit();
     }
 }

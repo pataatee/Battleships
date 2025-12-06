@@ -1,7 +1,9 @@
 package models.player;
 
 import models.grid.Grid;
+import models.grid.TileState;
 import models.placeable.boat.Boat;
+import models.placeable.boat.BoatsObserver;
 import models.placeable.trap.Trap;
 import models.weapon.Effect;
 import models.weapon.EffectType;
@@ -10,7 +12,7 @@ import models.weapon.Weapon;
 
 import java.util.ArrayList;
 
-public abstract class Player {
+public abstract class Player{
     private int _id;
     private String _name;
     private boolean _isAlive=true;

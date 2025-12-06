@@ -37,13 +37,10 @@ public class Game {
 
     public void executeHumanAttack(int x, int y) {
         Player attacker = _players[_currentPlayerIndex];
-
         if (!isHumanTurn()){
             return;
         }
-
         if (_gameState != GameState.IN_GAME) return;
-
         Attack attack = attacker.createAttack(x, y);
         Player opponent = getOpponent();
         opponent.getAttacked(attack);
@@ -77,7 +74,7 @@ public class Game {
     }
 
     private void AITurnDelayer() {
-        Timer timer = new Timer(800, e -> executeAITurn());
+        Timer timer = new Timer(0, e -> executeAITurn());
         timer.setRepeats(false);
         timer.start();
     }
