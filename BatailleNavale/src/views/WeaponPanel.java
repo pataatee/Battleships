@@ -34,9 +34,9 @@ public class WeaponPanel extends JPanel {
 
     public void initWeaponButtons() {
 
-        this._btnBomb = new ButtonBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/bomb.png"), "Bomb");
-        this._btnSonar = new ButtonBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/sonar.jpg"), "Sonar");
-        this._btnMissile = new ButtonBox(new ImageButton(50, 50, "a31-bataille-navale/BatailleNavale/assets/missile.png"), "Missile");
+        this._btnBomb = new ButtonBox(new ImageButton(50, 50, getClass().getResource("/assets/bomb.png").getPath()), "Bomb");
+        this._btnSonar = new ButtonBox(new ImageButton(50, 50, getClass().getResource("/assets/sonar.jpg").getPath()), "Sonar");
+        this._btnMissile = new ButtonBox(new ImageButton(50, 50, getClass().getResource("/assets/missile.png").getPath()), "Missile");
 
         this._panel.add(_btnBomb);
         this._panel.add(_btnMissile);
