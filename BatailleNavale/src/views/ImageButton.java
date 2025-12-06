@@ -3,14 +3,14 @@ package views;
 import javax.swing.*;
 import java.awt.*;
 
-public class WeaponButton extends JButton {
+public class ImageButton extends JButton {
     // to create the weapon buttons w images etc
 
     private int _btnWidth;
     private int _btnHeight;
     private String _imgPath;
 
-    public WeaponButton(int width, int height, String path) {
+    public ImageButton(int width, int height, String path) {
 
         this._btnHeight = height;
         this._btnWidth = width;
@@ -31,5 +31,6 @@ public class WeaponButton extends JButton {
         // adds the icon to the button :D
         this.setIcon(newIcon);
     }
+
 
 }
