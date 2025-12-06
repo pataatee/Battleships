@@ -2,6 +2,7 @@ package models.placeable.boat;
 
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
+import models.player.ShotResultType;
 
 import java.util.ArrayList;
 
@@ -25,12 +26,13 @@ public abstract class Boat extends Placeable {
         }
     }
 
-    public void onHit() {
+    public ShotResultType onHit() {
         this._pvs--;
         if(_pvs<=0){
             notifyObserver();
+            return ShotResultType.SUNK;
         }
-        System.out.println(_pvs);
+        return ShotResultType.HIT;
     }
 
     public void addObserver(BoatsObserver ob) {

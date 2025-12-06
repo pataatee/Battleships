@@ -1,6 +1,8 @@
 package models.placeable.trap;
 
+import models.grid.SeaTile;
 import models.grid.Tile;
+import models.player.ShotResultType;
 
 public class BlackHole extends Trap {
 
@@ -9,9 +11,10 @@ public class BlackHole extends Trap {
     }
 
     @Override
-    public void onHit() {
+    public ShotResultType onHit() {
         //TODO: code BlackHole's effect
         super.setActivated(true);
+        return ShotResultType.BLACKHOLE;
     }
 
     public void updateTile(Tile tile) {

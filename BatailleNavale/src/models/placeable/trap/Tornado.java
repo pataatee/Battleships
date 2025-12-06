@@ -1,6 +1,7 @@
 package models.placeable.trap;
 
 import models.grid.Tile;
+import models.player.ShotResultType;
 
 public class Tornado extends Trap {
 
@@ -9,9 +10,10 @@ public class Tornado extends Trap {
     }
 
     @Override
-    public void onHit() {
+    public ShotResultType onHit() {
         //TODO: code tornado's effect
         super.setActivated(true);
+        return ShotResultType.TORNAD;
     }
 
     public void updateTile(Tile tile) {
