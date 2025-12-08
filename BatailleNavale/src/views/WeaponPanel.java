@@ -38,20 +38,32 @@ public class WeaponPanel extends JPanel {
         this._btnSonar = new ButtonBox(new ImageButton(50, 50, getClass().getResource("/assets/sonar.jpg").getPath()), "Sonar");
         this._btnMissile = new ButtonBox(new ImageButton(50, 50, getClass().getResource("/assets/missile.png").getPath()), "Missile");
 
+        //this._btnMissile.setActivatedLabel(true);
+
+
         this._panel.add(_btnBomb);
         this._panel.add(_btnMissile);
         this._panel.add(_btnSonar);
 
         this._btnSonar.getBtnImg().addActionListener(act -> {
             this._controller.setSonar();
+            this._btnMissile.setActivatedLabel(false);
+            this._btnSonar.setActivatedLabel(true);
+            this._btnBomb.setActivatedLabel(false);
         });
 
         this._btnBomb.getBtnImg().addActionListener(act -> {
             this._controller.setBomb();
+            this._btnMissile.setActivatedLabel(false);
+            this._btnSonar.setActivatedLabel(false);
+            this._btnBomb.setActivatedLabel(true);
         });
 
         this._btnMissile.getBtnImg().addActionListener(act -> {
             this._controller.setMissile();
+            this._btnMissile.setActivatedLabel(true);
+            this._btnSonar.setActivatedLabel(false);
+            this._btnBomb.setActivatedLabel(false);
         });
 
     }
