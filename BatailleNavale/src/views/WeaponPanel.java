@@ -47,23 +47,38 @@ public class WeaponPanel extends JPanel {
 
         this._btnSonar.getBtnImg().addActionListener(act -> {
             this._controller.setSonar();
-            this._btnMissile.setActivatedLabel(false);
+            /*this._btnMissile.setActivatedLabel(false);
             this._btnSonar.setActivatedLabel(true);
-            this._btnBomb.setActivatedLabel(false);
+            this._btnBomb.setActivatedLabel(false);*/
+
+            //this._btnMissile.setSelectedLayer(false);
+            this._btnSonar.setSelectedLayer();
+            this._btnMissile.setNotSelectedLayer();
+            this._btnBomb.setNotSelectedLayer();
+            //this._btnBomb.setSelectedLayer(false);
+
         });
 
         this._btnBomb.getBtnImg().addActionListener(act -> {
             this._controller.setBomb();
-            this._btnMissile.setActivatedLabel(false);
+            /*this._btnMissile.setActivatedLabel(false);
             this._btnSonar.setActivatedLabel(false);
-            this._btnBomb.setActivatedLabel(true);
+            this._btnBomb.setActivatedLabel(true);*/
+
+            this._btnMissile.setNotSelectedLayer();
+            this._btnSonar.setNotSelectedLayer();
+            this._btnBomb.setSelectedLayer();
         });
 
         this._btnMissile.getBtnImg().addActionListener(act -> {
             this._controller.setMissile();
-            this._btnMissile.setActivatedLabel(true);
+            /*this._btnMissile.setActivatedLabel(true);
             this._btnSonar.setActivatedLabel(false);
-            this._btnBomb.setActivatedLabel(false);
+            this._btnBomb.setActivatedLabel(false);*/
+
+            this._btnMissile.setSelectedLayer();
+            this._btnSonar.setNotSelectedLayer();
+            this._btnBomb.setNotSelectedLayer();
         });
 
     }
