@@ -26,7 +26,7 @@ public class MainView extends JFrame {
 
         mainPanel.add(centerPanel,BorderLayout.CENTER);
 
-        //mainPanel.add(new WeaponPanel(new WeaponController(new AIPlayer("AI",1,new Grid(10)))),BorderLayout.SOUTH);
+        mainPanel.add(new WeaponPanel(new WeaponController(new AIPlayer("AI",1,new Grid(10)))),BorderLayout.SOUTH);
     }
 
     public void setConfig(ConfigPanel configPanel) {
