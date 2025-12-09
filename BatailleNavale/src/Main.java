@@ -9,6 +9,7 @@ import models.placeable.PlaceableFactory;
 import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
+import models.weapon.Bomb;
 import views.GridPanel;
 import views.MainView;
 
@@ -53,6 +54,7 @@ public class Main {
 
         Player p2 = new AIPlayer("Ai", 1, g[0]);
         Player p1 = new HumanPlayer("human", 0, g[1]);
+        p1.setWeapon(new Bomb());
         Game game = new Game(p1, p2);
         GameController gc = new GameController(game);
 

@@ -15,7 +15,7 @@ public class MainView extends JFrame {
     public MainView(GridPanel[] g) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 500);
+        setSize(900, 900);
         setLocationRelativeTo(null);
         mainPanel = new JPanel(new BorderLayout());
         add(mainPanel);

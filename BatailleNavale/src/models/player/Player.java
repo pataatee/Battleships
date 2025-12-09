@@ -62,12 +62,11 @@ public abstract class Player{
         for (Effect value : effect) {
             if (value.getEffectType() == EffectType.HIT) {
                 res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
-                if(res[i] == ShotResultType.SUNK){
-
-                }
+                System.out.println(res[i]);
             } else {
                 continue;
             }
+            i++;
         }
         return res;
     }
@@ -85,7 +84,7 @@ public abstract class Player{
                     System.out.println("Add to log Sunk");
                 }
                 case TORNAD -> {
-                    System.out.println("Add to log Tornaded");
+                    System.out.println("Add to log Tornadoed");
                 }
                 case BLACKHOLE -> {
                     System.out.println("Add to log BlackHole");
