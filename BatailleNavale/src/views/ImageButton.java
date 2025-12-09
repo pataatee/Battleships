@@ -15,7 +15,9 @@ public class ImageButton extends JButton {
         this._btnHeight = height;
         this._btnWidth = width;
         this._imgPath = path;
-
+        this.setContentAreaFilled(false);
+        this.setFocusPainted(false);
+        this.setRolloverEnabled(false);
         this.initializeButton();
 
     }
