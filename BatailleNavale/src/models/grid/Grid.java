@@ -46,6 +46,9 @@ public class Grid implements BoatsObserver {
     }
 
     public ShotResultType hitTile(int x, int y){
+        if(x<0||x>=_size||y<0||y>=_size){
+            return ShotResultType.MISS;
+        }
         ShotResultType res =  _tilesMap[x][y].onHit();
         notifyObserver(x,y,_tilesMap[x][y].getStateName());
         return res;
