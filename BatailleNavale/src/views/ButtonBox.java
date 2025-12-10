@@ -49,21 +49,13 @@ public class ButtonBox extends JPanel {
 
     public void setSelectedLayer() {
         this._pan.setVisible(true);
-        this._pan.setBackground(new Color(0x66E61313, true));
-        this.setBackground(new Color(255,255,255));
-        this._desc.setBackground(new Color(255,255,255));
-        this._btnImg.setBackground(new Color(255,255,255));
-        this.setForeground(new Color(255,255,255));
+        this._pan.setBackground(new Color(0x67065A61, true));
         this.updateUI();
     }
 
     public void setNotSelectedLayer() {
         this._pan.setVisible(true);
-        this._pan.setBackground(new Color(0x86B5AEAE, true));
-        this.setBackground(new Color(255,255,255));
-        this._desc.setBackground(new Color(255,255,255));
-        this._btnImg.setBackground(new Color(255,255,255));
-        this.setForeground(new Color(255,255,255));
+        this._pan.setBackground(new Color(0x86E3D8D8, true));
         this.updateUI();
     }
 
