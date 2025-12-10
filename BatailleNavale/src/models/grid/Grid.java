@@ -4,22 +4,18 @@ import models.game.placement.Orientation;
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
-import models.placeable.boat.BoatsObserver;
 import models.player.ShotResultType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class Grid implements BoatsObserver {
+public class Grid{
 
     private int _size;
     private Tile[][] _tilesMap;
     private ArrayList<GridObserver> _observer;
-    private HashMap<Boat, ArrayList<int[]>> _boatPositions;
 
     public Grid(int size){
         _observer = new ArrayList<GridObserver>();
-        _boatPositions = new HashMap<Boat, ArrayList<int[]>>();
         _size = size;
         generateGrid();
     }
@@ -42,6 +38,7 @@ public class Grid implements BoatsObserver {
     public void changeStateOfTile(int x,int y , TileState newState){
         if(x>=0 && x<_size && y>=0 && y<_size) {
             _tilesMap[x][y].setState(newState);
+            notifyObserver(x,y,_tilesMap[x][y].getStateName());
         }
     }
 
@@ -81,16 +78,12 @@ public class Grid implements BoatsObserver {
         }
 
         if(object.getPlaceableType()== PlaceableType.BOAT){
-            ArrayList<int[]> boatPos = new ArrayList<int[]>();
             Boat boat = (Boat)object;
-            boat.addObserver(this);
-
             for(int[] position :positions){
                 changeStateOfTile(position[0],position[1],TileState.BOAT);
                 _tilesMap[position[0]][position[1]].setObject(object);
-                boatPos.add(new int[]{position[0], position[1]});
+                boat.addPosition(new int[]{position[0], position[1]});
             }
-            _boatPositions.put(boat, boatPos);
         }
         else if(object.getPlaceableType()== PlaceableType.TRAP){
             for(int[] position :positions){
@@ -110,14 +103,4 @@ public class Grid implements BoatsObserver {
         return _tilesMap[x][y].getStateName();
     }
 
-    @Override
-    public void reactOnDeath(Boat boat) {
-        ArrayList<int[]> positions = _boatPositions.get(boat);
-        if(positions != null){
-            for(int[] pos : positions){
-                changeStateOfTile(pos[0], pos[1], TileState.BOATDEAD);
-                notifyObserver(pos[0], pos[1], TileState.BOATDEAD);
-            }
-        }
-    }
 }

@@ -1,6 +1,9 @@
 package models.player;
 
 import models.grid.Grid;
+import models.grid.TileState;
+import models.placeable.Placeable;
+import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
 import models.weapon.Effect;
@@ -22,6 +25,7 @@ public abstract class Player{
     private PlayerType _type;
 
 
+
     public Player(String name,int id,Grid grid,PlayerType type){
         _id=id;
         _name=name;
@@ -40,13 +44,6 @@ public abstract class Player{
         _trapList.add(trap);
 
     };
-    public void reactToDeathOfBoat(boolean live){
-        _pv--;
-        if(_pv<=0){
-            _isAlive=false;
-            notifyDeath();
-        }
-    }
 
     public Attack createAttack(int x, int y) {
         return new Attack(x, y, _currentWeapon);
@@ -62,7 +59,9 @@ public abstract class Player{
         for (Effect value : effect) {
             if (value.getEffectType() == EffectType.HIT) {
                 res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
-                System.out.println(res[i]);
+                if(res[i]==ShotResultType.SUNK){
+                    reactToSunk();
+                }
             } else {
                 continue;
             }
@@ -115,5 +114,32 @@ public abstract class Player{
 
     public PlayerType getType() {
         return _type;
+    }
+
+
+    public void reactToSunk(){
+        for (Boat boat : _boatList) {
+            System.out.println(boat);
+            if (boat.isDead()) {
+                int[][] positions = boat.getPosition();
+                for (int[] pos : positions) {
+                    _grid.changeStateOfTile(pos[0],pos[1], TileState.BOATDEAD);
+                }
+            }
+        }
+    }
+
+
+    public void givePlaceable(Placeable[] placeables) {
+        for(Placeable pl : placeables){
+            if(pl.getPlaceableType()== PlaceableType.BOAT){
+                this.addBoat((Boat) pl);
+            }
+            if(pl.getPlaceableType()== PlaceableType.TRAP){
+                this.addTrap((Trap) pl);
+            }
+
+        }
+
     }
 }
