@@ -2,6 +2,8 @@ package models.player;
 
 import models.grid.Grid;
 import models.grid.TileState;
+import models.placeable.Placeable;
+import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
 import models.weapon.Effect;

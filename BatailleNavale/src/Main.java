@@ -1,4 +1,5 @@
 import controllers.GameController;
+import controllers.WeaponController;
 import models.game.Game;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
@@ -12,6 +13,7 @@ import models.player.Player;
 import models.weapon.Bomb;
 import views.GridPanel;
 import views.MainView;
+import views.WeaponPanel;
 
 public class Main {
     public static void main(String[] args) {
@@ -67,9 +69,9 @@ public class Main {
         g[0].addObserver(panels[0]);
         g[1].addObserver(panels[1]);
         game.startGame();
+        WeaponController wc = new WeaponController(p1);
 
-
-        MainView main = new MainView(panels);
+        MainView main = new MainView(panels,wc);
         game.addObserver(main);
         main.setVisible(true);
     }
