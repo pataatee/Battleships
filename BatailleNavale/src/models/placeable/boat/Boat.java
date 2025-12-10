@@ -4,43 +4,46 @@ import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.player.ShotResultType;
 
-import java.util.ArrayList;
-
 public abstract class Boat extends Placeable {
-    private Boolean _isAlive;
+    private Boolean _isDead;
     private int _pvs;
-    private ArrayList<BoatsObserver> _boatObservers;
+    private int[][] _position;
     private BoatType _type;
+    private int _positionIndex;
 
     public Boat(String name,BoatType type) {
         super(name,type.getSize(), PlaceableType.BOAT);
-        this._isAlive=true;
+        this._isDead =false;
         this._pvs=type.getSize();
-        this._boatObservers=new ArrayList<BoatsObserver>();
         this._type = type;
+        _position = new int[type.getSize()][2];
     }
 
-    public void notifyObserver() {
-        for (BoatsObserver obs : _boatObservers) {
-            obs.reactOnDeath(this);
-        }
-    }
 
     public ShotResultType onHit() {
         this._pvs--;
         if(_pvs<=0){
-            notifyObserver();
+            _isDead =true;
             return ShotResultType.SUNK;
         }
         return ShotResultType.HIT;
     }
 
-    public void addObserver(BoatsObserver ob) {
-        _boatObservers.add(ob);
+    public void addPosition(int[] pos){
+        _position[_positionIndex] = pos;
+        _positionIndex++;
+    }
 
+    public int[][] getPosition(){
+        return _position;
     }
 
     public BoatType getType() {
         return this._type;
+    }
+
+
+    public boolean isDead(){
+        return _isDead;
     }
 }
