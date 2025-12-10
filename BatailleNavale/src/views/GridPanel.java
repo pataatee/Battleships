@@ -7,8 +7,6 @@ import models.grid.TileState;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class GridPanel extends JPanel implements GridObserver {
 
@@ -119,11 +117,9 @@ public class GridPanel extends JPanel implements GridObserver {
         int size = _grid.getSize();
         int index = x * size + y;
         Component comp = gridContainer.getComponent(index);
-        if (comp instanceof JLabel) {
-            JLabel cell = (JLabel) comp;
-            cell.setBackground(getTileColor(x, y));
-            cell.repaint();
-        }
+        JLabel cell = (JLabel) comp;
+        cell.setBackground(getTileColor(x, y));
+        cell.repaint();
         gridContainer.revalidate();
         gridContainer.repaint();
     }

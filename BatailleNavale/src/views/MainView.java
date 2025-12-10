@@ -3,8 +3,6 @@ package views;
 import controllers.WeaponController;
 import models.game.GameObserver;
 import models.game.GameState;
-import models.grid.Grid;
-import models.player.AIPlayer;
 import models.player.Attack;
 import models.player.Player;
 
@@ -13,24 +11,24 @@ import java.awt.*;
 
 public class MainView extends JFrame implements GameObserver {
 
-    private JPanel mainPanel;
+    private final JPanel _mainPanel;
     private ConfigPanel config;
 
-    public MainView(GridPanel[] g) {
+    public MainView(GridPanel[] g,WeaponController wc) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(900, 900);
         setLocationRelativeTo(null);
-        mainPanel = new JPanel(new BorderLayout());
-        add(mainPanel);
+        _mainPanel = new JPanel(new BorderLayout());
+        add(_mainPanel);
 
         JPanel centerPanel = new JPanel(new GridLayout(1, 2));
         centerPanel.add(g[0]);
         centerPanel.add(g[1]);
 
-        mainPanel.add(centerPanel,BorderLayout.CENTER);
+        _mainPanel.add(centerPanel,BorderLayout.CENTER);
 
-        mainPanel.add(new WeaponPanel(new WeaponController(new AIPlayer("AI",1,new Grid(10)))),BorderLayout.SOUTH);
+        _mainPanel.add(new WeaponPanel(wc),BorderLayout.SOUTH);
     }
 
     public void setConfig(ConfigPanel configPanel) {
@@ -81,8 +79,8 @@ public class MainView extends JFrame implements GameObserver {
 
     @Override
     public void updateGameOver(Player winner) {
-        mainPanel.removeAll();
-        mainPanel.updateUI();
-        mainPanel.add(new EndScreenPanel(winner),BorderLayout.CENTER);
+        _mainPanel.removeAll();
+        _mainPanel.updateUI();
+        _mainPanel.add(new EndScreenPanel(winner),BorderLayout.CENTER);
     }
 }
