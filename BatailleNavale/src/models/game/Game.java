@@ -95,6 +95,7 @@ public class Game {
     private void endGame(Player winner) {
         _gameState = GameState.ENDGAME;
         notifyGameOver(winner);
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
     }
 
     public Player getCurrentPlayer() {
@@ -152,6 +153,7 @@ public class Game {
     private void notifyGameOver(Player winner) {
         for (GameObserver ob : _observers) {
             ob.updateGameOver(winner);
+            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbb");
         }
     }
 }

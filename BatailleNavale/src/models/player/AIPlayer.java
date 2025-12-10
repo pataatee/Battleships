@@ -26,8 +26,4 @@ public class AIPlayer extends Player {
         return createAttack(coords[0], coords[1]);
     }
 
-    @Override
-    public void notifyDeath() {
-        System.out.println("Ai est morte");
-    }
 }
