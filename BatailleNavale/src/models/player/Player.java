@@ -19,7 +19,6 @@ public abstract class Player{
     private boolean _isAlive=true;
     private ArrayList<Boat> _boatList;
     private ArrayList<Trap> _trapList;
-    private int _pv;
     private Grid _grid;
     private Weapon _currentWeapon;
     private PlayerType _type;
@@ -37,7 +36,6 @@ public abstract class Player{
     }
 
     public void addBoat(Boat boat){
-        _pv++;
         _boatList.add(boat);
     };
     public void addTrap(Trap trap){
@@ -92,13 +90,6 @@ public abstract class Player{
         }
     }
 
-
-
-    public void notifyDeath(){
-
-    }
-
-
     public void setWeapon(Weapon weapon){
         _currentWeapon = weapon;
     }
@@ -118,19 +109,23 @@ public abstract class Player{
 
 
     public void reactToSunk(){
+        int i =0;
         for (Boat boat : _boatList) {
-            System.out.println(boat);
             if (boat.isDead()) {
+                i++;
                 int[][] positions = boat.getPosition();
                 for (int[] pos : positions) {
                     _grid.changeStateOfTile(pos[0],pos[1], TileState.BOATDEAD);
                 }
             }
         }
+        if(i==_boatList.size()){
+            _isAlive=false;
+        }
     }
 
 
-    public void givePlaceable(Placeable[] placeables) {
+    public void addPlaceable(Placeable[] placeables) {
         for(Placeable pl : placeables){
             if(pl.getPlaceableType()== PlaceableType.BOAT){
                 this.addBoat((Boat) pl);

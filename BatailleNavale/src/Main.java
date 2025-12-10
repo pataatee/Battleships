@@ -6,8 +6,6 @@ import models.game.placement.StaticPlacementStrategy;
 import models.grid.Grid;
 import models.placeable.Placeable;
 import models.placeable.PlaceableFactory;
-import models.placeable.PlaceableType;
-import models.placeable.boat.Boat;
 import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
@@ -57,8 +55,8 @@ public class Main {
         Player p2 = new AIPlayer("Ai", 1, g[0]);
         Player p1 = new HumanPlayer("human", 0, g[1]);
         p1.setWeapon(new Bomb());
-        p2.givePlaceable(pla1);
-        p1.givePlaceable(pla2);
+        p2.addPlaceable(pla1);
+        p1.addPlaceable(pla2);
         Game game = new Game(p1, p2);
         GameController gc = new GameController(game);
 
@@ -70,7 +68,9 @@ public class Main {
         g[1].addObserver(panels[1]);
         game.startGame();
 
+
         MainView main = new MainView(panels);
+        game.addObserver(main);
         main.setVisible(true);
     }
 }
