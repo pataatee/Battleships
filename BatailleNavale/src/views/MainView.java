@@ -17,7 +17,7 @@ public class MainView extends JFrame implements GameObserver {
     public MainView(GridPanel[] g,WeaponController wc) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(900, 900);
+        setSize(600, 600);
         setLocationRelativeTo(null);
         _mainPanel = new JPanel(new BorderLayout());
         add(_mainPanel);
