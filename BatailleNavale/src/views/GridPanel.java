@@ -164,6 +164,8 @@ public class GridPanel extends JPanel implements GridObserver {
                 case TRAPHIT -> { return Color.YELLOW ;}
                 case SEARCHED -> { return Color.DARK_GRAY ;}
                 case NOTSEARCHED -> { return Color.MAGENTA; }
+                case ISLAND -> {return  Color.yellow;}
+                case ISLANDHIT -> {return  Color.BLUE;}
             }
         }
         else {
@@ -172,6 +174,8 @@ public class GridPanel extends JPanel implements GridObserver {
                 case BOATHIT -> { return Color.RED; }
                 case TRAPHIT -> { return Color.ORANGE; }
                 case BOATDEAD -> { return Color.BLACK; }
+                case ISLAND -> {return  Color.yellow;}
+                case ISLANDHIT -> {return  Color.BLUE;}
                 default -> { return Color.CYAN; }
             }
         }

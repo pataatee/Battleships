@@ -15,7 +15,7 @@ class TileTest {
     @Test
     void onHit() {
         var t = new SeaTile();
-        t.onHit();
+        t.onHit(0,0);
         assertSame(TileState.MISS, t.getStateName());
     }
 }

@@ -9,5 +9,7 @@ public enum TileState {
     TRAP,
     TRAPHIT,
     SEARCHED,
-    NOTSEARCHED
+    NOTSEARCHED,
+    ISLAND,
+    ISLANDHIT
 }

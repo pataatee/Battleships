@@ -21,6 +21,7 @@ public abstract class Player{
     private ArrayList<Trap> _trapList;
     private Grid _grid;
     private Weapon _currentWeapon;
+    private ArrayList<Weapon> _WeaponList;
     private PlayerType _type;
 
 
@@ -32,6 +33,7 @@ public abstract class Player{
         _boatList = new ArrayList<Boat>();
         _trapList = new ArrayList<Trap>();
         _currentWeapon=new Missile();
+        _WeaponList = new ArrayList<>();
         _type = type;
     }
 
@@ -47,17 +49,17 @@ public abstract class Player{
         return new Attack(x, y, _currentWeapon);
     }
 
-    public ShotResultType[] getAttacked(Attack attack){
+    public ShotResult[] getAttacked(Attack attack){
         int x = attack.getX();
         int y =  attack.getY();
         Weapon weapon = attack.getWeapon();
         Effect[] effect = weapon.use(x,y);
-        ShotResultType[] res = new ShotResultType[effect.length];
+        ShotResult[] res = new ShotResult[effect.length];
         int i = 0 ;
         for (Effect value : effect) {
             if (value.getEffectType() == EffectType.HIT) {
                 res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
-                if(res[i]==ShotResultType.SUNK){
+                if(res[i].get_type()==ShotResultType.SUNK){
                     reactToSunk();
                 }
             } else {
@@ -68,31 +70,24 @@ public abstract class Player{
         return res;
     }
 
-    public void handelShotResult(ShotResultType[] resultTypes){
-        for(ShotResultType res : resultTypes){
-            switch (res) {
-                case MISS -> {
-                    System.out.println("Add to log Miss");
-                }
-                case HIT -> {
-                    System.out.println("Add to log Hit");
-                }
-                case SUNK -> {
-                    System.out.println("Add to log Sunk");
-                }
-                case TORNAD -> {
-                    System.out.println("Add to log Tornadoed");
-                }
-                case BLACKHOLE -> {
-                    System.out.println("Add to log BlackHole");
-                }
-            }
+
+
+    public void setWeapon(Weapon weapon){
+        if(_WeaponList.contains(weapon)){
+            _currentWeapon = weapon;
+        }else {
+            _currentWeapon = new Missile();
         }
     }
 
-    public void setWeapon(Weapon weapon){
-        _currentWeapon = weapon;
+    public void addWeapon(Weapon weapon){
+        _WeaponList.add(weapon);
     }
+
+    public void removeWeapon(Weapon weapon){
+        _WeaponList.remove(weapon);
+    }
+
 
     public Weapon getWeapon(){
         return _currentWeapon;
@@ -136,5 +131,9 @@ public abstract class Player{
 
         }
 
+    }
+
+    public void setUpIsland() {
+        _grid.setUpIsland();
     }
 }

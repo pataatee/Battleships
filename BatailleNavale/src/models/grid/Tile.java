@@ -2,6 +2,7 @@ package models.grid;
 
 import models.placeable.EmptyObject;
 import models.placeable.Placeable;
+import models.player.ShotResult;
 import models.player.ShotResultType;
 
 public abstract class Tile {
@@ -39,7 +40,7 @@ public abstract class Tile {
     /**
      * Call the OnHit event of the current TileState
      */
-    public abstract ShotResultType onHit();
+    public abstract ShotResult onHit(int x ,int y);
 
     public void setObject(Placeable object){
         _obj = object;
