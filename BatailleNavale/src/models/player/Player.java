@@ -6,10 +6,7 @@ import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
-import models.weapon.Effect;
-import models.weapon.EffectType;
-import models.weapon.Missile;
-import models.weapon.Weapon;
+import models.weapon.*;
 
 import java.util.ArrayList;
 
@@ -21,7 +18,7 @@ public abstract class Player{
     private ArrayList<Trap> _trapList;
     private Grid _grid;
     private Weapon _currentWeapon;
-    private ArrayList<Weapon> _WeaponList;
+    private ArrayList<WeaponType> _WeaponList;
     private PlayerType _type;
 
 
@@ -73,19 +70,22 @@ public abstract class Player{
 
 
     public void setWeapon(Weapon weapon){
-        if(_WeaponList.contains(weapon)){
+        if(_WeaponList.contains(weapon.get_type())){
             _currentWeapon = weapon;
+            System.out.println("new weapon added"+weapon);
         }else {
             _currentWeapon = new Missile();
         }
     }
 
     public void addWeapon(Weapon weapon){
-        _WeaponList.add(weapon);
+        if(weapon ==null) return;
+        _WeaponList.add(weapon.get_type());
+        System.out.println(weapon);
     }
 
     public void removeWeapon(Weapon weapon){
-        _WeaponList.remove(weapon);
+        _WeaponList.remove(weapon.get_type());
     }
 
 
@@ -136,4 +136,9 @@ public abstract class Player{
     public void setUpIsland() {
         _grid.setUpIsland();
     }
+
+    public Grid getGrid(){
+        return _grid;
+    }
+
 }

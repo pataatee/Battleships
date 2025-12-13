@@ -1,8 +1,9 @@
 package models.weapon;
 
-public class Sonar implements Weapon {
+public class Sonar extends Weapon {
 
     public Sonar() {
+        super(WeaponType.SONAR);
 
     }
 

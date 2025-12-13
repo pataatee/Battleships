@@ -1,8 +1,9 @@
 package models.weapon;
 
-public class Bomb implements Weapon {
+public class Bomb extends Weapon {
 
     public Bomb() {
+        super(WeaponType.BOMB);
 
     }
 

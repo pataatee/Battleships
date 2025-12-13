@@ -112,8 +112,9 @@ public class Grid{
 
 
     public void addWeaponToIslandTile(int x , int y,Weapon wp){
-        if(_tilesMap[x][y].getStateName() == TileState.ISLANDHIT){
+        if(_tilesMap[x][y].getStateName() == TileState.ISLAND){
             ((IslandTile)_tilesMap[x][y]).addWeapon(wp);
+            System.out.println(wp+"ajouté!");
         }
     }
 
