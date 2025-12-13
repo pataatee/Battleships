@@ -150,6 +150,7 @@ public class Game {
                 }
                 case ISLANDHIT -> {
                     System.out.println("Add to log IslandHit");
+                    getCurrentPlayer().addWeapon(getOpponent().getGrid().getWeaponFromIslandTile(res.get_x(), res.get_y()));
                 }
             }
         }
