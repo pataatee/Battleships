@@ -28,6 +28,10 @@ public class Game {
 
     public void setUpGameMode(GameMode gameMode) {
         _gameMode = gameMode;
+        if(_gameMode == GameMode.ISLAND) {
+            _players[0].setUpIsland();
+            _players[1].setUpIsland();
+        }
     }
 
     public void startGame() {
@@ -43,8 +47,8 @@ public class Game {
         if (_gameState != GameState.IN_GAME) return;
         Attack attack = attacker.createAttack(x, y);
         Player opponent = getOpponent();
-        ShotResultType[] res = opponent.getAttacked(attack);
-        _players[_currentPlayerIndex].handelShotResult(res);
+        ShotResult[] res = opponent.getAttacked(attack);
+        this.handelShotResult(res);
 
         notifyAttackExecuted(attack, opponent);
 
@@ -63,8 +67,8 @@ public class Game {
 
         Attack attack = aiPlayer.generateAttack();
         Player opponent = getOpponent();
-        ShotResultType[] res = opponent.getAttacked(attack);
-        _players[_currentPlayerIndex].handelShotResult(res);
+        ShotResult[] res = opponent.getAttacked(attack);
+        this.handelShotResult(res);
 
         notifyAttackExecuted(attack, opponent);
 
@@ -125,6 +129,35 @@ public class Game {
     public void addObserver(GameObserver observer) {
         _observers.add(observer);
     }
+
+    public void handelShotResult(ShotResult[] resultTypes){
+        for(ShotResult res : resultTypes){
+            switch (res.get_type()) {
+                case MISS -> {
+                    System.out.println("Add to log Miss");
+                }
+                case HIT -> {
+                    System.out.println("Add to log Hit");
+                }
+                case SUNK -> {
+                    System.out.println("Add to log Sunk");
+                }
+                case TORNAD -> {
+                    System.out.println("Add to log Tornadoed");
+                }
+                case BLACKHOLE -> {
+                    System.out.println("Add to log BlackHole");
+                }
+                case ISLANDHIT -> {
+                    System.out.println("Add to log IslandHit");
+                }
+            }
+        }
+    }
+
+
+
+
 
     private void notifyNextTurn() {
         for (GameObserver ob : _observers) {

@@ -1,6 +1,7 @@
 import controllers.GameController;
 import controllers.WeaponController;
 import models.game.Game;
+import models.game.GameMode;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
 import models.game.placement.StaticPlacementStrategy;
@@ -22,7 +23,11 @@ public class Main {
         Grid[] g = new Grid[2];
         g[0] = new Grid(10);
         g[1] = new Grid(10);
-
+        Player p2 = new AIPlayer("Ai", 1, g[0]);
+        Player p1 = new HumanPlayer("human", 0, g[1]);
+        Game game = new Game(p1, p2);
+        game.setUpGameMode(GameMode.ISLAND);
+        g[0].addWeaponToIslandTile(4,4,new Bomb());
         var p = new Placement(new StaticPlacementStrategy());
         var fac = new PlaceableFactory();
 
@@ -54,12 +59,11 @@ public class Main {
         p.placeObject(pla1, g[0]);
         p.placeObject(pla2, g[1]);
 
-        Player p2 = new AIPlayer("Ai", 1, g[0]);
-        Player p1 = new HumanPlayer("human", 0, g[1]);
+
         p1.setWeapon(new Bomb());
         p2.addPlaceable(pla1);
         p1.addPlaceable(pla2);
-        Game game = new Game(p1, p2);
+
         GameController gc = new GameController(game);
 
         GridPanel[] panels = new GridPanel[2];

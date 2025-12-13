@@ -4,7 +4,9 @@ import models.game.placement.Orientation;
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
+import models.player.ShotResult;
 import models.player.ShotResultType;
+import models.weapon.Weapon;
 
 import java.util.ArrayList;
 
@@ -42,11 +44,11 @@ public class Grid{
         }
     }
 
-    public ShotResultType hitTile(int x, int y){
+    public ShotResult hitTile(int x, int y){
         if(x<0||x>=_size||y<0||y>=_size){
-            return ShotResultType.MISS;
+            return new ShotResult(x,y,ShotResultType.MISS);
         }
-        ShotResultType res =  _tilesMap[x][y].onHit();
+        ShotResult res =  _tilesMap[x][y].onHit(x,y);
         notifyObserver(x,y,_tilesMap[x][y].getStateName());
         return res;
     }
@@ -98,6 +100,31 @@ public class Grid{
     public int getSize() {
         return this._size;
     }
+
+    public void setUpIsland(){
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                _tilesMap[i+3][j+3]= new IslandTile();
+            }
+        }
+    }
+
+
+
+    public void addWeaponToIslandTile(int x , int y,Weapon wp){
+        if(_tilesMap[x][y].getStateName() == TileState.ISLANDHIT){
+            ((IslandTile)_tilesMap[x][y]).addWeapon(wp);
+        }
+    }
+
+    public Weapon getWeaponFromIslandTile(int x, int y){
+        if(_tilesMap[x][y].getStateName() == TileState.ISLANDHIT){
+            return ((IslandTile)_tilesMap[x][y]).getWeapon();
+        }
+        return null;
+    }
+
+
 
     public TileState getTileTileState(int x,int y) {
         return _tilesMap[x][y].getStateName();

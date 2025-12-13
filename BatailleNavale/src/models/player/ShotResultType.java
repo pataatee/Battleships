@@ -5,5 +5,6 @@ public enum ShotResultType {
     HIT,
     SUNK,
     TORNAD,
-    BLACKHOLE
+    BLACKHOLE,
+    ISLANDHIT
 }

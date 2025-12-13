@@ -2,6 +2,7 @@ package models.placeable.boat;
 
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
+import models.player.ShotResult;
 import models.player.ShotResultType;
 
 public abstract class Boat extends Placeable {
@@ -20,13 +21,13 @@ public abstract class Boat extends Placeable {
     }
 
 
-    public ShotResultType onHit() {
+    public ShotResult onHit(int x ,int y) {
         this._pvs--;
         if(_pvs<=0){
             _isDead =true;
-            return ShotResultType.SUNK;
+            return new ShotResult(x,y,ShotResultType.SUNK);
         }
-        return ShotResultType.HIT;
+        return new ShotResult(x,y,ShotResultType.HIT);
     }
 
     public void addPosition(int[] pos){
