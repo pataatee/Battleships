@@ -12,17 +12,13 @@ public class RandomPlacementStrategy extends PlacementStrategy {
     }
 
     @Override
-    public void placeObjects(Placeable[] placeable, Grid grid) {
+    public void placeObjects(Placeable[] placeable, Grid grid, Coord co) {
         Random rd = new Random();
 
         for (Placeable pl : placeable) {
             Boolean ok = false;
-
             do {
-                int x = rd.nextInt(grid.getSize());
-                int y = rd.nextInt(grid.getSize());
-                int rota = rd.nextInt(Orientation.values().length);
-                ok = grid.placeObject(pl, x,y,Orientation.values()[rota]);
+                ok = grid.placeObject(pl, rd.nextInt(grid.getSize()), rd.nextInt(grid.getSize()),Orientation.values()[rd.nextInt(Orientation.values().length)]);
             } while (!ok);
         }
     }

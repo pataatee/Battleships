@@ -2,14 +2,6 @@ package models.game.placement;
 
 import models.grid.Grid;
 import models.placeable.Placeable;
-import models.placeable.boat.AircraftCarrier;
-import models.placeable.boat.Boat;
-import models.placeable.trap.BlackHole;
-import models.placeable.trap.Trap;
-import models.player.Player;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class StaticPlacementStrategy extends PlacementStrategy {
 
@@ -19,7 +11,7 @@ public class StaticPlacementStrategy extends PlacementStrategy {
 
 
     @Override
-    public void placeObjects(Placeable[] placeable, Grid grid) {
+    public void placeObjects(Placeable[] placeable, Grid grid, Coord co) {
 
         grid.placeObject(placeable[0], StaticPositions.AIRCRAFTCARRIERDEFAULTPOS.getX(), StaticPositions.AIRCRAFTCARRIERDEFAULTPOS.getY(), StaticPositions.AIRCRAFTCARRIERDEFAULTPOS.getOrientation());
         grid.placeObject(placeable[1], StaticPositions.CRUISERDEFAULTPOS.getX(), StaticPositions.CRUISERDEFAULTPOS.getY(), StaticPositions.CRUISERDEFAULTPOS.getOrientation());

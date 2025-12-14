@@ -8,6 +8,6 @@ public abstract class PlacementStrategy {
     public PlacementStrategy() {
     }
 
-    public abstract void placeObjects(Placeable[] placeable, Grid grid);
+    public abstract void placeObjects(Placeable[] placeable, Grid grid, Coord co);
 
 }

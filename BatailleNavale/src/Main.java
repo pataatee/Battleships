@@ -55,9 +55,9 @@ public class Main {
         pla2[8] = fac.createTornado(0);
         pla2[9] = fac.createTorpedoBoat();
 
-        p.setPlacementStrategy(new RandomPlacementStrategy());
-        p.placeObject(pla1, g[0]);
-        p.placeObject(pla2, g[1]);
+        //p.setPlacementStrategy(new RandomPlacementStrategy());
+        p.placeObject(pla1, g[0], null);
+        p.placeObject(pla2, g[1], null);
 
 
         p1.setWeapon(new Bomb());

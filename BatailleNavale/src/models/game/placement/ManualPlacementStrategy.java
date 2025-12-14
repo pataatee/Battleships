@@ -12,8 +12,8 @@ public class ManualPlacementStrategy extends PlacementStrategy {
     }
 
     @Override
-    public void placeObjects(Placeable[] placeable, Grid grid) {
-
+    public void placeObjects(Placeable[] placeable, Grid grid, Coord co) {
+        grid.placeObject(placeable[0], co.getX(), co.getY(), co.getOrientation());
     }
 
 }
