@@ -1,4 +1,5 @@
 import controllers.GameController;
+import controllers.PlacementController;
 import controllers.WeaponController;
 import models.game.Game;
 import models.game.GameMode;
@@ -75,7 +76,9 @@ public class Main {
         game.startGame();
         WeaponController wc = new WeaponController(p1);
 
-        MainView main = new MainView(panels,wc);
+        PlacementController pc = new PlacementController(p, pla1);
+
+        MainView main = new MainView(panels,wc, pc);
         game.addObserver(main);
         main.setVisible(true);
     }
