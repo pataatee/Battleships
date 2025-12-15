@@ -3,7 +3,6 @@ package models.placeable.trap;
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.player.ShotResult;
-import models.player.ShotResultType;
 
 public abstract class Trap extends Placeable {
     private Boolean _hasBeenActivated;

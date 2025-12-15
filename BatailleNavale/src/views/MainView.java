@@ -1,6 +1,5 @@
 package views;
 
-import controllers.WeaponController;
 import models.game.GameObserver;
 import models.game.GameState;
 import models.player.Attack;

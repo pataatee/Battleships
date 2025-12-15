@@ -1,15 +1,10 @@
 package models.player;
 
-import models.game.placement.Placement;
-import models.game.placement.RandomPlacementStrategy;
 import models.grid.Grid;
-import models.placeable.Placeable;
-import models.placeable.PlaceableFactory;
-import models.weapon.Bomb;
 import models.weapon.Missile;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AIPlayerTest {
 

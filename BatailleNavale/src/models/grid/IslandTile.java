@@ -1,10 +1,7 @@
 package models.grid;
 
-import models.placeable.boat.Boat;
-import models.placeable.trap.Trap;
 import models.player.ShotResult;
 import models.player.ShotResultType;
-import models.weapon.Weapon;
 import models.weapon.WeaponType;
 
 public class IslandTile extends Tile {

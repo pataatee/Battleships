@@ -4,7 +4,6 @@ import models.player.Player;
 import models.weapon.Bomb;
 import models.weapon.Missile;
 import models.weapon.Sonar;
-import models.weapon.Weapon;
 
 public class WeaponController {
     private Player _player;

@@ -6,7 +6,6 @@ import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
 import models.player.ShotResult;
 import models.player.ShotResultType;
-import models.weapon.Weapon;
 import models.weapon.WeaponType;
 
 import java.util.ArrayList;

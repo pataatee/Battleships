@@ -1,7 +1,9 @@
 package models.placeable;
 
 import models.placeable.boat.*;
-import models.placeable.trap.*;
+import models.placeable.trap.BlackHole;
+import models.placeable.trap.Tornado;
+import models.placeable.trap.Trap;
 
 public class PlaceableFactory {
 
