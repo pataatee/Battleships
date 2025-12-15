@@ -74,8 +74,9 @@ public class Main {
         g[1].addObserver(panels[1]);
         game.startGame();
         WeaponController wc = new WeaponController(p1);
-
-        MainView main = new MainView(panels,wc);
+        WeaponPanel wp = new WeaponPanel(wc);
+        p1.addWeaponObserver(wp);
+        MainView main = new MainView(panels,wp);
         game.addObserver(main);
         main.setVisible(true);
     }

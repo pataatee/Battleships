@@ -20,6 +20,7 @@ public abstract class Player{
     private Weapon _currentWeapon;
     private ArrayList<WeaponType> _WeaponList;
     private PlayerType _type;
+    private ArrayList<WeaponObserver> _wpObserverList;
 
 
 
@@ -32,6 +33,7 @@ public abstract class Player{
         _currentWeapon=new Missile();
         _WeaponList = new ArrayList<>();
         _type = type;
+        _wpObserverList= new ArrayList<>();
     }
 
     public void addBoat(Boat boat){
@@ -73,19 +75,23 @@ public abstract class Player{
         if(_WeaponList.contains(weapon.get_type())){
             _currentWeapon = weapon;
             System.out.println("new weapon added"+weapon);
+
         }else {
             _currentWeapon = new Missile();
         }
+        notifyWeaponSelected(_currentWeapon.get_type());
     }
 
     public void addWeapon(Weapon weapon){
         if(weapon ==null) return;
         _WeaponList.add(weapon.get_type());
         System.out.println(weapon);
+        notifyWeaponUnlocked(weapon.get_type(),true);
     }
 
     public void removeWeapon(Weapon weapon){
         _WeaponList.remove(weapon.get_type());
+        notifyWeaponUnlocked(weapon.get_type(),false);
     }
 
 
@@ -140,5 +146,23 @@ public abstract class Player{
     public Grid getGrid(){
         return _grid;
     }
+
+
+    public void addWeaponObserver(WeaponObserver wo){
+        _wpObserverList.add(wo);
+    }
+
+    public void notifyWeaponSelected(WeaponType wp){
+        for(WeaponObserver wo : _wpObserverList){
+            wo.notifySelected(wp);
+        }
+    }
+
+    public void notifyWeaponUnlocked(WeaponType wp,boolean unlock){
+        for(WeaponObserver wo : _wpObserverList){
+            wo.notifyUnlocked(wp,unlock);
+        }
+    }
+
 
 }

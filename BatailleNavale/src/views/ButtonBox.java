@@ -55,8 +55,13 @@ public class ButtonBox extends JPanel {
 
     public void setNotSelectedLayer() {
         this._pan.setVisible(true);
-        this._pan.setBackground(new Color(0x86E3D8D8, true));
+        this._pan.setBackground(new Color(0x0FFFFFF, true));
         this.updateUI();
+    }
+
+
+    public void deactivateButton(boolean state) {
+        _btnImg.setEnabled(state);
     }
 
 
