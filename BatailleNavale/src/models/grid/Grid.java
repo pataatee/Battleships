@@ -7,6 +7,7 @@ import models.placeable.boat.Boat;
 import models.player.ShotResult;
 import models.player.ShotResultType;
 import models.weapon.Weapon;
+import models.weapon.WeaponType;
 
 import java.util.ArrayList;
 
@@ -111,14 +112,14 @@ public class Grid{
 
 
 
-    public void addWeaponToIslandTile(int x , int y,Weapon wp){
+    public void addWeaponToIslandTile(int x , int y, WeaponType wp){
         if(_tilesMap[x][y].getStateName() == TileState.ISLAND){
             ((IslandTile)_tilesMap[x][y]).addWeapon(wp);
             System.out.println(wp+"ajouté!");
         }
     }
 
-    public Weapon getWeaponFromIslandTile(int x, int y){
+    public WeaponType getWeaponFromIslandTile(int x, int y){
         if(_tilesMap[x][y].getStateName() == TileState.ISLANDHIT){
             return ((IslandTile)_tilesMap[x][y]).getWeapon();
         }

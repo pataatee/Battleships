@@ -12,6 +12,7 @@ import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
 import models.weapon.Bomb;
+import models.weapon.WeaponType;
 import views.GridPanel;
 import views.MainView;
 import views.WeaponPanel;
@@ -27,7 +28,7 @@ public class Main {
         Player p1 = new HumanPlayer("human", 0, g[1]);
         Game game = new Game(p1, p2);
         game.setUpGameMode(GameMode.ISLAND);
-        g[0].addWeaponToIslandTile(4,4,new Bomb());
+        g[0].addWeaponToIslandTile(4,4, WeaponType.BOMB);
         var p = new Placement(new StaticPlacementStrategy());
         var fac = new PlaceableFactory();
 

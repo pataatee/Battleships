@@ -82,11 +82,10 @@ public abstract class Player{
         notifyWeaponSelected(_currentWeapon.get_type());
     }
 
-    public void addWeapon(Weapon weapon){
-        if(weapon ==null) return;
-        _WeaponList.add(weapon.get_type());
-        System.out.println(weapon);
-        notifyWeaponUnlocked(weapon.get_type(),true);
+    public void addWeapon(WeaponType wt){
+        _WeaponList.add(wt);
+        System.out.println(wt);
+        notifyWeaponUnlocked(wt,true);
     }
 
     public void removeWeapon(Weapon weapon){
@@ -163,6 +162,36 @@ public abstract class Player{
             wo.notifyUnlocked(wp,unlock);
         }
     }
+
+
+    public void handelShotResult(ShotResult[] resultTypes){
+        for(ShotResult res : resultTypes){
+            switch (res.get_type()) {
+                case MISS -> {
+                    System.out.println("Add to log Miss");
+                }
+                case HIT -> {
+                    System.out.println("Add to log Hit");
+                }
+                case SUNK -> {
+                    System.out.println("Add to log Sunk");
+                }
+                case TORNAD -> {
+                    System.out.println("Add to log Tornadoed");
+                }
+                case BLACKHOLE -> {
+                    System.out.println("Add to log BlackHole");
+                }
+                case DISCOVERBOMB -> {
+                    System.out.println("Add to log DiscoverBomb");
+                    this.addWeapon(WeaponType.BOMB);
+                }
+                case DISCOVERSONAR -> {
+                }
+            }
+        }
+    }
+
 
 
 }

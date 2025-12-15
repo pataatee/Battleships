@@ -48,7 +48,7 @@ public class Game {
         Attack attack = attacker.createAttack(x, y);
         Player opponent = getOpponent();
         ShotResult[] res = opponent.getAttacked(attack);
-        this.handelShotResult(res);
+        getCurrentPlayer().handelShotResult(res);
 
         notifyAttackExecuted(attack, opponent);
 
@@ -68,7 +68,7 @@ public class Game {
         Attack attack = aiPlayer.generateAttack();
         Player opponent = getOpponent();
         ShotResult[] res = opponent.getAttacked(attack);
-        this.handelShotResult(res);
+        getCurrentPlayer().handelShotResult(res);
 
         notifyAttackExecuted(attack, opponent);
 
@@ -130,34 +130,6 @@ public class Game {
         _observers.add(observer);
     }
 
-    public void handelShotResult(ShotResult[] resultTypes){
-        for(ShotResult res : resultTypes){
-            switch (res.get_type()) {
-                case MISS -> {
-                    System.out.println("Add to log Miss");
-                }
-                case HIT -> {
-                    System.out.println("Add to log Hit");
-                }
-                case SUNK -> {
-                    System.out.println("Add to log Sunk");
-                }
-                case TORNAD -> {
-                    System.out.println("Add to log Tornadoed");
-                }
-                case BLACKHOLE -> {
-                    System.out.println("Add to log BlackHole");
-                }
-                case ISLANDHIT -> {
-                    System.out.println("Add to log IslandHit");
-                    getCurrentPlayer().addWeapon(getOpponent().getGrid().getWeaponFromIslandTile(res.get_x(), res.get_y()));
-                }
-            }
-        }
-    }
-
-
-
 
 
     private void notifyNextTurn() {
@@ -187,7 +159,6 @@ public class Game {
     private void notifyGameOver(Player winner) {
         for (GameObserver ob : _observers) {
             ob.updateGameOver(winner);
-            System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbb");
         }
     }
 }
