@@ -49,6 +49,8 @@ public class Grid{
             return new ShotResult(x,y,ShotResultType.MISS);
         }
         ShotResult res =  _tilesMap[x][y].onHit(x,y);
+        System.out.println(res.get_type());
+        System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbb" + getTileTileState(x,y));
         notifyObserver(x,y,_tilesMap[x][y].getStateName());
         return res;
     }
@@ -105,6 +107,7 @@ public class Grid{
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 _tilesMap[i+3][j+3]= new IslandTile();
+                notifyObserver(i+3,j+3,_tilesMap[i+3][j+3].getStateName());
             }
         }
     }
@@ -128,6 +131,9 @@ public class Grid{
 
 
     public TileState getTileTileState(int x,int y) {
+        if(x<0||x>=_size||y<0||y>=_size){
+            return TileState.EMPTY;
+        }
         return _tilesMap[x][y].getStateName();
     }
 

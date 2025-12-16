@@ -21,7 +21,7 @@ public class SeaTile extends Tile{
             }
             case TRAP -> {
                 this.setState(TileState.TRAPHIT);
-                getObject().onHit(x,y);
+                return getObject().onHit(x,y);
             }
         }
         return new ShotResult(x,y,ShotResultType.MISS);

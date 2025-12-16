@@ -27,12 +27,12 @@ public class Game {
         _currentTurn = 0;
         _gameState = GameState.CONFIG;
         _gameMode = GameMode.NORMAL;
-        _observers = new ArrayList<GameObserver>();
+        _observers = new ArrayList<>();
     }
 
     public void setUpGameMode(GameMode gameMode) {
         _gameMode = gameMode;
-        if(_gameMode == GameMode.ISLAND) {
+        if (_gameMode == GameMode.ISLAND) {
             _players[0].setUpIsland();
             _players[1].setUpIsland();
         }
@@ -43,16 +43,12 @@ public class Game {
         notifyGameStateChanged();
     }
 
-    public void executeHumanAttack(int x, int y) {
-        Player attacker = _players[_currentPlayerIndex];
-        if (!isHumanTurn()){
-            return;
-        }
-        if (_gameState != GameState.IN_GAME) return;
-        Attack attack = attacker.createAttack(x, y);
+    private void processAttack(Attack attack) {
+        Player attacker = getCurrentPlayer();
         Player opponent = getOpponent();
-        ShotResult[] res = opponent.getAttacked(attack);
-        getCurrentPlayer().handelShotResult(res);
+
+        ShotResult[] results = opponent.getAttacked(attack);
+        attacker.handelShotResult(results);
 
         notifyAttackExecuted(attack, opponent);
 
@@ -60,31 +56,32 @@ public class Game {
             endGame(attacker);
             return;
         }
+
         nextTurn();
-        if (_players[_currentPlayerIndex].getType() == AI) {
-            AITurnDelayer();
+
+        if (isAITurn()) {
+            scheduleAITurn();
         }
+    }
+
+    public void executeHumanAttack(int x, int y) {
+        if (!isHumanTurn() || _gameState != GameState.IN_GAME) {
+            return;
+        }
+
+        Player attacker = getCurrentPlayer();
+        Attack attack = attacker.createAttack(x, y);
+        processAttack(attack);
     }
 
     private void executeAITurn() {
-        AIPlayer aiPlayer = (AIPlayer) _players[_currentPlayerIndex];
-
+        AIPlayer aiPlayer = (AIPlayer) getCurrentPlayer();
         Attack attack = aiPlayer.generateAttack();
-        Player opponent = getOpponent();
-        ShotResult[] res = opponent.getAttacked(attack);
-        getCurrentPlayer().handelShotResult(res);
-
-        notifyAttackExecuted(attack, opponent);
-
-        if (!opponent.isAlive()) {
-            endGame(aiPlayer);
-            return;
-        }
-        nextTurn();
+        processAttack(attack);
     }
 
-    private void AITurnDelayer() {
-        Timer timer = new Timer(0, e -> executeAITurn());
+    private void scheduleAITurn() {
+        Timer timer = new Timer(500, e -> executeAITurn()); // 500ms de délai
         timer.setRepeats(false);
         timer.start();
     }
@@ -103,15 +100,19 @@ public class Game {
     private void endGame(Player winner) {
         _gameState = GameState.ENDGAME;
         notifyGameOver(winner);
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaa");
     }
+
 
     public Player getCurrentPlayer() {
         return _players[_currentPlayerIndex];
     }
 
     public boolean isHumanTurn() {
-        return _players[_currentPlayerIndex].getType() == HUMAN;
+        return getCurrentPlayer().getType() == HUMAN;
+    }
+
+    public boolean isAITurn() {
+        return getCurrentPlayer().getType() == AI;
     }
 
     public GameMode getGameMode() {
@@ -130,11 +131,10 @@ public class Game {
         return _gameState;
     }
 
+
     public void addObserver(GameObserver observer) {
         _observers.add(observer);
     }
-
-
 
     private void notifyNextTurn() {
         for (GameObserver ob : _observers) {
@@ -160,7 +160,7 @@ public class Game {
         }
     }
 
-    private void notifyGameOver(Player winner) {
+    private void notifyGameOver (Player winner){
         for (GameObserver ob : _observers) {
             ob.updateGameOver(winner);
         }

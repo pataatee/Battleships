@@ -15,6 +15,7 @@ import models.weapon.Bomb;
 import models.weapon.WeaponType;
 import views.GridPanel;
 import views.MainView;
+import views.PlayerPanel;
 import views.WeaponPanel;
 
 public class Main {
@@ -24,11 +25,13 @@ public class Main {
         Grid[] g = new Grid[2];
         g[0] = new Grid(10);
         g[1] = new Grid(10);
-        Player p2 = new AIPlayer("Ai", 1, g[0]);
-        Player p1 = new HumanPlayer("human", 0, g[1]);
+
+        Player p1 = new HumanPlayer("human", 0, g[0]);
+        Player p2 = new AIPlayer("Ai", 1, g[1]);
+
         Game game = new Game(p1, p2);
-        game.setUpGameMode(GameMode.ISLAND);
-        g[0].addWeaponToIslandTile(4,4, WeaponType.BOMB);
+
+
         var p = new Placement(new StaticPlacementStrategy());
         var fac = new PlaceableFactory();
 
@@ -56,29 +59,34 @@ public class Main {
         pla2[8] = fac.createTornado(0);
         pla2[9] = fac.createTorpedoBoat();
 
-        p.setPlacementStrategy(new RandomPlacementStrategy());
-        p.placeObject(pla1, g[0]);
-        p.placeObject(pla2, g[1]);
 
 
-        p1.setWeapon(new Bomb());
-        p2.addPlaceable(pla1);
-        p1.addPlaceable(pla2);
+
+        p1.addPlaceable(pla1);
+        p2.addPlaceable(pla2);
 
         GameController gc = new GameController(game);
 
-        GridPanel[] panels = new GridPanel[2];
-        panels[0] = new GridPanel(gc, g[0], false);
-        panels[1] = new GridPanel(gc, g[1], true);
+        WeaponController wc1 = new WeaponController(p1);
+        WeaponPanel wp1 = new WeaponPanel(wc1);
+        p1.addWeaponObserver(wp1);
 
-        g[0].addObserver(panels[0]);
-        g[1].addObserver(panels[1]);
+        WeaponController wc2 = new WeaponController(p2);
+        WeaponPanel wp2 = new WeaponPanel(wc2);
+        p2.addWeaponObserver(wp2);
+
+        PlayerPanel player1 = new PlayerPanel(gc, g[0], true, wp1);
+        PlayerPanel player2 = new PlayerPanel(gc, g[1], false, wp2);
+
         game.startGame();
-        WeaponController wc = new WeaponController(p1);
-        WeaponPanel wp = new WeaponPanel(wc);
-        p1.addWeaponObserver(wp);
-        MainView main = new MainView(panels,wp);
+
+        MainView main = new MainView(player1, player2);
         game.addObserver(main);
+        game.setUpGameMode(GameMode.ISLAND);
+        g[1].addWeaponToIslandTile(4,4, WeaponType.BOMB);
+        p.setPlacementStrategy(new RandomPlacementStrategy());
+        p.placeObject(pla1, g[0]);
+        p.placeObject(pla2, g[1]);
         main.setVisible(true);
     }
 }

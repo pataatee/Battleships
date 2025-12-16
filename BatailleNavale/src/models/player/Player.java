@@ -56,10 +56,15 @@ public abstract class Player{
         ShotResult[] res = new ShotResult[effect.length];
         int i = 0 ;
         for (Effect value : effect) {
-            if (value.getEffectType() == EffectType.HIT) {
-                res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
-                if(res[i].get_type()==ShotResultType.SUNK){
-                    reactToSunk();
+            if (value.getEffectType() == EffectType.HIT || value.getEffectType() == EffectType.BOMB) {
+                if(value.getEffectType() == EffectType.BOMB && _grid.getTileTileState(value.getPos()[0], value.getPos()[1])==TileState.ISLAND){
+                    res[i]= new ShotResult(value.getPos()[0], value.getPos()[1],ShotResultType.MISS);
+                }
+                else {
+                    res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
+                    if (res[i].get_type() == ShotResultType.SUNK) {
+                        reactToSunk();
+                    }
                 }
             } else {
                 continue;
@@ -125,8 +130,8 @@ public abstract class Player{
     }
 
 
-    public void addPlaceable(Placeable[] placeables) {
-        for(Placeable pl : placeables){
+    public void addPlaceable(Placeable[] placeable) {
+        for(Placeable pl : placeable){
             if(pl.getPlaceableType()== PlaceableType.BOAT){
                 this.addBoat((Boat) pl);
             }
@@ -181,12 +186,14 @@ public abstract class Player{
                 }
                 case BLACKHOLE -> {
                     System.out.println("Add to log BlackHole");
+                    this.getAttacked(createAttack(res.get_x(),res.get_y()));
                 }
                 case DISCOVERBOMB -> {
                     System.out.println("Add to log DiscoverBomb");
                     this.addWeapon(WeaponType.BOMB);
                 }
                 case DISCOVERSONAR -> {
+                    this.addWeapon(WeaponType.SONAR);
                 }
             }
         }
