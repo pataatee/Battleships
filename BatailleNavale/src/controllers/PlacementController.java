@@ -23,14 +23,7 @@ public class PlacementController {
     public Boolean placeObject(Placeable pla) {
         Placeable[] pl1 = new Placeable[1];
         pl1[0] = pla;
-        //debug
-        System.out.println("=== PlacementController.placeObject ===");
-        System.out.println("Grid hashCode: " + _grid.hashCode());
-        System.out.println("Coordonnées: " + _toPlace.toString());
-        Boolean result = this._pl.placeObject(pl1,_grid,_toPlace);
-        //debug
-        System.out.println("Résultat: " + result);
-        return result;
+        return this._pl.placeObject(pl1,_grid,_toPlace);
     }
 
 

@@ -24,11 +24,6 @@ public class BordelPanel extends JPanel implements GridObserver {
         this._grid = grid;
         this.isPlayerView = isPlayerView;
 
-        //debug
-        System.out.println("=== BordelPanel créé ===");
-        System.out.println("Grid hashCode: " + grid.hashCode());
-        System.out.println("isPlayerView: " + isPlayerView);
-
         this._grid.addObserver(this);
 
         setLayout(new BorderLayout(5, 5));
@@ -44,9 +39,7 @@ public class BordelPanel extends JPanel implements GridObserver {
 
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                //JLabel cell = new JLabel();
-                //debug
-                JLabel cell = new JLabel(y + "," + x);
+                JLabel cell = new JLabel();
                 cell.setBackground(getTileColor(x, y));
                 cell.setOpaque(true);
                 cell.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
@@ -134,8 +127,6 @@ public class BordelPanel extends JPanel implements GridObserver {
 
     @Override
     public void updateTileState(int x , int y ,TileState state) {
-        //debug
-        System.out.println(">>> BordelPanel.updateTileState appelé ! x=" + x + ", y=" + y + ", state=" + state);
         this._cells[y][x].setBackground(getTileColor(x, y));
         this._cells[y][x].repaint();
     }
