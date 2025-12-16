@@ -40,6 +40,8 @@ public class Grid{
     public void changeStateOfTile(int x,int y , TileState newState){
         if(x>=0 && x<_size && y>=0 && y<_size) {
             _tilesMap[x][y].setState(newState);
+            //debug
+            System.out.println(">>> Grid.changeStateOfTile: x=" + x + ", y=" + y + ", newState=" + newState + ", nb observers=" + _observer.size());
             notifyObserver(x,y,_tilesMap[x][y].getStateName());
         }
     }
@@ -73,7 +75,12 @@ public class Grid{
     public Boolean placeObject(Placeable object, int x, int y, Orientation orientation) {
         int[][] positions = object.skibidiRizzler(x,y,orientation);
 
+        //debug
+        System.out.println("=== Positions calculées pour placement ===");
+
         for(int[] position :positions){
+            //debug
+            System.out.println("Position: [" + position[0] + "][" + position[1] + "]");
             if(!isTileFree(position[0],position[1])){
                 return false;
             }

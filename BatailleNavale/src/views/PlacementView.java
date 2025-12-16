@@ -19,8 +19,10 @@ public class PlacementView extends JPanel {
     private PlacementController _pc;
     private JPanel _panButtons;
     private Placeable _currentPlToPlace;
+    private int _currentIndexPlToPlace;
     private ImageButton _btnOr;
     private JButton _btnValidate;
+    private JButton[] _lstPlaceableButtons;
 
 
     public PlacementView(PlacementController pc, BordelPanel gp) {
@@ -41,13 +43,19 @@ public class PlacementView extends JPanel {
     }
 
     public void initPlaceableButtons() {
+
+        this._lstPlaceableButtons = new JButton[this._pc.getNbPlaceables()];
+
         for (int i = 0; i < this._pc.getNbPlaceables(); i++) {
             JButton btn = new JButton(this._pc.getPlName(i));
             this._placeableButtons.add(btn);
+            this._lstPlaceableButtons[i] = btn;
             final String k = this._pc.getPlName(i);
             Placeable pl = this._pc.getPl(i);
+            int finalI = i;
             btn.addActionListener(act -> {
                 this._currentPlToPlace = pl;
+                this._currentIndexPlToPlace = finalI;
                 //System.out.println(k);
             });
         }
@@ -119,7 +127,16 @@ public class PlacementView extends JPanel {
         this._btnValidate = new JButton("OK");
         rightPanel.add(this._btnValidate);
         this._btnValidate.addActionListener(act -> {
-            this._pc.placeObject(this._currentPlToPlace);
+            Boolean placed = this._pc.placeObject(this._currentPlToPlace);
+
+            if (placed) {
+                System.out.println("Boat/Trap " + this._currentPlToPlace.getName() + " successfully placed !");
+                JButton btnToDisable = this._lstPlaceableButtons[this._currentIndexPlToPlace];
+                btnToDisable.setEnabled(false);
+            }
+            else {
+                System.out.println("Error: couldn't place Boat/Trap.");
+            }
         });
 
         this._panButtons.add(this._scrPlaceableButtons, BorderLayout.CENTER);
@@ -132,7 +149,7 @@ public class PlacementView extends JPanel {
 
 
     public void getPosOfPos(int x, int y) {
-        System.out.println("Veut posser en "+x +" "+y+" ");
+        System.out.println("Veut poser en "+x +" "+y+" ");
         this._pc.setCoordXY(x, y);
     }
 
