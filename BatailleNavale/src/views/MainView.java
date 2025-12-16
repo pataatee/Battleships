@@ -1,9 +1,11 @@
 package views;
 
+import controllers.GameController;
 import controllers.PlacementController;
 import controllers.WeaponController;
 import models.game.GameObserver;
 import models.game.GameState;
+import models.grid.Grid;
 import models.player.Attack;
 import models.player.Player;
 
@@ -15,7 +17,7 @@ public class MainView extends JFrame implements GameObserver {
     private final JPanel _mainPanel;
     private ConfigPanel config;
 
-    public MainView(GridPanel[] g, WeaponController wc, PlacementController pc) {
+    public MainView(GridPanel[] g, WeaponController wc, PlacementController pc, GameController gc) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 600);
@@ -31,7 +33,7 @@ public class MainView extends JFrame implements GameObserver {
 
         _mainPanel.add(new WeaponPanel(wc),BorderLayout.SOUTH);
 
-        this._mainPanel.add(new PlacementView(pc, g[0]));
+        this._mainPanel.add(new PlacementView(pc, new BordelPanel(new Grid(10), false)));
     }
 
     public void setConfig(ConfigPanel configPanel) {

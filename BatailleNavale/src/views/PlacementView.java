@@ -1,6 +1,10 @@
 package views;
 
 import controllers.PlacementController;
+import models.game.placement.Coord;
+import models.game.placement.Orientation;
+import models.grid.TileState;
+import models.placeable.Placeable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,19 +13,30 @@ public class PlacementView extends JPanel {
 
     private JPanel _placeableButtons; // le truc dans lequel il y aura tous les boutons
     private JScrollPane _scrPlaceableButtons;
-    private GridPanel _gridPan; // la grille sur laquelle on place les objets
+    private BordelPanel _gridPan; // la grille sur laquelle on place les objets
     private JButton _next; // pour aller à l'écran suivant (jeu)
     private JButton _previous; // pour aller à l'écran précédent (config)
     private PlacementController _pc;
     private JPanel _panButtons;
+    private Placeable _currentPlToPlace;
+    private ImageButton _btnOr;
+    private JButton _btnValidate;
 
-    public PlacementView(PlacementController pc, GridPanel gp) {
+
+    public PlacementView(PlacementController pc, BordelPanel gp) {
 
         this._pc = pc;
         this._gridPan = gp;
+        this._gridPan.setVisible(true);
         this.initPanelPlButtons();
         this.initPlaceableButtons();
         this.initPlacementView();
+        gp.addDelegate(this);
+//
+//        JButton btn = new JButton("test");
+//        btn.addActionListener(act -> {
+//            System.out.println(this._pc.getCoord());
+//        });
 
     }
 
@@ -29,6 +44,12 @@ public class PlacementView extends JPanel {
         for (int i = 0; i < this._pc.getNbPlaceables(); i++) {
             JButton btn = new JButton(this._pc.getPlName(i));
             this._placeableButtons.add(btn);
+            final String k = this._pc.getPlName(i);
+            Placeable pl = this._pc.getPl(i);
+            btn.addActionListener(act -> {
+                this._currentPlToPlace = pl;
+                //System.out.println(k);
+            });
         }
     }
 
@@ -74,9 +95,32 @@ public class PlacementView extends JPanel {
 //        JButton btnOr = new JButton("Touurne");
 //        btnOr.setPreferredSize(new Dimension(60, 30));
         JPanel rightPanel = new JPanel(new BorderLayout());
-        ImageButton btnOr = new ImageButton(40, 40, getClass().getResource("/assets/rotate.png").getPath());
+        this._btnOr = new ImageButton(40, 40, getClass().getResource("/assets/rotate.png").getPath());
         rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 20));
-        rightPanel.add(btnOr, BorderLayout.NORTH);
+        rightPanel.add(this._btnOr, BorderLayout.NORTH);
+
+        this._btnOr.addActionListener(act -> {
+            switch (this._pc.getCoordOr()) {
+                case HORIZONTAL -> this._pc.setCoordOr(Orientation.VERTICAL);
+                case VERTICAL -> this._pc.setCoordOr(Orientation.HORIZONTAL);
+                default -> this._pc.setCoordOr(Orientation.HORIZONTAL);
+            }
+
+            System.out.println("Orientation: " + this._pc.getCoordOr());
+        });
+
+
+        JButton btn = new JButton("test");
+        rightPanel.add(btn);
+        btn.addActionListener(act -> {
+            System.out.println(this._pc.showCoord());
+        });
+
+        this._btnValidate = new JButton("OK");
+        rightPanel.add(this._btnValidate);
+        this._btnValidate.addActionListener(act -> {
+            this._pc.placeObject(this._currentPlToPlace);
+        });
 
         this._panButtons.add(this._scrPlaceableButtons, BorderLayout.CENTER);
         this._panButtons.add(rightPanel, BorderLayout.EAST);
@@ -84,6 +128,16 @@ public class PlacementView extends JPanel {
 
     public void showPlacementView(Boolean show) {
         this.setVisible(show);
+    }
+
+
+    public void getPosOfPos(int x, int y) {
+        System.out.println("Veut posser en "+x +" "+y+" ");
+        this._pc.setCoordXY(x, y);
+    }
+
+    public Placeable getCurrentToPlace() {
+        return this._currentPlToPlace;
     }
 
 }

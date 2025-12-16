@@ -22,4 +22,20 @@ public class Coord {
     public Orientation getOrientation() {
         return this._or;
     }
+
+    public void setOrientation(Orientation or) {
+        this._or = or;
+    }
+
+    public void setX(int x) {
+        this._x = x;
+    }
+
+    public void setY(int y) {
+        this._y = y;
+    }
+
+    public String toString() {
+        return "x: " + this._x + " y: " + this._y + " Orientation: " + this._or;
+    }
 }
