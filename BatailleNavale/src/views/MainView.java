@@ -20,7 +20,7 @@ public class MainView extends JFrame implements GameObserver {
     public MainView(GridPanel[] g, WeaponController wc, PlacementController pc, GameController gc, Grid grid) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 600);
+        setSize(800, 600);
         setLocationRelativeTo(null);
         _mainPanel = new JPanel(new BorderLayout());
         add(_mainPanel);
@@ -31,7 +31,8 @@ public class MainView extends JFrame implements GameObserver {
 
         _mainPanel.add(centerPanel,BorderLayout.CENTER);
 
-        _mainPanel.add(new WeaponPanel(wc),BorderLayout.SOUTH);
+        //_mainPanel.add(new WeaponPanel(wc),BorderLayout.SOUTH);
+        this._mainPanel.add(Box.createVerticalStrut(270), BorderLayout.SOUTH);
 
         this._mainPanel.add(new PlacementView(pc, new BordelPanel(grid, true)));
     }

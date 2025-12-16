@@ -23,6 +23,11 @@ public class PlacementView extends JPanel {
     private ImageButton _btnOr;
     private JButton _btnValidate;
     private JButton[] _lstPlaceableButtons;
+    private JPanel _pnlInfos;
+    private JLabel _lblInfoOr;
+    private JLabel _lblInfoPlSelected;
+    private JLabel _lblInfoWherePlaced;
+    private JLabel _lblError;
 
 
     public PlacementView(PlacementController pc, BordelPanel gp) {
@@ -30,6 +35,8 @@ public class PlacementView extends JPanel {
         this._pc = pc;
         this._gridPan = gp;
         this._gridPan.setVisible(true);
+        this.idkfHowToCallThatButItsGunnaBeCoolISwear();
+
         this.initPanelPlButtons();
         this.initPlaceableButtons();
         this.initPlacementView();
@@ -54,8 +61,10 @@ public class PlacementView extends JPanel {
             Placeable pl = this._pc.getPl(i);
             int finalI = i;
             btn.addActionListener(act -> {
+                this._lblError.setVisible(false);
                 this._currentPlToPlace = pl;
                 this._currentIndexPlToPlace = finalI;
+                this._lblInfoPlSelected.setText("Placeable: " + this._currentPlToPlace.getName());
                 //System.out.println(k);
             });
         }
@@ -69,6 +78,14 @@ public class PlacementView extends JPanel {
 
         this.add(this._panButtons, BorderLayout.WEST);
 
+        // Panel central qui contient les infos + la grille
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(this._pnlInfos, BorderLayout.WEST);
+        centerPanel.add(this._gridPan, BorderLayout.CENTER);
+
+        this.add(centerPanel, BorderLayout.EAST);
+
+
         JPanel panNextPrev = new JPanel();
         panNextPrev.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         panNextPrev.setPreferredSize(new Dimension(300, 50));
@@ -76,13 +93,17 @@ public class PlacementView extends JPanel {
         this._next = new JButton("Next");
         this._next.setPreferredSize(new Dimension(90, 70));
         panNextPrev.add(this._next, BorderLayout.EAST);
+        /*this._next.addActionListener(act -> {
+            this.setVisible(false);
+
+        });*/
         this._previous = new JButton("Previous");
         this._previous.setPreferredSize(new Dimension(90, 70));
         panNextPrev.add(this._previous, BorderLayout.WEST);
         this.add(panNextPrev, BorderLayout.SOUTH);
 
         //this._gridPan.setPreferredSize(new Dimension(300, 300));
-        this.add(this._gridPan, BorderLayout.EAST);
+        //this.add(this._gridPan, BorderLayout.EAST);
 
     }
 
@@ -109,9 +130,18 @@ public class PlacementView extends JPanel {
 
         this._btnOr.addActionListener(act -> {
             switch (this._pc.getCoordOr()) {
-                case HORIZONTAL -> this._pc.setCoordOr(Orientation.VERTICAL);
-                case VERTICAL -> this._pc.setCoordOr(Orientation.HORIZONTAL);
-                default -> this._pc.setCoordOr(Orientation.HORIZONTAL);
+                case HORIZONTAL -> {
+                    this._pc.setCoordOr(Orientation.VERTICAL);
+                    this._lblInfoOr.setText("Orientation: " + this._pc.getCoordOr());
+                }
+                case VERTICAL -> {
+                    this._pc.setCoordOr(Orientation.HORIZONTAL);
+                    this._lblInfoOr.setText("Orientation: " + this._pc.getCoordOr());
+                }
+                default -> {
+                    this._pc.setCoordOr(Orientation.HORIZONTAL);
+                    this._lblInfoOr.setText("Orientation: " + this._pc.getCoordOr());
+                }
             }
 
             System.out.println("Orientation: " + this._pc.getCoordOr());
@@ -123,16 +153,40 @@ public class PlacementView extends JPanel {
         btn.addActionListener(act -> {
             System.out.println(this._pc.showCoord());
         });
+        btn.setVisible(false);
 
-        this._btnValidate = new JButton("OK");
-        rightPanel.add(this._btnValidate);
+        this._btnValidate = new JButton("Place"); // OK // oui c juste pour trouver plus vite le btn et alors
+        this._btnValidate.setMaximumSize(new Dimension(152, 50));
+        this._pnlInfos.add(this._btnValidate);
         this._btnValidate.addActionListener(act -> {
+
+            if (this._currentPlToPlace == null) {
+                this._lblError.setText("Error: Please select a boat or trap.");
+                this._lblError.setForeground(new Color(0xD50505));
+                this._lblError.setVisible(true);
+                return;
+            }
+
             Boolean placed = this._pc.placeObject(this._currentPlToPlace);
 
             if (placed) {
                 System.out.println("Boat/Trap " + this._currentPlToPlace.getName() + " successfully placed !");
                 JButton btnToDisable = this._lstPlaceableButtons[this._currentIndexPlToPlace];
                 btnToDisable.setEnabled(false);
+
+
+                // gneh pr eviter les conneries quand on reclique pas sur un nv bouton bato apres avoir placé qqch mdr
+                // reset placeable
+                this._currentPlToPlace = null;
+                this._currentIndexPlToPlace = -1;
+
+                // reset orientation
+                this._pc.setCoordOr(Orientation.HORIZONTAL);
+
+                // reset info labels
+                this._lblInfoPlSelected.setText("Placeable: None");
+                this._lblInfoWherePlaced.setText("Position: Null");
+                this._lblInfoOr.setText("Orientation; HORIZONTAL");
             }
             else {
                 System.out.println("Error: couldn't place Boat/Trap.");
@@ -150,11 +204,35 @@ public class PlacementView extends JPanel {
 
     public void getPosOfPos(int x, int y) {
         System.out.println("Veut poser en "+x +" "+y+" ");
+        this._lblInfoWherePlaced.setText("Position: x:" + x + ", y:" + y);
         this._pc.setCoordXY(x, y);
     }
 
     public Placeable getCurrentToPlace() {
         return this._currentPlToPlace;
+    }
+
+    private void idkfHowToCallThatButItsGunnaBeCoolISwear() {
+        this._pnlInfos = new JPanel();
+        this._pnlInfos.setLayout(new BoxLayout(this._pnlInfos, BoxLayout.Y_AXIS));
+        this._pnlInfos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this._pnlInfos.setPreferredSize(new Dimension(200, 200));
+        this._lblInfoOr = new JLabel("Orientation: HORIZONTAL");
+        this._lblInfoPlSelected = new JLabel("Placeable: None");
+        this._lblInfoWherePlaced = new JLabel("Position: Null");
+        this._lblError = new JLabel();
+        this._lblError.setVisible(false);
+
+        this._pnlInfos.add(this._lblInfoPlSelected);
+        this._pnlInfos.add(this._lblInfoWherePlaced);
+        this._pnlInfos.add(this._lblInfoOr);
+        this._pnlInfos.add(this._lblError);
+
+        // espace blanc
+        this._pnlInfos.add(Box.createVerticalStrut(20));
+
+        this.add(this._pnlInfos);
+
     }
 
 }
