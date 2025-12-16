@@ -11,6 +11,8 @@ import java.awt.*;
 
 public class PlacementView extends JPanel {
 
+    // TODO: ajouter un btn pour clear et recommencer le placement
+
     private JPanel _placeableButtons; // le truc dans lequel il y aura tous les boutons
     private JScrollPane _scrPlaceableButtons;
     private BordelPanel _gridPan; // la grille sur laquelle on place les objets
@@ -28,6 +30,7 @@ public class PlacementView extends JPanel {
     private JLabel _lblInfoPlSelected;
     private JLabel _lblInfoWherePlaced;
     private JLabel _lblError;
+    private Boolean _coAreChosenYippie;
 
 
     public PlacementView(PlacementController pc, BordelPanel gp) {
@@ -35,8 +38,8 @@ public class PlacementView extends JPanel {
         this._pc = pc;
         this._gridPan = gp;
         this._gridPan.setVisible(true);
+        this._coAreChosenYippie = false;
         this.idkfHowToCallThatButItsGunnaBeCoolISwear();
-
         this.initPanelPlButtons();
         this.initPlaceableButtons();
         this.initPlacementView();
@@ -93,13 +96,16 @@ public class PlacementView extends JPanel {
         this._next = new JButton("Next");
         this._next.setPreferredSize(new Dimension(90, 70));
         panNextPrev.add(this._next, BorderLayout.EAST);
-        /*this._next.addActionListener(act -> {
+        this._next.addActionListener(act -> {
             this.setVisible(false);
-
-        });*/
+            // TODO: implémenter dans GameController une maniere de changer d'écran (ou autre controller, idk)
+        });
         this._previous = new JButton("Previous");
         this._previous.setPreferredSize(new Dimension(90, 70));
         panNextPrev.add(this._previous, BorderLayout.WEST);
+        this._previous.addActionListener(act -> {
+            this.setVisible(false);
+        });
         this.add(panNextPrev, BorderLayout.SOUTH);
 
         //this._gridPan.setPreferredSize(new Dimension(300, 300));
@@ -161,7 +167,14 @@ public class PlacementView extends JPanel {
         this._btnValidate.addActionListener(act -> {
 
             if (this._currentPlToPlace == null) {
-                this._lblError.setText("Error: Please select a boat or trap.");
+                this._lblError.setText("<html>Error: Please select a boat <br>or trap.</html>");
+                this._lblError.setForeground(new Color(0xD50505));
+                this._lblError.setVisible(true);
+                return;
+            }
+
+            if (!this._coAreChosenYippie) {
+                this._lblError.setText("<html>Error: Please choose where<br>you're gonna place the<br>placeable.</html>");
                 this._lblError.setForeground(new Color(0xD50505));
                 this._lblError.setVisible(true);
                 return;
@@ -203,9 +216,11 @@ public class PlacementView extends JPanel {
 
 
     public void getPosOfPos(int x, int y) {
+        this._lblError.setVisible(false);
         System.out.println("Veut poser en "+x +" "+y+" ");
         this._lblInfoWherePlaced.setText("Position: x:" + x + ", y:" + y);
         this._pc.setCoordXY(x, y);
+        this._coAreChosenYippie = true;
     }
 
     public Placeable getCurrentToPlace() {
