@@ -20,10 +20,10 @@ public class PlacementController {
         _grid = grid;
     }
 
-    public void placeObject(Placeable pla) {
+    public Boolean placeObject(Placeable pla) {
         Placeable[] pl1 = new Placeable[1];
         pl1[0] = pla;
-        this._pl.placeObject(pl1,_grid,_toPlace);
+        return this._pl.placeObject(pl1,_grid,_toPlace);
     }
 
 

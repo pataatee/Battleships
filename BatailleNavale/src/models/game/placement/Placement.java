@@ -20,8 +20,8 @@ public class Placement {
         this._placementStrategy = strat;
     }
 
-    public void placeObject(Placeable[] placeables, Grid grid, Coord co) {
-        this._placementStrategy.placeObjects(placeables, grid, co);
+    public Boolean placeObject(Placeable[] placeables, Grid grid, Coord co) {
+        return this._placementStrategy.placeObjects(placeables, grid, co);
     }
 
 

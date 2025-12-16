@@ -11,7 +11,7 @@ public class StaticPlacementStrategy extends PlacementStrategy {
 
 
     @Override
-    public void placeObjects(Placeable[] placeable, Grid grid, Coord co) {
+    public Boolean placeObjects(Placeable[] placeable, Grid grid, Coord co) {
 
         grid.placeObject(placeable[0], StaticPositions.AIRCRAFTCARRIERDEFAULTPOS.getX(), StaticPositions.AIRCRAFTCARRIERDEFAULTPOS.getY(), StaticPositions.AIRCRAFTCARRIERDEFAULTPOS.getOrientation());
         grid.placeObject(placeable[1], StaticPositions.CRUISERDEFAULTPOS.getX(), StaticPositions.CRUISERDEFAULTPOS.getY(), StaticPositions.CRUISERDEFAULTPOS.getOrientation());
@@ -20,6 +20,8 @@ public class StaticPlacementStrategy extends PlacementStrategy {
         grid.placeObject(placeable[4], StaticPositions.TORPEDOBOATDEFAULTPOS.getX(), StaticPositions.TORPEDOBOATDEFAULTPOS.getY(), StaticPositions.TORPEDOBOATDEFAULTPOS.getOrientation());
         grid.placeObject(placeable[5], StaticPositions.BLACKHOLEDEFAULTPOS.getX(), StaticPositions.BLACKHOLEDEFAULTPOS.getY(), StaticPositions.BLACKHOLEDEFAULTPOS.getOrientation());
         grid.placeObject(placeable[6], StaticPositions.TORNADODEFAULTPOS.getX(), StaticPositions.TORNADODEFAULTPOS.getY(), StaticPositions.TORNADODEFAULTPOS.getOrientation());
+
+        return true;
 
     }
 
