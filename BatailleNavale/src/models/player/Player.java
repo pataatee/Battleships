@@ -65,19 +65,21 @@ public abstract class Player{
         ShotResult[] res = new ShotResult[effect.length];
         int i = 0 ;
         for (Effect value : effect) {
+            int effectx = value.getPos()[0];
+            int effecty = value.getPos()[1];
             switch (value.getEffectType()){
                 case HIT -> {
-                    res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
+                    res[i] = _grid.hitTile(effectx, effecty);
                 }
                 case SCAN -> {
-                    continue;
+                    res[i] = _grid.getTileTileState(effectx,effecty)==TileState.EMPTY || _grid.getTileTileState(effectx,effecty)==TileState.ISLAND ? new ShotResult(effectx,effecty,ShotResultType.MISS):new ShotResult(effectx,effecty,ShotResultType.SONAR);
                 }
                 case BOMB -> {
-                    if(_grid.getTileTileState(value.getPos()[0], value.getPos()[1])==TileState.ISLAND){
-                        res[i]= new ShotResult(value.getPos()[0], value.getPos()[1],ShotResultType.MISS);
+                    if(_grid.getTileTileState(effectx, effecty)==TileState.ISLAND){
+                        res[i]= new ShotResult(effectx, effecty,ShotResultType.MISS);
                     }
                     else {
-                        res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
+                        res[i] = _grid.hitTile(effectx, effecty);
                     }
 
                 }
@@ -190,24 +192,28 @@ public abstract class Player{
 
 
     public void handelShotResult(ShotResult[] resultTypes){
+        int sonarResult = 0;
         for(ShotResult res : resultTypes){
             switch (res.get_type()) {
-                case MISS -> {
-                    System.out.println("Add to log Miss");
-                }
                 case HIT -> {
                     System.out.println("Add to log Hit");
                 }
                 case SUNK -> {
                     System.out.println("Add to log Sunk");
                 }
+                case SONAR -> {
+                    sonarResult++;
+                }
                 case TORNAD -> {
                     System.out.println("Add to log Tornadoed");
-                    _isTornaded=3;
+                    _isTornaded = 3;
                 }
                 case BLACKHOLE -> {
                     System.out.println("Add to log BlackHole");
-                    this.getAttacked(createAttack(res.get_x(),res.get_y()));
+                    this.getAttacked(createAttack(res.get_x(), res.get_y()));
+                }
+                case ISLANDHIT -> {
+                    System.out.println("Add to log IslandHit");
                 }
                 case DISCOVERBOMB -> {
                     System.out.println("Add to log DiscoverBomb");
@@ -216,7 +222,13 @@ public abstract class Player{
                 case DISCOVERSONAR -> {
                     this.addWeapon(WeaponType.SONAR);
                 }
+                default -> {
+                    System.out.println("Add to log Miss");
+                }
             }
+        }
+        if(sonarResult!=0){
+            System.out.println("Sonar" +  sonarResult);
         }
         removeWeapon(_currentWeapon.get_type());
     }

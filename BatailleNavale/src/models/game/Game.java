@@ -81,7 +81,7 @@ public class Game {
     }
 
     private void scheduleAITurn() {
-        Timer timer = new Timer(500, e -> executeAITurn()); // 500ms de délai
+        Timer timer = new Timer(500, e -> executeAITurn());
         timer.setRepeats(false);
         timer.start();
     }

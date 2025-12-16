@@ -84,6 +84,7 @@ public class Main {
         game.addObserver(main);
         game.setUpGameMode(GameMode.ISLAND);
         g[1].addWeaponToIslandTile(4,4, WeaponType.BOMB);
+        g[1].addWeaponToIslandTile(5,4, WeaponType.SONAR);
         p.setPlacementStrategy(new RandomPlacementStrategy());
         p.placeObject(pla1, g[0]);
         p.placeObject(pla2, g[1]);

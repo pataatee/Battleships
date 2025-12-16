@@ -4,6 +4,7 @@ public enum ShotResultType {
     MISS,
     HIT,
     SUNK,
+    SONAR,
     TORNAD,
     BLACKHOLE,
     ISLANDHIT,
