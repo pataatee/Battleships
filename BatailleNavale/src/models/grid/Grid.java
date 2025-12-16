@@ -49,8 +49,6 @@ public class Grid{
             return new ShotResult(x,y,ShotResultType.MISS);
         }
         ShotResult res =  _tilesMap[x][y].onHit(x,y);
-        System.out.println(res.get_type());
-        System.out.println("bbbbbbbbbbbbbbbbbbbbbbbbbb" + getTileTileState(x,y));
         notifyObserver(x,y,_tilesMap[x][y].getStateName());
         return res;
     }

@@ -21,6 +21,7 @@ public abstract class Player{
     private ArrayList<WeaponType> _WeaponList;
     private PlayerType _type;
     private ArrayList<WeaponObserver> _wpObserverList;
+    private int _isTornaded;
 
 
 
@@ -28,8 +29,8 @@ public abstract class Player{
         _id=id;
         _name=name;
         _grid= grid;
-        _boatList = new ArrayList<Boat>();
-        _trapList = new ArrayList<Trap>();
+        _boatList = new ArrayList<>();
+        _trapList = new ArrayList<>();
         _currentWeapon=new Missile();
         _WeaponList = new ArrayList<>();
         _type = type;
@@ -45,7 +46,15 @@ public abstract class Player{
     };
 
     public Attack createAttack(int x, int y) {
-        return new Attack(x, y, _currentWeapon);
+
+        int xoffset = x;
+        int yoffset = y;
+        if(_isTornaded>0){
+            _isTornaded--;
+            xoffset = (5+xoffset)%(this._grid.getSize()-1);
+            yoffset = (5+yoffset)%(this._grid.getSize()-1);
+        }
+        return new Attack(xoffset, yoffset, _currentWeapon);
     }
 
     public ShotResult[] getAttacked(Attack attack){
@@ -56,18 +65,25 @@ public abstract class Player{
         ShotResult[] res = new ShotResult[effect.length];
         int i = 0 ;
         for (Effect value : effect) {
-            if (value.getEffectType() == EffectType.HIT || value.getEffectType() == EffectType.BOMB) {
-                if(value.getEffectType() == EffectType.BOMB && _grid.getTileTileState(value.getPos()[0], value.getPos()[1])==TileState.ISLAND){
-                    res[i]= new ShotResult(value.getPos()[0], value.getPos()[1],ShotResultType.MISS);
-                }
-                else {
+            switch (value.getEffectType()){
+                case HIT -> {
                     res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
-                    if (res[i].get_type() == ShotResultType.SUNK) {
-                        reactToSunk();
-                    }
                 }
-            } else {
-                continue;
+                case SCAN -> {
+                    continue;
+                }
+                case BOMB -> {
+                    if(_grid.getTileTileState(value.getPos()[0], value.getPos()[1])==TileState.ISLAND){
+                        res[i]= new ShotResult(value.getPos()[0], value.getPos()[1],ShotResultType.MISS);
+                    }
+                    else {
+                        res[i] = _grid.hitTile(value.getPos()[0], value.getPos()[1]);
+                    }
+
+                }
+            }
+            if (res[i].get_type() == ShotResultType.SUNK) {
+                reactToSunk();
             }
             i++;
         }
@@ -93,9 +109,13 @@ public abstract class Player{
         notifyWeaponUnlocked(wt,true);
     }
 
-    public void removeWeapon(Weapon weapon){
-        _WeaponList.remove(weapon.get_type());
-        notifyWeaponUnlocked(weapon.get_type(),false);
+    public void removeWeapon(WeaponType wt){
+        if(wt == WeaponType.MISSILE){
+            return;
+        }
+        _WeaponList.remove(wt);
+        setWeapon(new Missile());
+        notifyWeaponUnlocked(wt,false);
     }
 
 
@@ -183,6 +203,7 @@ public abstract class Player{
                 }
                 case TORNAD -> {
                     System.out.println("Add to log Tornadoed");
+                    _isTornaded=3;
                 }
                 case BLACKHOLE -> {
                     System.out.println("Add to log BlackHole");
@@ -197,6 +218,7 @@ public abstract class Player{
                 }
             }
         }
+        removeWeapon(_currentWeapon.get_type());
     }
 
 

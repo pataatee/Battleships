@@ -14,7 +14,6 @@ public class BlackHole extends Trap {
     public ShotResult onHit(int x,int y) {
         //TODO: code BlackHole's effect
         super.setActivated(true);
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return new ShotResult(x,y,ShotResultType.BLACKHOLE);
     }
 
