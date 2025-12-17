@@ -11,7 +11,6 @@ import java.awt.*;
 
 public class PlacementView extends JPanel {
 
-    // TODO: ajouter un btn pour clear et recommencer le placement
 
     private JPanel _placeableButtons; // le truc dans lequel il y aura tous les boutons
     private JScrollPane _scrPlaceableButtons;
@@ -25,11 +24,7 @@ public class PlacementView extends JPanel {
     private ImageButton _btnOr;
     private JButton _btnValidate;
     private JButton[] _lstPlaceableButtons;
-    private JPanel _pnlInfos;
-    private JLabel _lblInfoOr;
-    private JLabel _lblInfoPlSelected;
-    private JLabel _lblInfoWherePlaced;
-    private JLabel _lblError;
+    private PlacementInfoPanel _pnlInfos;
     private Boolean _coAreChosenYippie;
     private JButton _btnClear;
 
@@ -65,10 +60,10 @@ public class PlacementView extends JPanel {
             Placeable pl = this._pc.getPl(i);
             int finalI = i;
             btn.addActionListener(act -> {
-                this._lblError.setVisible(false);
+                this._pnlInfos.getLblError().setVisible(false);
                 this._currentPlToPlace = pl;
                 this._currentIndexPlToPlace = finalI;
-                this._lblInfoPlSelected.setText("Placeable: " + this._currentPlToPlace.getName());
+                this._pnlInfos.setLblSelectedPl(this._currentPlToPlace.getName());
                 //System.out.println(k);
             });
         }
@@ -136,18 +131,21 @@ public class PlacementView extends JPanel {
         rightPanel.add(this._btnOr, BorderLayout.NORTH);
 
         this._btnOr.addActionListener(act -> {
+
+            this._pnlInfos.getLblError().setVisible(false);
+
             switch (this._pc.getCoordOr()) {
                 case HORIZONTAL -> {
                     this._pc.setCoordOr(Orientation.VERTICAL);
-                    this._lblInfoOr.setText("Orientation: " + this._pc.getCoordOr());
+                    this._pnlInfos.setLblOrientation(this._pc.getCoordOr().toString());
                 }
                 case VERTICAL -> {
                     this._pc.setCoordOr(Orientation.HORIZONTAL);
-                    this._lblInfoOr.setText("Orientation: " + this._pc.getCoordOr());
+                    this._pnlInfos.setLblOrientation(this._pc.getCoordOr().toString());
                 }
                 default -> {
                     this._pc.setCoordOr(Orientation.HORIZONTAL);
-                    this._lblInfoOr.setText("Orientation: " + this._pc.getCoordOr());
+                    this._pnlInfos.setLblOrientation(this._pc.getCoordOr().toString());
                 }
             }
 
@@ -162,22 +160,22 @@ public class PlacementView extends JPanel {
         });
         btn.setVisible(false);
 
+        this._pnlInfos.add(Box.createVerticalStrut(20));
+
         this._btnValidate = new JButton("Place"); // OK // oui c juste pour trouver plus vite le btn et alors
         this._btnValidate.setMaximumSize(new Dimension(152, 50));
         this._pnlInfos.add(this._btnValidate);
         this._btnValidate.addActionListener(act -> {
 
             if (this._currentPlToPlace == null) {
-                this._lblError.setText("<html>Error: Please select a boat <br>or trap.</html>");
-                this._lblError.setForeground(new Color(0xD50505));
-                this._lblError.setVisible(true);
+                this._pnlInfos.setLblErrorText("Please select a boat <br>or trap.");
+                this._pnlInfos.getLblError().setVisible(true);
                 return;
             }
 
             if (!this._coAreChosenYippie) {
-                this._lblError.setText("<html>Error: Please choose where<br>you're gonna place the<br>placeable.</html>");
-                this._lblError.setForeground(new Color(0xD50505));
-                this._lblError.setVisible(true);
+                this._pnlInfos.setLblErrorText("Please choose where<br>you're gonna place the<br>placeable.");
+                this._pnlInfos.getLblError().setVisible(true);
                 return;
             }
 
@@ -202,6 +200,8 @@ public class PlacementView extends JPanel {
             }
             else {
                 System.out.println("Error: couldn't place Boat/Trap.");
+                this._pnlInfos.setLblErrorText("Couldn't place Boat/Trap. Please try again.");
+                this._pnlInfos.getLblError().setVisible(true);
             }
         });
 
@@ -229,9 +229,9 @@ public class PlacementView extends JPanel {
 
 
     public void getPosOfPos(int x, int y) {
-        this._lblError.setVisible(false);
+        this._pnlInfos.getLblError().setVisible(false);
         System.out.println("Veut poser en "+x +" "+y+" ");
-        this._lblInfoWherePlaced.setText("Position: x:" + x + ", y:" + y);
+        this._pnlInfos.setLblPosition("x:" + x + " y:" + y);
         this._pc.setCoordXY(x, y);
         this._coAreChosenYippie = true;
     }
@@ -241,24 +241,9 @@ public class PlacementView extends JPanel {
     }
 
     private void idkfHowToCallThatButItsGunnaBeCoolISwear() {
-        this._pnlInfos = new JPanel();
-        this._pnlInfos.setLayout(new BoxLayout(this._pnlInfos, BoxLayout.Y_AXIS));
-        this._pnlInfos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        this._pnlInfos.setPreferredSize(new Dimension(200, 200));
-        this._lblInfoOr = new JLabel("Orientation: HORIZONTAL");
-        this._lblInfoPlSelected = new JLabel("Placeable: None");
-        this._lblInfoWherePlaced = new JLabel("Position: Null");
-        this._lblError = new JLabel();
-        this._lblError.setVisible(false);
-
-        this._pnlInfos.add(this._lblInfoPlSelected);
-        this._pnlInfos.add(this._lblInfoWherePlaced);
-        this._pnlInfos.add(this._lblInfoOr);
-        this._pnlInfos.add(this._lblError);
-
-        // espace blanc
-        this._pnlInfos.add(Box.createVerticalStrut(20));
-
+        this._pnlInfos = new PlacementInfoPanel();
+        this._pnlInfos.setLblSelectedPl("None");
+        this.resetInfoLabels();
         this.add(this._pnlInfos);
 
     }
@@ -270,9 +255,10 @@ public class PlacementView extends JPanel {
     }
 
     public void resetInfoLabels() {
-        this._lblInfoPlSelected.setText("Placeable: None");
-        this._lblInfoWherePlaced.setText("Position: Null");
-        this._lblInfoOr.setText("Orientation; HORIZONTAL");
+        this._pnlInfos.setLblSelectedPl("None");
+        this._pnlInfos.setLblPosition("Null");
+        this._pnlInfos.setLblOrientation("HORIZONTAL");
+        this._pnlInfos.getLblError().setVisible(false);
     }
 
 }
