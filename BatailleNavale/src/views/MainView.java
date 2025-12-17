@@ -34,7 +34,7 @@ public class MainView extends JFrame implements GameObserver {
         //_mainPanel.add(new WeaponPanel(wc),BorderLayout.SOUTH);
         this._mainPanel.add(Box.createVerticalStrut(270), BorderLayout.SOUTH);
 
-        this._mainPanel.add(new PlacementView(pc, new BordelPanel(grid, true)));
+        this._mainPanel.add(new PlacementView(pc, new ManualPlacementPanel(pc, new BordelPanel(grid, true))));
     }
 
     public void setConfig(ConfigPanel configPanel) {

@@ -21,6 +21,9 @@ public class PlacementInfoPanel extends JPanel {
         this._lblInfoPosition = new JLabel("Position: ");
         this._lblInfoOr = new JLabel("Orientation: ");
         this._lblError = new JLabel("Erreur: ");
+
+        this.resetInfoLabels();
+
         this._lblError.setForeground(new Color(0xD50505));
         this._lblError.setVisible(false);
 
@@ -48,6 +51,13 @@ public class PlacementInfoPanel extends JPanel {
 
     public void setLblOrientation(String text) {
         this._lblInfoOr.setText("Orientation: " + text);
+    }
+
+    public void resetInfoLabels() {
+        this.setLblSelectedPl("None");
+        this.setLblPosition("Null");
+        this.setLblOrientation("HORIZONTAL");
+        this.getLblError().setVisible(false);
     }
 
 }

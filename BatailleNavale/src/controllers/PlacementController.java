@@ -82,5 +82,20 @@ public class PlacementController {
 
     }
 
+    public Placeable getPlFromIndex(int i) {
+        if (i == -1) {
+            return null;
+        }
+        return this._lstToPlace[i];
+    }
+
+    public String getPlNameFromIndex(int i) {
+        return this._lstToPlace[i].getName();
+    }
+
+    public void setPlaceableAtIndex(Placeable pl, int i) {
+        this._lstToPlace[i] = pl;
+    }
+
 
 }

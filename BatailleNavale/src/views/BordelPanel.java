@@ -16,7 +16,7 @@ public class BordelPanel extends JPanel implements GridObserver {
     private Grid _grid;
     private GameController _controller;
     private boolean isPlayerView;
-    private PlacementView _delegate;
+    private ManualPlacementPanel _delegate;
     private JLabel[][] _cells;
 
 
@@ -121,7 +121,7 @@ public class BordelPanel extends JPanel implements GridObserver {
     }
 
 
-    public void addDelegate(PlacementView placementView) {
+    public void addDelegate(ManualPlacementPanel placementView) {
         _delegate = placementView;
     }
 
