@@ -31,6 +31,7 @@ public class PlacementView extends JPanel {
     private JLabel _lblInfoWherePlaced;
     private JLabel _lblError;
     private Boolean _coAreChosenYippie;
+    private JButton _btnClear;
 
 
     public PlacementView(PlacementController pc, BordelPanel gp) {
@@ -197,13 +198,25 @@ public class PlacementView extends JPanel {
                 this._pc.setCoordOr(Orientation.HORIZONTAL);
 
                 // reset info labels
-                this._lblInfoPlSelected.setText("Placeable: None");
-                this._lblInfoWherePlaced.setText("Position: Null");
-                this._lblInfoOr.setText("Orientation; HORIZONTAL");
+                this.resetInfoLabels();
             }
             else {
                 System.out.println("Error: couldn't place Boat/Trap.");
             }
+        });
+
+        this._pnlInfos.add(Box.createVerticalStrut(20));
+
+        this._btnClear = new JButton("Reset");
+        this._btnClear.setMaximumSize(new Dimension(152, 50));
+        this._pnlInfos.add(this._btnClear);
+        this._btnClear.addActionListener(act -> {
+            this._currentPlToPlace = null;
+            this._currentIndexPlToPlace = -1;
+            this.resetInfoLabels();
+            this._pc.resetPlacement();
+            this.resetPlaceableButtons();
+            this._coAreChosenYippie = false;
         });
 
         this._panButtons.add(this._scrPlaceableButtons, BorderLayout.CENTER);
@@ -248,6 +261,18 @@ public class PlacementView extends JPanel {
 
         this.add(this._pnlInfos);
 
+    }
+
+    public void resetPlaceableButtons() {
+        for (JButton btn : this._lstPlaceableButtons) {
+            btn.setEnabled(true);
+        }
+    }
+
+    public void resetInfoLabels() {
+        this._lblInfoPlSelected.setText("Placeable: None");
+        this._lblInfoWherePlaced.setText("Position: Null");
+        this._lblInfoOr.setText("Orientation; HORIZONTAL");
     }
 
 }

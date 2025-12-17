@@ -1,5 +1,6 @@
 package controllers;
 
+import models.game.GameMode;
 import models.game.placement.Coord;
 import models.game.placement.Orientation;
 import models.game.placement.Placement;
@@ -12,12 +13,14 @@ public class PlacementController {
     private Placeable[] _lstToPlace;
     private Coord _toPlace;
     private Grid _grid;
+    private GameMode _gameMode;
 
-    public PlacementController(Placement pl, Placeable[] lst, Coord co,Grid grid) {
+    public PlacementController(Placement pl, Placeable[] lst, Coord co,Grid grid, GameMode gm) {
         this._pl = pl;
         this._lstToPlace = lst;
         this._toPlace = co;
         _grid = grid;
+        this._gameMode = gm;
     }
 
     public Boolean placeObject(Placeable pla) {
@@ -58,6 +61,25 @@ public class PlacementController {
 
     public String showCoord() {
         return this._toPlace.toString();
+    }
+
+    public void resetPlacement() {
+        for (Placeable pl : this._lstToPlace) {
+            pl.resetPositions();
+        }
+
+        this._grid.resetGrid();
+
+        if (this._gameMode == GameMode.ISLAND) {
+            this._grid.setUpIsland();
+        }
+
+        this._grid.notifyReset();
+
+        this._toPlace.setX(0);
+        this._toPlace.setY(0);
+        this._toPlace.setOrientation(Orientation.HORIZONTAL);
+
     }
 
 

@@ -47,6 +47,8 @@ public abstract class Placeable {
         return  tiles;
     }
 
+    public abstract void resetPositions();
+
 
 
 }

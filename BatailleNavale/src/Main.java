@@ -72,7 +72,7 @@ public class Main {
         game.startGame();
         WeaponController wc = new WeaponController(p1);
 
-        PlacementController pc = new PlacementController(p, pla1, new Coord(0, 0, Orientation.HORIZONTAL),g[1]);
+        PlacementController pc = new PlacementController(p, pla1, new Coord(0, 0, Orientation.HORIZONTAL),g[1], game.getGameMode());
 
         MainView main = new MainView(panels,wc, pc, gc, g[1]);
         game.addObserver(main);

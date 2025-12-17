@@ -131,4 +131,18 @@ public class Grid{
         return _tilesMap[x][y].getStateName();
     }
 
+    public void resetGrid() {
+        this.generateGrid();
+        this.notifyReset();
+    }
+
+
+    public void notifyReset() {
+        for (int x = 0; x < this._size; x++) {
+            for (int y = 0; y < this._size; y++) {
+                notifyObserver(x, y, this._tilesMap[x][y].getStateName());
+            }
+        }
+    }
+
 }
