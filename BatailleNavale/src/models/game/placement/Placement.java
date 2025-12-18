@@ -23,6 +23,9 @@ public class Placement {
     public Boolean placeObject(Placeable[] placeables, Grid grid, Coord co) {
         return this._placementStrategy.placeObjects(placeables, grid, co);
     }
+    public Boolean placeOneObject(Placeable placeable, Grid grid, Coord co) {
+        return this._placementStrategy.placeOneObject(placeable, grid, co);
+    }
 
     public PlacementStrategy getPlacementStrategy() {
         return this._placementStrategy;

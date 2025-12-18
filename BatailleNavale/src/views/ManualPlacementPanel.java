@@ -143,7 +143,6 @@ public class ManualPlacementPanel extends JPanel {
 
                 // reset labels, coordinates, placeable selected after placing a pl
                 // reset placeable
-                this._pc.setPlaceableAtIndex(null, _currentIndexPlToPlace);
                 this._currentIndexPlToPlace = -1;
 
                 // reset orientation

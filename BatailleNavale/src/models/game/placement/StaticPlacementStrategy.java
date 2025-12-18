@@ -25,5 +25,10 @@ public class StaticPlacementStrategy extends PlacementStrategy {
 
     }
 
+    @Override
+    public Boolean placeOneObject(Placeable placeable, Grid grid, Coord co) {
+        return false;
+    }
+
 
 }

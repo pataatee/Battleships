@@ -36,10 +36,12 @@ public class MainView extends JFrame implements GameObserver {
 
         BordelPanel bpStatic = new BordelPanel(grid, true);
         BordelPanel bpManual = new BordelPanel(grid, true);
+        BordelPanel bpRandow = new BordelPanel(grid, true);
+
 
         BordelPanel bp = new BordelPanel(grid, true);
 
-        this._mainPanel.add(new PlacementView(pc, new ManualPlacementPanel(pc, bpManual), new StaticPlacementPanel(bpStatic, pc)));
+        this._mainPanel.add(new PlacementView(pc, new ManualPlacementPanel(pc, bpManual), new StaticPlacementPanel(bpStatic, pc), new RandomPlacementPanel(pc, bpRandow)));
     }
 
     public void setConfig(ConfigPanel configPanel) {

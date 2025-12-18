@@ -25,4 +25,14 @@ public class RandomPlacementStrategy extends PlacementStrategy {
         return true;
     }
 
+    @Override
+    public Boolean placeOneObject(Placeable placeable, Grid grid, Coord co) {
+        Random rd = new Random();
+        Boolean ok = false;
+        do {
+            ok = grid.placeObject(placeable, rd.nextInt(grid.getSize()), rd.nextInt(grid.getSize()),Orientation.values()[rd.nextInt(Orientation.values().length)]);
+        } while (!ok);
+        return true;
+    }
+
 }

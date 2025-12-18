@@ -1,10 +1,7 @@
 package controllers;
 
 import models.game.GameMode;
-import models.game.placement.Coord;
-import models.game.placement.Orientation;
-import models.game.placement.Placement;
-import models.game.placement.StaticPlacementStrategy;
+import models.game.placement.*;
 import models.grid.Grid;
 import models.placeable.Placeable;
 
@@ -30,9 +27,7 @@ public class PlacementController {
             return false;
         }
 
-        Placeable[] pl1 = new Placeable[1];
-        pl1[0] = pla;
-        return this._pl.placeObject(pl1,_grid,_toPlace);
+        return this._pl.placeOneObject(pla,_grid,_toPlace);
     }
 
 
@@ -70,7 +65,6 @@ public class PlacementController {
     }
 
     public void resetPlacement() {
-
         for (Placeable pl : this._lstToPlace) {
             pl.resetPositions();
         }
@@ -109,7 +103,19 @@ public class PlacementController {
     }
 
 
-    public void changeStrat(String aStatic) {
-        _pl.setStrat(new StaticPlacementStrategy());
+    public void changeStrat(PlacementStrategies strat) {
+
+        switch(strat) {
+            case STATIC:
+                this._pl.setStrat(new StaticPlacementStrategy());
+                break;
+            case RANDOM:
+                this._pl.setStrat(new RandomPlacementStrategy());
+                break;
+            case MANUAL:
+                this._pl.setStrat(new ManualPlacementStrategy());
+                break;
+        }
+
     }
 }

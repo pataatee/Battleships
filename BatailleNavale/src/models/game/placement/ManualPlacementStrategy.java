@@ -16,4 +16,9 @@ public class ManualPlacementStrategy extends PlacementStrategy {
         return grid.placeObject(placeable[0], co.getX(), co.getY(), co.getOrientation());
     }
 
+    @Override
+    public Boolean placeOneObject(Placeable placeable, Grid grid, Coord co) {
+        return grid.placeObject(placeable, co.getX(), co.getY(), co.getOrientation());
+    }
+
 }

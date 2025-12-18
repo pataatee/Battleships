@@ -3,6 +3,7 @@ package views;
 import controllers.PlacementController;
 import models.game.placement.Coord;
 import models.game.placement.Orientation;
+import models.game.placement.PlacementStrategies;
 import models.grid.TileState;
 import models.placeable.Placeable;
 
@@ -22,6 +23,7 @@ public class PlacementView extends JPanel {
     private PlacementController _pc; // controller ofc
 
     private ManualPlacementPanel _pnlManualPlacement; // manual placement panel
+    private RandomPlacementPanel _pnlRandomPlacement; // random placement panel
     private StaticPlacementPanel _pnlStaticPlacement; // static placement panel
     private JPanel _pnlNoneSelected; // no placement strategy selected
 
@@ -31,11 +33,12 @@ public class PlacementView extends JPanel {
 
 
     // constructor ofc
-    public PlacementView(PlacementController pc, ManualPlacementPanel mpp, StaticPlacementPanel spp) {
+    public PlacementView(PlacementController pc, ManualPlacementPanel mpp, StaticPlacementPanel spp, RandomPlacementPanel rpp) {
 
         this._pc = pc;
         this._pnlManualPlacement = mpp;
         this._pnlStaticPlacement = spp;
+        this._pnlRandomPlacement = rpp;
 
         this.initAttributes();
         this.initThis();
@@ -101,6 +104,7 @@ public class PlacementView extends JPanel {
 
         this._pnlPlacement.add(this._pnlNoneSelected, "NONE");
         this._pnlPlacement.add(this._pnlManualPlacement, "MANUAL");
+        this._pnlPlacement.add(this._pnlRandomPlacement, "RANDOM");
         this._pnlPlacement.add(this._pnlStaticPlacement, "STATIC");
 
         this.add(this._pnlPlacement, BorderLayout.CENTER);
@@ -114,18 +118,23 @@ public class PlacementView extends JPanel {
 
             int index = this._cboSelectPlacementStrategy.getSelectedIndex();
 
+            this._pc.resetPlacement();
             switch (index) {
                 case 0:
                     this._lytPnlPlacement.show(this._pnlPlacement, "NONE");
                     break;
                 case 1:
+                    this._pc.changeStrat(PlacementStrategies.MANUAL);
                     this._lytPnlPlacement.show(this._pnlPlacement, "MANUAL");
+                    _pnlManualPlacement.resetPlaceableButtons();
                     break;
                 case 2:
-                    this._lytPnlPlacement.show(this._pnlPlacement, "STATIC");
+                    this._pc.changeStrat(PlacementStrategies.RANDOM);
+                    this._pc.placeAllObjects();
+                    this._lytPnlPlacement.show(this._pnlPlacement, "RANDOM");
                     break;
                 case 3:
-                    this._pc.changeStrat("Static");
+                    this._pc.changeStrat(PlacementStrategies.STATIC);
                     this._pc.placeAllObjects();
                     this._pnlStaticPlacement.repaint();
                     this._lytPnlPlacement.show(this._pnlPlacement, "STATIC");
