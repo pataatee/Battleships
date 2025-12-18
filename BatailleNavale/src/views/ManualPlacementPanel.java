@@ -110,7 +110,7 @@ public class ManualPlacementPanel extends JPanel {
         this.setLayout(new BorderLayout());
 
         this.add(this._pnlLeft, BorderLayout.WEST);
-        this.add(this._pnlRight, BorderLayout.EAST);
+        this.add(this._pnlRight, BorderLayout.CENTER);
 
     }
 
@@ -160,6 +160,8 @@ public class ManualPlacementPanel extends JPanel {
                 this._pnlInfos.getLblError().setVisible(true);
 
             }
+
+            this._coSelected = false;
         });
 
         // btn erase all action listener
@@ -239,7 +241,7 @@ public class ManualPlacementPanel extends JPanel {
         this._coSelected = true;
     }
 
-    public void showPlacementView(Boolean show) {
+    public void showManualPlacementPanel(Boolean show) {
         this.setVisible(show);
     }
 

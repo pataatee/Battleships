@@ -22,16 +22,25 @@ public class PlacementView extends JPanel {
     private PlacementController _pc; // controller ofc
 
     private ManualPlacementPanel _pnlManualPlacement; // manual placement panel
+    private StaticPlacementPanel _pnlStaticPlacement; // static placement panel
+    private JPanel _pnlNoneSelected; // no placement strategy selected
+
+    private JPanel _pnlPlacement;
+    private CardLayout _lytPnlPlacement;
+
 
 
     // constructor ofc
-    public PlacementView(PlacementController pc, ManualPlacementPanel mpp) {
+    public PlacementView(PlacementController pc, ManualPlacementPanel mpp, StaticPlacementPanel spp) {
 
         this._pc = pc;
         this._pnlManualPlacement = mpp;
+        this._pnlStaticPlacement = spp;
 
         this.initAttributes();
         this.initThis();
+
+        actionsChangeCbo();
 
     }
 
@@ -58,6 +67,7 @@ public class PlacementView extends JPanel {
 
         // init placement strategy combo box
         this._cboSelectPlacementStrategy = new JComboBox<String>();
+        this._cboSelectPlacementStrategy.addItem("Please select a placement method...");
         this._cboSelectPlacementStrategy.addItem("Manual placement");
         this._cboSelectPlacementStrategy.addItem("Random placement");
         this._cboSelectPlacementStrategy.addItem("Static placement");
@@ -73,6 +83,9 @@ public class PlacementView extends JPanel {
         this._pnlPlacementStrategySelection.add(this._lblPlacementStrategy, BorderLayout.WEST);
         this._pnlPlacementStrategySelection.add(this._cboSelectPlacementStrategy, BorderLayout.CENTER);
 
+        // init none selected panel
+        this._pnlNoneSelected = new JPanel();
+
     }
 
     public void initThis() {
@@ -82,8 +95,47 @@ public class PlacementView extends JPanel {
 
         this.add(this._pnlNavigate, BorderLayout.SOUTH);
         this.add(this._pnlPlacementStrategySelection, BorderLayout.NORTH);
-        this.add(this._pnlManualPlacement, BorderLayout.CENTER);
 
+        this._lytPnlPlacement = new CardLayout();
+        this._pnlPlacement = new JPanel(this._lytPnlPlacement);
+
+        this._pnlPlacement.add(this._pnlNoneSelected, "NONE");
+        this._pnlPlacement.add(this._pnlManualPlacement, "MANUAL");
+        this._pnlPlacement.add(this._pnlStaticPlacement, "STATIC");
+
+        this.add(this._pnlPlacement, BorderLayout.CENTER);
+
+
+    }
+
+    public void actionsChangeCbo() {
+
+        this._cboSelectPlacementStrategy.addActionListener(act -> {
+
+            int index = this._cboSelectPlacementStrategy.getSelectedIndex();
+
+            switch (index) {
+                case 0:
+                    this._lytPnlPlacement.show(this._pnlPlacement, "NONE");
+                    break;
+                case 1:
+                    this._lytPnlPlacement.show(this._pnlPlacement, "MANUAL");
+                    break;
+                case 2:
+                    this._lytPnlPlacement.show(this._pnlPlacement, "STATIC");
+                    break;
+                case 3:
+                    this._pc.changeStrat("Static");
+                    this._pc.placeAllObjects();
+                    this._pnlStaticPlacement.repaint();
+                    this._lytPnlPlacement.show(this._pnlPlacement, "STATIC");
+                    break;
+                default:
+                    this._pnlManualPlacement.showManualPlacementPanel(false);
+                    break;
+            }
+
+        });
 
     }
 

@@ -4,6 +4,7 @@ import models.game.GameMode;
 import models.game.placement.Coord;
 import models.game.placement.Orientation;
 import models.game.placement.Placement;
+import models.game.placement.StaticPlacementStrategy;
 import models.grid.Grid;
 import models.placeable.Placeable;
 
@@ -24,6 +25,11 @@ public class PlacementController {
     }
 
     public Boolean placeObject(Placeable pla) {
+
+        if (this._toPlace.getX() < 0 || this._toPlace.getY() < 0) {
+            return false;
+        }
+
         Placeable[] pl1 = new Placeable[1];
         pl1[0] = pla;
         return this._pl.placeObject(pl1,_grid,_toPlace);
@@ -64,6 +70,7 @@ public class PlacementController {
     }
 
     public void resetPlacement() {
+
         for (Placeable pl : this._lstToPlace) {
             pl.resetPositions();
         }
@@ -97,5 +104,12 @@ public class PlacementController {
         this._lstToPlace[i] = pl;
     }
 
+    public Boolean placeAllObjects() {
+        return this._pl.placeObject(this._lstToPlace, this._grid, this._toPlace);
+    }
 
+
+    public void changeStrat(String aStatic) {
+        _pl.setStrat(new StaticPlacementStrategy());
+    }
 }

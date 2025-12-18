@@ -24,6 +24,14 @@ public class Placement {
         return this._placementStrategy.placeObjects(placeables, grid, co);
     }
 
+    public PlacementStrategy getPlacementStrategy() {
+        return this._placementStrategy;
+    }
+
+    public void setStrat(PlacementStrategy strategy){
+        _placementStrategy = strategy;
+    }
+
 
     /*
     // default values version

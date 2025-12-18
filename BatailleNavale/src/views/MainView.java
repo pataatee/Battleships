@@ -26,15 +26,20 @@ public class MainView extends JFrame implements GameObserver {
         add(_mainPanel);
 
         JPanel centerPanel = new JPanel(new GridLayout(1, 2));
-        centerPanel.add(g[0]);
-        centerPanel.add(g[1]);
+        //centerPanel.add(g[0]);
+        //centerPanel.add(g[1]);
 
         _mainPanel.add(centerPanel,BorderLayout.CENTER);
 
         //_mainPanel.add(new WeaponPanel(wc),BorderLayout.SOUTH);
         this._mainPanel.add(Box.createVerticalStrut(270), BorderLayout.SOUTH);
 
-        this._mainPanel.add(new PlacementView(pc, new ManualPlacementPanel(pc, new BordelPanel(grid, true))));
+        BordelPanel bpStatic = new BordelPanel(grid, true);
+        BordelPanel bpManual = new BordelPanel(grid, true);
+
+        BordelPanel bp = new BordelPanel(grid, true);
+
+        this._mainPanel.add(new PlacementView(pc, new ManualPlacementPanel(pc, bpManual), new StaticPlacementPanel(bpStatic, pc)));
     }
 
     public void setConfig(ConfigPanel configPanel) {
