@@ -12,7 +12,7 @@ public class RandomPlacementStrategy extends PlacementStrategy {
     }
 
     @Override
-    public void placeObjects(Placeable[] placeable, Grid grid) {
+    public Boolean placeObjects(Placeable[] placeable, Grid grid, Coord co) {
         Random rd = new Random();
 
         for (Placeable pl : placeable) {
@@ -25,6 +25,18 @@ public class RandomPlacementStrategy extends PlacementStrategy {
                 ok = grid.placeObject(pl, x,y,Orientation.values()[rota]);
             } while (!ok);
         }
+
+        return true;
+    }
+
+    @Override
+    public Boolean placeOneObject(Placeable placeable, Grid grid, Coord co) {
+        Random rd = new Random();
+        Boolean ok = false;
+        do {
+            ok = grid.placeObject(placeable, rd.nextInt(grid.getSize()), rd.nextInt(grid.getSize()),Orientation.values()[rd.nextInt(Orientation.values().length)]);
+        } while (!ok);
+        return true;
     }
 
 }

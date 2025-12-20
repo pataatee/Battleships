@@ -1,12 +1,19 @@
 package models.grid;
 
+import models.placeable.boat.Boat;
+import models.placeable.trap.Trap;
 import models.player.ShotResult;
 import models.player.ShotResultType;
 import models.weapon.WeaponType;
+import models.weapon.Weapon;
+
+import static models.player.ShotResultType.ISLANDHIT;
 
 public class IslandTile extends Tile {
 
     WeaponType _weapon;
+    Weapon _weapon;
+    Trap _trap;
 
     public IslandTile() {
         super(TileState.ISLAND);

@@ -13,7 +13,7 @@ class RandomPlacementStrategyTest {
     void placeObjects() {
         Grid[] g = new Grid[1];
         g[0]=new Grid(10);
-        var p = new  Placement(new RandomPlacementStrategy());
+        var p = new  Placement(g,new RandomPlacementStrategy());
         
         var fac = new PlaceableFactory();
         var boat = fac.createTorpedoBoat();
@@ -21,7 +21,7 @@ class RandomPlacementStrategyTest {
         
         pla[0]=boat;
         pla[1]= fac.createAircraftCarrier();
-        p.placeObject(pla,g[0]);
+        p.placeObject(pla,g[0], null);
         int count =0;
         for (int i = 0; i < g[0].getSize(); i++) {
             for (int j = 0; j < g[0].getSize(); j++) {
@@ -39,7 +39,7 @@ class RandomPlacementStrategyTest {
     void placeMoreObjects() {
         Grid[] g = new Grid[1];
         g[0]=new Grid(10);
-        var p = new  Placement(new RandomPlacementStrategy());
+        var p = new  Placement(g,new RandomPlacementStrategy());
 
         var fac = new PlaceableFactory();
         var boat = fac.createTorpedoBoat();
@@ -68,7 +68,7 @@ class RandomPlacementStrategyTest {
 
 
 
-        p.placeObject(pla,g[0]);
+        p.placeObject(pla,g[0], null);
         int count =0;
         for (int i = 0; i < g[0].getSize(); i++) {
             for (int j = 0; j < g[0].getSize(); j++) {

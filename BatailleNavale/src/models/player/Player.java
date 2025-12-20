@@ -25,6 +25,7 @@ public abstract class Player{
 
 
 
+
     public Player(String name,int id,Grid grid,PlayerType type){
         _id=id;
         _name=name;

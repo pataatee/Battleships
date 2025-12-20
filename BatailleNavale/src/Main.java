@@ -5,6 +5,12 @@ import models.game.GameMode;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
 import models.game.placement.StaticPlacementStrategy;
+import controllers.GameController;
+import controllers.PlacementController;
+import controllers.WeaponController;
+import models.game.Game;
+import models.game.GameMode;
+import models.game.placement.*;
 import models.grid.Grid;
 import models.placeable.Placeable;
 import models.placeable.PlaceableFactory;
@@ -14,8 +20,14 @@ import models.player.Player;
 import models.weapon.Bomb;
 import models.weapon.WeaponType;
 import views.GridPanel;
+import models.player.AIPlayer;
+import models.player.HumanPlayer;
+import models.player.Player;
+import models.weapon.Bomb;
+import views.GridPanel;
 import views.MainView;
 import views.PlayerPanel;
+import views.WeaponPanel;
 import views.WeaponPanel;
 
 public class Main {
@@ -61,6 +73,12 @@ public class Main {
 
 
 
+        //p.setPlacementStrategy(new RandomPlacementStrategy());
+//        p.placeObject(pla1, g[0], null);
+//        p.placeObject(pla2, g[1], null);
+//        p1.setWeapon(new Bomb());
+//        p2.addPlaceable(pla1);
+//        p1.addPlaceable(pla2);
 
         p1.addPlaceable(pla1);
         p2.addPlaceable(pla2);
@@ -89,5 +107,7 @@ public class Main {
         p.placeObject(pla1, g[0]);
         p.placeObject(pla2, g[1]);
         main.setVisible(true);
+
+
     }
 }

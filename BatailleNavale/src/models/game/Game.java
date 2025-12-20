@@ -32,7 +32,7 @@ public class Game {
 
     public void setUpGameMode(GameMode gameMode) {
         _gameMode = gameMode;
-        if (_gameMode == GameMode.ISLAND) {
+        if(_gameMode == GameMode.ISLAND) {
             _players[0].setUpIsland();
             _players[1].setUpIsland();
         }
@@ -135,6 +135,7 @@ public class Game {
     public void addObserver(GameObserver observer) {
         _observers.add(observer);
     }
+
 
     private void notifyNextTurn() {
         for (GameObserver ob : _observers) {

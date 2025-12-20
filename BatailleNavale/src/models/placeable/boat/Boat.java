@@ -20,7 +20,6 @@ public abstract class Boat extends Placeable {
         _position = new int[type.getSize()][2];
     }
 
-
     public ShotResult onHit(int x ,int y) {
         this._pvs--;
         if(_pvs<=0){
@@ -46,5 +45,16 @@ public abstract class Boat extends Placeable {
 
     public boolean isDead(){
         return _isDead;
+    }
+
+    @Override
+    public void resetPositions() {
+        this._positionIndex = 0;
+        this._pvs = this.getSize();
+        this._isDead = false;
+
+        for (int i = 0; i < this._position.length; i++) {
+            this._position[i] = null;
+        }
     }
 }

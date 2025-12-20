@@ -2,6 +2,8 @@ package models.placeable;
 
 import models.game.placement.Orientation;
 import models.player.ShotResult;
+import models.player.ShotResult;
+import models.player.ShotResultType;
 
 public abstract class Placeable {
     private int _size;
@@ -45,6 +47,8 @@ public abstract class Placeable {
         }
         return  tiles;
     }
+
+    public abstract void resetPositions();
 
 
 

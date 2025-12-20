@@ -8,6 +8,7 @@ public abstract class PlacementStrategy {
     public PlacementStrategy() {
     }
 
-    public abstract void placeObjects(Placeable[] placeable, Grid grid);
+    public abstract Boolean placeObjects(Placeable[] placeable, Grid grid, Coord co);
+    public abstract Boolean placeOneObject(Placeable placeable, Grid grid, Coord co);
 
 }

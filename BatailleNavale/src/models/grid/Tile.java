@@ -3,6 +3,7 @@ package models.grid;
 import models.placeable.EmptyObject;
 import models.placeable.Placeable;
 import models.player.ShotResult;
+import models.player.ShotResultType;
 
 public abstract class Tile {
 

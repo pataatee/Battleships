@@ -1,5 +1,6 @@
 package models.placeable.trap;
 
+import models.grid.SeaTile;
 import models.grid.Tile;
 import models.player.ShotResult;
 import models.player.ShotResultType;

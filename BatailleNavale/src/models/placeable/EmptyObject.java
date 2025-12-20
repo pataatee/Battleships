@@ -13,4 +13,9 @@ public class EmptyObject extends Placeable{
         return new ShotResult(x,y,ShotResultType.MISS);
         //TODO: dunno if i have to write something here but feels weird to leave it empty
     }
+
+    @Override
+    public void resetPositions() {
+        return;
+    }
 }

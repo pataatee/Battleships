@@ -30,4 +30,10 @@ public abstract class Trap extends Placeable {
     public Boolean getActivation() {
         return this._hasBeenActivated;
     }
+
+    @Override
+    public void resetPositions() {
+        this._hasBeenActivated = false;
+        this._hasBeenUsed = false;
+    }
 }

@@ -5,19 +5,34 @@ import models.placeable.Placeable;
 
 public class Placement {
 
+    private Grid[] _grids;
     private PlacementStrategy _placementStrategy;
 
     //choose everything version
-    public Placement(PlacementStrategy strat) {
+    public Placement(Grid[] grids, PlacementStrategy strat) {
+        this._grids = grids;
         this._placementStrategy = strat;
     }
 
-    public void setPlacementStrategy(PlacementStrategy strat){
-        _placementStrategy=strat;
+    // only choose strategy version
+    public Placement(PlacementStrategy strat) {
+        this._grids = new Grid[2];
+        this._placementStrategy = strat;
     }
 
-    public void placeObject(Placeable[] placeables, Grid grid) {
-        this._placementStrategy.placeObjects(placeables, grid);
+    public Boolean placeObject(Placeable[] placeables, Grid grid, Coord co) {
+        return this._placementStrategy.placeObjects(placeables, grid, co);
+    }
+    public Boolean placeOneObject(Placeable placeable, Grid grid, Coord co) {
+        return this._placementStrategy.placeOneObject(placeable, grid, co);
+    }
+
+    public PlacementStrategy getPlacementStrategy() {
+        return this._placementStrategy;
+    }
+
+    public void setStrat(PlacementStrategy strategy){
+        _placementStrategy = strategy;
     }
 
 

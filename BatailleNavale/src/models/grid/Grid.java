@@ -3,11 +3,6 @@ package models.grid;
 import models.game.placement.Orientation;
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
-import models.placeable.boat.Boat;
-import models.player.ShotResult;
-import models.player.ShotResultType;
-import models.weapon.WeaponType;
-
 import java.util.ArrayList;
 
 public class Grid{
@@ -22,11 +17,19 @@ public class Grid{
         generateGrid();
     }
 
+    /**
+     * Set the grid size and regenerate it
+     * @param size
+     */
     public void setSize(int size){
         _size = size;
         generateGrid();
     }
 
+
+    /**
+     * Generate the grid with size: _size
+     */
     public void generateGrid(){
         _tilesMap = new Tile[_size][_size];
 
@@ -37,6 +40,12 @@ public class Grid{
         }
     }
 
+    /**
+     * Change the TileState of the Tile
+     * @param x position X of  the tile
+     * @param y position Y of the tile
+     * @param newState new state of the tile
+     */
     public void changeStateOfTile(int x,int y , TileState newState){
         if(x>=0 && x<_size && y>=0 && y<_size) {
             _tilesMap[x][y].setState(newState);
@@ -53,6 +62,13 @@ public class Grid{
         return res;
     }
 
+
+    /**
+     * Check if the tile x,y is free (TileState = Empty)
+     * @param x Position X
+     * @param y Ta mère
+     * @return false if tile is not free or if the asked cord are of grid
+     */
     public boolean isTileFree(int x ,int y){
         if(x>=0 && x<_size && y>=0 && y<_size) {
             return _tilesMap[x][y].isFree();
@@ -60,6 +76,10 @@ public class Grid{
         return false;
     }
 
+    /**
+     * Subscribe a new observer
+     * @param ob the new subscriber
+     */
     public void addObserver(GridObserver ob){
         _observer.add(ob);
     }
@@ -133,6 +153,20 @@ public class Grid{
             return TileState.EMPTY;
         }
         return _tilesMap[x][y].getStateName();
+    }
+
+    public void resetGrid() {
+        this.generateGrid();
+        this.notifyReset();
+    }
+
+
+    public void notifyReset() {
+        for (int x = 0; x < this._size; x++) {
+            for (int y = 0; y < this._size; y++) {
+                notifyObserver(x, y, this._tilesMap[x][y].getStateName());
+            }
+        }
     }
 
 }
