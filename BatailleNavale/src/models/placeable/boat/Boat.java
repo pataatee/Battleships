@@ -12,29 +12,29 @@ public abstract class Boat extends Placeable {
     private BoatType _type;
     private int _positionIndex;
 
-    public Boat(String name,BoatType type) {
-        super(name,type.getSize(), PlaceableType.BOAT);
-        this._isDead =false;
-        this._pvs=type.getSize();
+    public Boat(String name, BoatType type) {
+        super(name, type.getSize(), PlaceableType.BOAT);
+        this._isDead = false;
+        this._pvs = type.getSize();
         this._type = type;
         _position = new int[type.getSize()][2];
     }
 
-    public ShotResult onHit(int x ,int y) {
+    public ShotResult onHit(int x, int y) {
         this._pvs--;
-        if(_pvs<=0){
-            _isDead =true;
-            return new ShotResult(x,y,ShotResultType.SUNK);
+        if (_pvs <= 0) {
+            _isDead = true;
+            return new ShotResult(x, y, ShotResultType.SUNK);
         }
-        return new ShotResult(x,y,ShotResultType.HIT);
+        return new ShotResult(x, y, ShotResultType.HIT);
     }
 
-    public void addPosition(int[] pos){
+    public void addPosition(int[] pos) {
         _position[_positionIndex] = pos;
         _positionIndex++;
     }
 
-    public int[][] getPosition(){
+    public int[][] getPosition() {
         return _position;
     }
 
@@ -43,7 +43,7 @@ public abstract class Boat extends Placeable {
     }
 
 
-    public boolean isDead(){
+    public boolean isDead() {
         return _isDead;
     }
 

@@ -13,7 +13,7 @@ public class PlacementController {
     private Grid _grid;
     private GameMode _gameMode;
 
-    public PlacementController(Placement pl, Placeable[] lst, Coord co,Grid grid, GameMode gm) {
+    public PlacementController(Placement pl, Placeable[] lst, Coord co, Grid grid, GameMode gm) {
         this._pl = pl;
         this._lstToPlace = lst;
         this._toPlace = co;
@@ -27,7 +27,7 @@ public class PlacementController {
             return false;
         }
 
-        return this._pl.placeOneObject(pla,_grid,_toPlace);
+        return this._pl.placeOneObject(pla, _grid, _toPlace);
     }
 
 
@@ -105,7 +105,7 @@ public class PlacementController {
 
     public void changeStrat(PlacementStrategies strat) {
 
-        switch(strat) {
+        switch (strat) {
             case STATIC:
                 this._pl.setStrat(new StaticPlacementStrategy());
                 break;

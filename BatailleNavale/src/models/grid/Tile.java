@@ -3,14 +3,13 @@ package models.grid;
 import models.placeable.EmptyObject;
 import models.placeable.Placeable;
 import models.player.ShotResult;
-import models.player.ShotResultType;
 
 public abstract class Tile {
 
     private TileState _currentState;
     private Placeable _obj;
-    public Tile(TileState def)
-    {
+
+    public Tile(TileState def) {
         _currentState = def;
         _obj = new EmptyObject();
     }
@@ -18,36 +17,37 @@ public abstract class Tile {
 
     /**
      * Change the _currentState of the tile
+     *
      * @param state
      */
-    public void setState(TileState state)
-    {
+    public void setState(TileState state) {
         this._currentState = state;
     }
 
-    public TileState getStateName(){
+    public TileState getStateName() {
         return _currentState;
     }
 
     /**
-     *Check if the tile is empty
+     * Check if the tile is empty
+     *
      * @return return true if the current TileState is Empty
      */
-    public boolean isFree(){
+    public boolean isFree() {
         return _currentState == TileState.EMPTY;
     }
 
     /**
      * Call the OnHit event of the current TileState
      */
-    public abstract ShotResult onHit(int x ,int y);
+    public abstract ShotResult onHit(int x, int y);
 
-    public void setObject(Placeable object){
+    public void setObject(Placeable object) {
         _obj = object;
     }
 
-    public Placeable getObject(){
-        return  _obj;
+    public Placeable getObject() {
+        return _obj;
     }
 
 }

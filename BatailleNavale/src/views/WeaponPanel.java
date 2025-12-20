@@ -7,7 +7,7 @@ import models.weapon.WeaponType;
 import javax.swing.*;
 import java.awt.*;
 
-public class WeaponPanel extends JPanel  implements WeaponObserver {
+public class WeaponPanel extends JPanel implements WeaponObserver {
 
     private ButtonBox _btnSonar;
     private ButtonBox _btnMissile;
@@ -85,7 +85,7 @@ public class WeaponPanel extends JPanel  implements WeaponObserver {
     }
 
     @Override
-    public void notifyUnlocked(WeaponType wp,boolean unlocked) {
+    public void notifyUnlocked(WeaponType wp, boolean unlocked) {
         switch (wp) {
             case MISSILE -> {
                 _btnMissile.deactivateButton(unlocked);

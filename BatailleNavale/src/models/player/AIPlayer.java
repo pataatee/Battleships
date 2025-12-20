@@ -10,7 +10,7 @@ public class AIPlayer extends Player {
     private Random _random;
 
     public AIPlayer(String name, int id, Grid grid) {
-        super(name, id, grid,PlayerType.AI);
+        super(name, id, grid, PlayerType.AI);
         _gSize = grid.getSize();
         _random = new Random();
         super.setWeapon(new Missile());

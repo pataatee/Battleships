@@ -11,20 +11,20 @@ public abstract class Trap extends Placeable {
 
     public Trap(int ownerId, String name, int size) {
         super(name, size, PlaceableType.TRAP);
-        this._ownerId=ownerId;
-        this._hasBeenUsed=false;
-        this._hasBeenActivated=false;
+        this._ownerId = ownerId;
+        this._hasBeenUsed = false;
+        this._hasBeenActivated = false;
     }
 
     @Override
-    public abstract ShotResult onHit(int x,int y);
+    public abstract ShotResult onHit(int x, int y);
 
     public void setUsed(Boolean used) {
-        this._hasBeenUsed=used;
+        this._hasBeenUsed = used;
     }
 
     public void setActivated(Boolean activation) {
-        this._hasBeenActivated=activation;
+        this._hasBeenActivated = activation;
     }
 
     public Boolean getActivation() {

@@ -10,7 +10,7 @@ public enum BoatType {
     private int _size;
 
     BoatType(int size) {
-        this._size=size;
+        this._size = size;
     }
 
     public int getSize() {

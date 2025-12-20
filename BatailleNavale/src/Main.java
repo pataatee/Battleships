@@ -5,29 +5,15 @@ import models.game.GameMode;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
 import models.game.placement.StaticPlacementStrategy;
-import controllers.GameController;
-import controllers.PlacementController;
-import controllers.WeaponController;
-import models.game.Game;
-import models.game.GameMode;
-import models.game.placement.*;
 import models.grid.Grid;
 import models.placeable.Placeable;
 import models.placeable.PlaceableFactory;
 import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
-import models.weapon.Bomb;
 import models.weapon.WeaponType;
-import views.GridPanel;
-import models.player.AIPlayer;
-import models.player.HumanPlayer;
-import models.player.Player;
-import models.weapon.Bomb;
-import views.GridPanel;
 import views.MainView;
 import views.PlayerPanel;
-import views.WeaponPanel;
 import views.WeaponPanel;
 
 public class Main {
@@ -72,7 +58,6 @@ public class Main {
         pla2[9] = fac.createTorpedoBoat();
 
 
-
         //p.setPlacementStrategy(new RandomPlacementStrategy());
 //        p.placeObject(pla1, g[0], null);
 //        p.placeObject(pla2, g[1], null);
@@ -101,11 +86,11 @@ public class Main {
         MainView main = new MainView(player1, player2);
         game.addObserver(main);
         game.setUpGameMode(GameMode.ISLAND);
-        g[1].addWeaponToIslandTile(4,4, WeaponType.BOMB);
-        g[1].addWeaponToIslandTile(5,4, WeaponType.SONAR);
-        p.setPlacementStrategy(new RandomPlacementStrategy());
-        p.placeObject(pla1, g[0]);
-        p.placeObject(pla2, g[1]);
+        g[1].addWeaponToIslandTile(4, 4, WeaponType.BOMB);
+        g[1].addWeaponToIslandTile(5, 4, WeaponType.SONAR);
+        p.setStrat(new RandomPlacementStrategy());
+        p.placeObject(pla1, g[0], null);
+        p.placeObject(pla2, g[1], null);
         main.setVisible(true);
 
 

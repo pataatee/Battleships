@@ -2,7 +2,6 @@ package views;
 
 import controllers.PlacementController;
 import models.game.placement.Orientation;
-import models.placeable.Placeable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,7 +62,7 @@ public class ManualPlacementPanel extends JPanel {
         // init scrollable panel
         this._scrPanLstPlButtons = new JScrollPane(this._pnlForScrPan);
         this._scrPanLstPlButtons.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 5));
-        this._scrPanLstPlButtons.setPreferredSize(new Dimension(180,350));
+        this._scrPanLstPlButtons.setPreferredSize(new Dimension(180, 350));
 
         // init orientation
         this._pnlOrientation = new JPanel(new BorderLayout());
@@ -98,8 +97,6 @@ public class ManualPlacementPanel extends JPanel {
         this._pnlRight = new JPanel(new BorderLayout());
         this._pnlRight.add(this._pan, BorderLayout.WEST);
         this._pnlRight.add(this._pnlGrid, BorderLayout.EAST);
-
-
 
 
     }
@@ -151,8 +148,7 @@ public class ManualPlacementPanel extends JPanel {
                 // reset info labels
                 this._pnlInfos.resetInfoLabels();
 
-            }
-            else {
+            } else {
 
                 System.out.println("Error: couldn't place Boat/Trap.");
                 this._pnlInfos.setLblErrorText("Couldn't place Boat/Trap. Please try again.");
@@ -219,10 +215,6 @@ public class ManualPlacementPanel extends JPanel {
     }
 
 
-
-
-
-
     // useful stuff
     // resets the placeable buttons
     public void resetPlaceableButtons() {
@@ -234,7 +226,7 @@ public class ManualPlacementPanel extends JPanel {
     // positions magie noire
     public void getPosOfPos(int x, int y) {
         this._pnlInfos.getLblError().setVisible(false);
-        System.out.println("Veut poser en "+x +" "+y+" ");
+        System.out.println("Veut poser en " + x + " " + y + " ");
         this._pnlInfos.setLblPosition("x:" + x + " y:" + y);
         this._pc.setCoordXY(x, y);
         this._coSelected = true;

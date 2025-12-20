@@ -58,27 +58,63 @@ public class CellPanel extends JPanel implements GridObserver {
 
         if (true) {
             switch (tileState) {
-                case EMPTY -> { return Color.CYAN; }
-                case MISS -> { return Color.WHITE; }
-                case BOAT -> { return Color.DARK_GRAY; }
-                case BOATHIT -> { return Color.RED; }
-                case BOATDEAD -> { return Color.BLACK; }
-                case TRAP -> { return Color.ORANGE; }
-                case TRAPHIT -> { return Color.YELLOW; }
-                case SEARCHED -> { return Color.DARK_GRAY; }
-                case NOTSEARCHED -> { return Color.MAGENTA; }
-                case ISLAND -> { return Color.yellow; }
-                case ISLANDHIT -> { return Color.BLUE; }
+                case EMPTY -> {
+                    return Color.CYAN;
+                }
+                case MISS -> {
+                    return Color.WHITE;
+                }
+                case BOAT -> {
+                    return Color.DARK_GRAY;
+                }
+                case BOATHIT -> {
+                    return Color.RED;
+                }
+                case BOATDEAD -> {
+                    return Color.BLACK;
+                }
+                case TRAP -> {
+                    return Color.ORANGE;
+                }
+                case TRAPHIT -> {
+                    return Color.YELLOW;
+                }
+                case SEARCHED -> {
+                    return Color.DARK_GRAY;
+                }
+                case NOTSEARCHED -> {
+                    return Color.MAGENTA;
+                }
+                case ISLAND -> {
+                    return Color.yellow;
+                }
+                case ISLANDHIT -> {
+                    return Color.BLUE;
+                }
             }
         } else {
             switch (tileState) {
-                case MISS -> { return Color.WHITE; }
-                case BOATHIT -> { return Color.RED; }
-                case TRAPHIT -> { return Color.ORANGE; }
-                case BOATDEAD -> { return Color.BLACK; }
-                case ISLAND -> { return Color.yellow; }
-                case ISLANDHIT -> { return Color.BLUE; }
-                default -> { return Color.CYAN; }
+                case MISS -> {
+                    return Color.WHITE;
+                }
+                case BOATHIT -> {
+                    return Color.RED;
+                }
+                case TRAPHIT -> {
+                    return Color.ORANGE;
+                }
+                case BOATDEAD -> {
+                    return Color.BLACK;
+                }
+                case ISLAND -> {
+                    return Color.yellow;
+                }
+                case ISLANDHIT -> {
+                    return Color.BLUE;
+                }
+                default -> {
+                    return Color.CYAN;
+                }
             }
         }
 

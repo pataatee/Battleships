@@ -1,11 +1,7 @@
 package views;
 
 import controllers.PlacementController;
-import models.game.placement.Coord;
-import models.game.placement.Orientation;
 import models.game.placement.PlacementStrategies;
-import models.grid.TileState;
-import models.placeable.Placeable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +25,6 @@ public class PlacementView extends JPanel {
 
     private JPanel _pnlPlacement;
     private CardLayout _lytPnlPlacement;
-
 
 
     // constructor ofc

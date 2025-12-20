@@ -7,7 +7,8 @@ import models.placeable.trap.Trap;
 
 public class PlaceableFactory {
 
-    public PlaceableFactory() { }
+    public PlaceableFactory() {
+    }
 
     public Boat createCruiser() {
         return new Cruiser();
@@ -37,5 +38,7 @@ public class PlaceableFactory {
         return new Tornado(ownerId);
     }
 
-    public Placeable createEmptyObject() { return new EmptyObject(); }
+    public Placeable createEmptyObject() {
+        return new EmptyObject();
+    }
 }

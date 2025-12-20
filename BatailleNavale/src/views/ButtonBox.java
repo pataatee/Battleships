@@ -29,7 +29,7 @@ public class ButtonBox extends JPanel {
 
         // le panel gris au-dessus
         this._pan = new JPanel();
-        this._pan.setBackground(new Color(255, 255, 255,150));
+        this._pan.setBackground(new Color(255, 255, 255, 150));
         this._pan.setAlignmentX(Component.CENTER_ALIGNMENT);
         this._pan.setAlignmentY(Component.CENTER_ALIGNMENT);
         this._pan.setVisible(false);

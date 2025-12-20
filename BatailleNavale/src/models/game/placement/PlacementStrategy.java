@@ -9,6 +9,7 @@ public abstract class PlacementStrategy {
     }
 
     public abstract Boolean placeObjects(Placeable[] placeable, Grid grid, Coord co);
+
     public abstract Boolean placeOneObject(Placeable placeable, Grid grid, Coord co);
 
 }

@@ -11,10 +11,10 @@ public class Tornado extends Trap {
     }
 
     @Override
-    public ShotResult onHit(int x ,int y) {
+    public ShotResult onHit(int x, int y) {
         //TODO: code tornado's effect
         super.setActivated(true);
-        return new ShotResult(x,y,ShotResultType.TORNAD);
+        return new ShotResult(x, y, ShotResultType.TORNAD);
     }
 
     public void updateTile(Tile tile) {

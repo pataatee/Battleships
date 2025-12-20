@@ -14,6 +14,7 @@ public class ConfigController {
 
     /**
      * Try to select a boat for the game. If the boat cannot be added, return false
+     *
      * @param boat The boat to add
      * @return true if the boat was added, false otherwise
      */
@@ -23,6 +24,7 @@ public class ConfigController {
 
     /**
      * Deselect (remove) the last boat of the specified type
+     *
      * @param boatType The type of boat to remove
      * @return true if a boat was removed, false otherwise
      */
@@ -32,6 +34,7 @@ public class ConfigController {
 
     /**
      * Get the total number of cells occupied by all selected boats
+     *
      * @return The total number of cells
      */
     public int getTotalCases() {
@@ -40,6 +43,7 @@ public class ConfigController {
 
     /**
      * Get the number of boats of a specific type
+     *
      * @param boatType The type of boat
      * @return The count of boats of this type
      */
@@ -49,6 +53,7 @@ public class ConfigController {
 
     /**
      * Set the game mode
+     *
      * @param gameMode The game mode to set
      */
     public void SelectGameMode(GameMode gameMode) {
@@ -57,6 +62,7 @@ public class ConfigController {
 
     /**
      * Set the grid size
+     *
      * @param size The size of the grid
      */
     public void setGridSize(int size) {

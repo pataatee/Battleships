@@ -30,10 +30,10 @@ public class BordelPanel extends JPanel implements GridObserver {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         initGrid(10);
         initAttackButtons(10);
-        add(layeredPane,BorderLayout.CENTER);
+        add(layeredPane, BorderLayout.CENTER);
     }
 
-    private void initGrid(int size){
+    private void initGrid(int size) {
         this._cells = new JLabel[size][size];
         gridContainer = new JPanel(new GridLayout(size, size, 0, 0));
 
@@ -50,7 +50,7 @@ public class BordelPanel extends JPanel implements GridObserver {
         }
     }
 
-    private void initAttackButtons(int size){
+    private void initAttackButtons(int size) {
         buttonOverlay = new JPanel(new GridLayout(size, size, 0, 0));
         buttonOverlay.setOpaque(false);
 
@@ -64,7 +64,7 @@ public class BordelPanel extends JPanel implements GridObserver {
                 attackButton.setContentAreaFilled(false);
                 attackButton.setBorderPainted(false);
                 attackButton.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-                attackButton.addActionListener(evt->onCellAttacked(x,y));
+                attackButton.addActionListener(evt -> onCellAttacked(x, y));
 
                 buttonOverlay.add(attackButton);
             }
@@ -83,33 +83,68 @@ public class BordelPanel extends JPanel implements GridObserver {
     }
 
 
-    private Color getTileColor(int x, int y){
+    private Color getTileColor(int x, int y) {
         TileState state = _grid.getTileTileState(x, y);
 
         if (isPlayerView) {
-            switch (state){
-                case EMPTY -> { return Color.CYAN ;}
-                case MISS -> { return Color.WHITE; }
-                case BOAT -> { return Color.DARK_GRAY; }
-                case BOATHIT -> { return Color.RED; }
-                case BOATDEAD -> { return Color.BLACK; }
-                case TRAP -> { return Color.ORANGE; }
-                case TRAPHIT -> { return Color.YELLOW ;}
-                case SEARCHED -> { return Color.DARK_GRAY ;}
-                case NOTSEARCHED -> { return Color.MAGENTA; }
-                case ISLAND -> {return  Color.yellow;}
-                case ISLANDHIT -> {return  Color.BLUE;}
+            switch (state) {
+                case EMPTY -> {
+                    return Color.CYAN;
+                }
+                case MISS -> {
+                    return Color.WHITE;
+                }
+                case BOAT -> {
+                    return Color.DARK_GRAY;
+                }
+                case BOATHIT -> {
+                    return Color.RED;
+                }
+                case BOATDEAD -> {
+                    return Color.BLACK;
+                }
+                case TRAP -> {
+                    return Color.ORANGE;
+                }
+                case TRAPHIT -> {
+                    return Color.YELLOW;
+                }
+                case SEARCHED -> {
+                    return Color.DARK_GRAY;
+                }
+                case NOTSEARCHED -> {
+                    return Color.MAGENTA;
+                }
+                case ISLAND -> {
+                    return Color.yellow;
+                }
+                case ISLANDHIT -> {
+                    return Color.BLUE;
+                }
             }
-        }
-        else {
-            switch (state){
-                case MISS -> { return Color.WHITE; }
-                case BOATHIT -> { return Color.RED; }
-                case TRAPHIT -> { return Color.ORANGE; }
-                case BOATDEAD -> { return Color.BLACK; }
-                case ISLAND -> {return  Color.yellow;}
-                case ISLANDHIT -> {return  Color.BLUE;}
-                default -> { return Color.CYAN; }
+        } else {
+            switch (state) {
+                case MISS -> {
+                    return Color.WHITE;
+                }
+                case BOATHIT -> {
+                    return Color.RED;
+                }
+                case TRAPHIT -> {
+                    return Color.ORANGE;
+                }
+                case BOATDEAD -> {
+                    return Color.BLACK;
+                }
+                case ISLAND -> {
+                    return Color.yellow;
+                }
+                case ISLANDHIT -> {
+                    return Color.BLUE;
+                }
+                default -> {
+                    return Color.CYAN;
+                }
             }
         }
 
@@ -117,7 +152,7 @@ public class BordelPanel extends JPanel implements GridObserver {
     }
 
     private void onCellAttacked(int x, int y) {
-        _delegate.getPosOfPos(x,y);
+        _delegate.getPosOfPos(x, y);
     }
 
 
@@ -126,7 +161,7 @@ public class BordelPanel extends JPanel implements GridObserver {
     }
 
     @Override
-    public void updateTileState(int x , int y ,TileState state) {
+    public void updateTileState(int x, int y, TileState state) {
         this._cells[y][x].setBackground(getTileColor(x, y));
         this._cells[y][x].repaint();
     }

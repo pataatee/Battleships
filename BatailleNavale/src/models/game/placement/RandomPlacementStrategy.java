@@ -22,7 +22,7 @@ public class RandomPlacementStrategy extends PlacementStrategy {
                 int x = rd.nextInt(grid.getSize());
                 int y = rd.nextInt(grid.getSize());
                 int rota = rd.nextInt(Orientation.values().length);
-                ok = grid.placeObject(pl, x,y,Orientation.values()[rota]);
+                ok = grid.placeObject(pl, x, y, Orientation.values()[rota]);
             } while (!ok);
         }
 
@@ -34,7 +34,7 @@ public class RandomPlacementStrategy extends PlacementStrategy {
         Random rd = new Random();
         Boolean ok = false;
         do {
-            ok = grid.placeObject(placeable, rd.nextInt(grid.getSize()), rd.nextInt(grid.getSize()),Orientation.values()[rd.nextInt(Orientation.values().length)]);
+            ok = grid.placeObject(placeable, rd.nextInt(grid.getSize()), rd.nextInt(grid.getSize()), Orientation.values()[rd.nextInt(Orientation.values().length)]);
         } while (!ok);
         return true;
     }
