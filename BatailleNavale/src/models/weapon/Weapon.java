@@ -12,4 +12,8 @@ public abstract class Weapon {
     public WeaponType get_type() {
         return _type;
     }
+
+    public String toString() {
+        return this._type.toString();
+    }
 }

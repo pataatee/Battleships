@@ -14,8 +14,9 @@ public class MainView extends JFrame implements GameObserver {
     private ConfigPanel config;
     private PlayerPanel playerPanel1;
     private PlayerPanel playerPanel2;
+    private LogsPanel _pnlLogs;
 
-    public MainView(PlayerPanel playerPanel1, PlayerPanel playerPanel2) {
+    public MainView(PlayerPanel playerPanel1, PlayerPanel playerPanel2, LogsPanel logPan) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(854, 480);
@@ -27,8 +28,9 @@ public class MainView extends JFrame implements GameObserver {
         _mainPanel = new JPanel(new BorderLayout());
         add(_mainPanel);
 
-        JPanel centerPanel = new JPanel(new GridLayout(1, 2));
+        JPanel centerPanel = new JPanel(new GridLayout(1, 3));
         centerPanel.add(playerPanel1);
+        centerPanel.add(logPan);
         centerPanel.add(playerPanel2);
 
         _mainPanel.add(centerPanel, BorderLayout.CENTER);

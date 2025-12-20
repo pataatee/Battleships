@@ -26,5 +26,9 @@ public class Attack {
         return _y;
     }
 
+    public String weaponToString() {
+        return this._weapon.toString();
+    }
+
 
 }

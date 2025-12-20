@@ -1,4 +1,5 @@
 import controllers.GameController;
+import controllers.LogsController;
 import controllers.WeaponController;
 import models.game.Game;
 import models.game.GameMode;
@@ -12,6 +13,7 @@ import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
 import models.weapon.WeaponType;
+import views.LogsPanel;
 import views.MainView;
 import views.PlayerPanel;
 import views.WeaponPanel;
@@ -78,12 +80,16 @@ public class Main {
         WeaponPanel wp2 = new WeaponPanel(wc2);
         p2.addWeaponObserver(wp2);
 
+        LogsController lc = new LogsController();
+        game.getGameLogs().addObserver(lc);
+
         PlayerPanel player1 = new PlayerPanel(gc, g[0], true, wp1);
         PlayerPanel player2 = new PlayerPanel(gc, g[1], false, wp2);
+        LogsPanel logs = new LogsPanel(lc);
 
         game.startGame();
 
-        MainView main = new MainView(player1, player2);
+        MainView main = new MainView(player1, player2, logs);
         game.addObserver(main);
         game.setUpGameMode(GameMode.ISLAND);
         g[1].addWeaponToIslandTile(4, 4, WeaponType.BOMB);
