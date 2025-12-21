@@ -78,7 +78,7 @@ package models{
             }
             Coord "*" o-->"1 or" Orientation
 
-            class ManualPlacementStrategy implements PlacementStrategies{
+            class ManualPlacementStrategy implements PlacementStrategy{
                 +<<create>>ManualPlacementStrategy()
                 +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
                 +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
@@ -111,7 +111,7 @@ package models{
                     MANUAL
 
             }
-            class RandomPlacementStrategy implements PlacementStrategies{
+            class RandomPlacementStrategy implements PlacementStrategy{
                 +<<create>>RandomPlacementStrategy()
                 +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
                 +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
@@ -120,7 +120,7 @@ package models{
             RandomPlacementStrategy ..>models.placeable.Placeable:<<uses>>
             RandomPlacementStrategy ..>Coord:<<use>>
 
-            class StaticPlacementStrategy implements PlacementStrategies{
+            class StaticPlacementStrategy implements PlacementStrategy{
                 +<<create>>StaticPlacementStrategy()
                 +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
                 +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
