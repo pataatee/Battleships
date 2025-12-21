@@ -218,7 +218,7 @@ package models{
             +notifyReset()
         }
         Grid "1"-->"** -tilesMap" Tile
-        Grid "1"-->"* -observers" : GridObserver
+        Grid "1"-->"* -observers" GridObserver
         Grid ..>models.game.placement.Orientation:<<use>>
         Grid ..>models.placeable.Placeable:<<use>>
         Grid ..>models.placeable.PlaceableType:<<use>>
@@ -509,7 +509,6 @@ package models{
         Player "1"*-->"* -stats" Stats
         Player ..> models.game.logs.GameLogs:<<use>>
         Player ..>models.game.logs.Log:<<use>>
-        Player ..>models.grid.Grid:<<use>>
         Player ..>models.grid.TileState:<<use>>
         Player ..>models.placeable.PlaceableType:<<use>>
         Player ..>models.placeable.boat.BoatType:<<use>>
@@ -649,19 +648,79 @@ package models{
 package controllers{
 
     class ConfigController{
-
+        +<<create>>ConfigController(mdData:ConfigData)
+        +selectBoat(boat:Boat):Boolean
+        +deselectBoat(boatType:BoatType):Boolean
+        +getTotalCases():Integer
+        +SelectGameMode(gameMode:GameMode)
+        +getGridSize():Integer
+        +getGameMode():GameMode
+        +resetConfiguration()
+        +getSelectedBoats():Boat[*]
     }
+    ConfigController "1" o-->"1 -mdData"models.game.placement.ConfigData:<<use>>
+    ConfigController ..> models.game.GameMode:<<use>>
+    ConfigController ..>models.placeable.boat.Boat:<<use>>
+    ConfigController ..>models.placeable.boat.BoatType:<<use>>
+
     class GameController{
-
+        +<<create>>GameController(toControl:GameController,cd:ConfigData)
+        +SendAttack(x:Integer,y:Integer)
+        +setState(gameState:GameState)
+        +getGameMode():GameMode
+        +setGameMode(gameMode:GameMode)
+        +confirmConfig()
     }
-    class LogsController{
+    GameController "1"o-->"1 -gameModel" models.game.Game
+    GameController "1"o-->"1 -configData" models.game.placement.ConfigData
+    GameController ..>models.game.GameMode:<<use>>
+    GameController ..>models.game.GameState:<<use>>
 
+
+    class LogsController extends LogObserver{
+        +<<create>>LogsController
+        +notifyObservers()
+        +addObserver(obs:LogObserver)
+        +updateOnLogAdded(log:Log)
     }
+    LogsController ..> models.game.logs.Log:<<uses>>
+    LogsController "1"o--> "1 -observers" models.game.logs.LogsObserver
+
+
     class PlacementController{
+        +<<create>>PlacementController(pl:Placement,player:Player,gc:GameController)
+        +refreshList()
+        +placeObject(pla:Placeable)
+        +getNbPlaceables():Integer
+        +getPlName():String
+        +getPl():Placeable
+        +setCoordOr(or:Orientation)
+        +getCoordOr():Orientation
+        +setCoordXY(x:Integer,y:Integer)
+        +setCoord(co:Coord)
+        +showCoord():String
+        +resetPlacement()
+        +getPlFromIndex(i:Integer):Placeable
+        +getPlNameFromIndex(i:Integer):String
+        +setPlaceableAtIndex(pla:Placeable,i:Integer)
+        +placeAllObjects():Boolean
+        +changeStrat(strat:PlacementStrategy)
+
 
     }
-    class StatsController{
+    PlacementController ..>models.game.GameMode:<<use>>
+    PlacementController "1" *--> "1 -toPlace" models.game.placement.Coord
+    PlacementController "1" o--> "1 -pl" models.game.placement.Placement:<<use>>
+    PlacementController "1"o-->"1 -grid"models.grid.Grid : place On
+    PlacementController "1" o--> "1 -Placeable" models.placeable.Placeable:<<use>>
+    PlacementController "1" o--> "1 -gameController" GameController
+    PlacementController "1" o-->"1 -player" models.player.Player : place for the player
 
+
+
+
+    class StatsController{
+        +updateStats(Stats stats) {
     }
     class WeaponController{
 
