@@ -250,9 +250,6 @@ public abstract class Player {
         removeWeapon(_currentWeapon.get_type());
     }
 
-
-    public abstract void notifyDeath();
-
     public Placeable[] getPlaceableList() {
         System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa");
         int totalSize = _boatList.size() + _trapList.size();

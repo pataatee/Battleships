@@ -2,6 +2,7 @@ package models.game;
 
 import models.game.logs.GameLogs;
 import models.game.logs.Log;
+import models.placeable.boat.Boat;
 import models.player.AIPlayer;
 import models.player.Attack;
 import models.player.Player;

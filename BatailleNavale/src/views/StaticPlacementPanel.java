@@ -16,7 +16,7 @@ public class StaticPlacementPanel extends JPanel {
     public StaticPlacementPanel(PlacementController pc, Grid grid) {
 
         // init attributes with parameters
-        this._pnlGrid = new GridPanel(grid,false);
+        this._pnlGrid = new GridPanel(grid,true);
         this._pc = pc;
 
         this.initGrid();

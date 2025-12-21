@@ -27,6 +27,7 @@ public class AIPlayer extends Player {
         return createAttack(coords[0], coords[1]);
     }
 
+
     @Override
     public void notifyDeath(GameLogs logs) {
         logs.addLog(new Log("Player " + super.getName() + ", ID: " + super.getId() + " has been defeated !"));
