@@ -3,7 +3,7 @@ package models.game.placement;
 import models.grid.Grid;
 import models.placeable.Placeable;
 
-public class ManualPlacementStrategy extends PlacementStrategy {
+public class ManualPlacementStrategy implements PlacementStrategy {
 
     public ManualPlacementStrategy() {
     }

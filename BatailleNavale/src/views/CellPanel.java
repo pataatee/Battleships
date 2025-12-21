@@ -130,12 +130,10 @@ public class CellPanel extends JPanel implements GridObserver {
         cell.repaint();
         this.updateUI();
     }
-
     @Override
     public Dimension getPreferredSize() {
         int cellSize = 30;
         int size = _grid.getSize() * cellSize;
         return new Dimension(size, size);
     }
-
 }

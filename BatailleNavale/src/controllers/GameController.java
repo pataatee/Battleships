@@ -34,6 +34,6 @@ public class GameController {
 
     public void confirmConfig() {
         _gameModel.confirmConfig(_configData.getChosenBoats());
-        _gameModel.setUpGameMode(_configData.getGameMode());
+        _gameModel.setUpGameMode(_configData.get_gameMode());
     }
 }

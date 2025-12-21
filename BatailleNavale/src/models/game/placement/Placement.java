@@ -5,18 +5,9 @@ import models.placeable.Placeable;
 
 public class Placement {
 
-    private Grid[] _grids;
     private PlacementStrategy _placementStrategy;
 
-    //choose everything version
-    public Placement(Grid[] grids, PlacementStrategy strat) {
-        this._grids = grids;
-        this._placementStrategy = strat;
-    }
-
-    // only choose strategy version
     public Placement(PlacementStrategy strat) {
-        this._grids = new Grid[2];
         this._placementStrategy = strat;
     }
 

@@ -11,7 +11,6 @@ public class EmptyObject extends Placeable {
     @Override
     public ShotResult onHit(int x, int y) {
         return new ShotResult(x, y, ShotResultType.MISS);
-        //TODO: dunno if i have to write something here but feels weird to leave it empty
     }
 
     @Override

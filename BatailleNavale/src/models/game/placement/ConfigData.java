@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class ConfigData {
 
-    private int gridSize;
-    private int sumCell;
-    private GameMode gameMode;
+    private int _gridSize;
+    private int _sumCell;
+    private GameMode _gameMode;
 
     private final Player _player1;
     private final Player _player2;
@@ -21,14 +21,13 @@ public class ConfigData {
     public ConfigData(Player player1, Player player2) {
         this._player1 = player1;
         this._player2 = player2;
-        this.sumCell = 0;
-        this.gameMode = GameMode.NORMAL;
-        this.gridSize = 10; // Taille par défaut
+        this._sumCell = 0;
+        this._gameMode = GameMode.NORMAL;
+        this._gridSize = 10; // Taille par défaut
         this.boatList = new ArrayList<>();
 
-        // Initialiser les grilles avec la taille par défaut
-        _player1.getGrid().setSize(gridSize);
-        _player2.getGrid().setSize(gridSize);
+        _player1.getGrid().setSize(_gridSize);
+        _player2.getGrid().setSize(_gridSize);
     }
 
     public int getMaxAllowedCells() {
@@ -38,21 +37,19 @@ public class ConfigData {
     /**
      * Set the grid size
      *
-     * @param gridSize The new grid size
+     * @param _gridSize The new grid size
      */
-    public void setGridSize(int gridSize) {
-        if (gridSize < 6 || gridSize > 10) {
+    public void set_gridSize(int _gridSize) {
+        if (_gridSize < 6 || _gridSize > 10) {
             throw new IllegalArgumentException("La taille de la grille doit être entre 6 et 10");
         }
 
-        this.gridSize = gridSize;
+        this._gridSize = _gridSize;
 
-        // Mettre à jour les grilles des joueurs
-        _player1.getGrid().setSize(gridSize);
-        _player2.getGrid().setSize(gridSize);
+        _player1.getGrid().setSize(_gridSize);
+        _player2.getGrid().setSize(_gridSize);
 
-        // Réinitialiser la liste des bateaux si la nouvelle taille est trop petite
-        if (sumCell > getMaxAllowedCells()) {
+        if (_sumCell > getMaxAllowedCells()) {
             clearExcessBoats();
         }
     }
@@ -64,14 +61,14 @@ public class ConfigData {
      * @return true if the boat was added, false otherwise
      */
     public boolean addBoat(Boat boat) {
-        int newTotal = sumCell + boat.getSize();
+        int newTotal = _sumCell + boat.getSize();
         int maxAllowed = getMaxAllowedCells();
 
         if (newTotal > maxAllowed) {
             return false;
         }
 
-        sumCell = newTotal;
+        _sumCell = newTotal;
         boatList.add(boat);
         return true;
     }
@@ -83,7 +80,7 @@ public class ConfigData {
      * @return true if the boat can be added, false otherwise
      */
     public boolean canAddBoat(Boat boat) {
-        int newTotal = sumCell + boat.getSize();
+        int newTotal = _sumCell + boat.getSize();
         return newTotal <= getMaxAllowedCells();
     }
 
@@ -98,7 +95,7 @@ public class ConfigData {
             Boat boat = boatList.get(i);
             if (boat.getType() == boatType) {
                 boatList.remove(i);
-                sumCell -= boat.getSize();
+                _sumCell -= boat.getSize();
                 return true;
             }
         }
@@ -111,23 +108,7 @@ public class ConfigData {
      * @return The total number of cells
      */
     public int getTotalCells() {
-        return sumCell;
-    }
-
-    /**
-     * Get the count of boats of a specific type
-     *
-     * @param boatType The type of boat
-     * @return The count of boats
-     */
-    public int getBoatCountByType(BoatType boatType) {
-        int count = 0;
-        for (Boat boat : boatList) {
-            if (boat.getType() == boatType) {
-                count++;
-            }
-        }
-        return count;
+        return _sumCell;
     }
 
     /**
@@ -136,19 +117,19 @@ public class ConfigData {
      * @return The list of boats
      */
     public ArrayList<Boat> getChosenBoats() {
-        return new ArrayList<>(boatList); // Retourne une copie pour éviter la modification externe
+        return new ArrayList<>(boatList);
     }
 
     /**
      * Set the game mode
      *
-     * @param gameMode The game mode to set
+     * @param _gameMode The game mode to set
      */
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
+    public void set_gameMode(GameMode _gameMode) {
+        this._gameMode = _gameMode;
 
         // Réinitialiser la liste des bateaux si la nouvelle configuration est trop restrictive
-        if (sumCell > getMaxAllowedCells()) {
+        if (_sumCell > getMaxAllowedCells()) {
             clearExcessBoats();
         }
     }
@@ -158,8 +139,8 @@ public class ConfigData {
      *
      * @return The game mode
      */
-    public GameMode getGameMode() {
-        return gameMode;
+    public GameMode get_gameMode() {
+        return _gameMode;
     }
 
     /**
@@ -167,8 +148,8 @@ public class ConfigData {
      *
      * @return The grid size
      */
-    public int getGridSize() {
-        return gridSize;
+    public int get_gridSize() {
+        return _gridSize;
     }
 
 
@@ -178,9 +159,9 @@ public class ConfigData {
     private void clearExcessBoats() {
         int maxAllowed = getMaxAllowedCells();
 
-        while (sumCell > maxAllowed && !boatList.isEmpty()) {
+        while (_sumCell > maxAllowed && !boatList.isEmpty()) {
             Boat lastBoat = boatList.remove(boatList.size() - 1);
-            sumCell -= lastBoat.getSize();
+            _sumCell -= lastBoat.getSize();
         }
     }
 
@@ -189,12 +170,12 @@ public class ConfigData {
      */
     public void reset() {
         this.boatList.clear();
-        this.sumCell = 0;
-        this.gameMode = GameMode.NORMAL;
-        this.gridSize = 10;
+        this._sumCell = 0;
+        this._gameMode = GameMode.NORMAL;
+        this._gridSize = 10;
 
-        _player1.getGrid().setSize(gridSize);
-        _player2.getGrid().setSize(gridSize);
+        _player1.getGrid().setSize(_gridSize);
+        _player2.getGrid().setSize(_gridSize);
     }
 
 }

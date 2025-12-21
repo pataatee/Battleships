@@ -44,8 +44,6 @@ public class Game {
         if (_gameMode == GameMode.ISLAND) {
             _players[0].setUpIsland();
             _players[1].setUpIsland();
-            _players[0].clearWeapon();
-            _players[1].clearWeapon();
         }
     }
 
@@ -83,7 +81,6 @@ public class Game {
         }
     }
 
-    // Nouvelle méthode dans Game pour gérer les stats
     private void updateStatsFromAttack(Player attacker, Player opponent, ShotResult[] results) {
         for (ShotResult res : results) {
             switch (res.get_type()) {
@@ -148,6 +145,9 @@ public class Game {
     public void setGameState(GameState gameState) {
         _gameState = gameState;
         notifyGameStateChanged();
+        if(gameState==GameState.IN_GAME) {
+            startGame();
+        }
     }
 
 
@@ -201,6 +201,7 @@ public class Game {
         }
     }
 
+    //spaghetti code at his finest sorry for the reader
     public void confirmConfig(ArrayList<Boat> chosenBoats) {
         PlaceableFactory placeableFactory = new PlaceableFactory();
         _players[0].resetBoatList();
@@ -220,6 +221,9 @@ public class Game {
             _players[0].addWeapon(WeaponType.SONAR);
             _players[1].addWeapon(WeaponType.BOMB);
             _players[1].addWeapon(WeaponType.SONAR);
+        }else{
+            _players[0].clearWeapon();
+            _players[1].clearWeapon();
         }
         _players[0].getStats().setOpponentBoatStats(_players[1].getNbBoats(), _players[1].getNbBoatTiles());
         _players[1].getStats().setOpponentBoatStats(_players[0].getNbBoats(), _players[0].getNbBoatTiles());

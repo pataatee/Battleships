@@ -26,7 +26,7 @@ public class ButtonGridPanel extends JPanel {
                 button.setOpaque(false);
                 button.setContentAreaFilled(false);
                 button.setBorderPainted(false);
-
+                button.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
                 int finalX = x;
                 int finalY = y;
                 button.addActionListener(e -> _delegate.invoke(finalX, finalY));
@@ -34,9 +34,5 @@ public class ButtonGridPanel extends JPanel {
                 add(button);
             }
         }
-    }
-
-    public void set_delegate(GridButtonDelegate _delegate) {
-        this._delegate = _delegate;
     }
 }

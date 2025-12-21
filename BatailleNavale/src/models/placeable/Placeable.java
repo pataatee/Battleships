@@ -35,10 +35,10 @@ public abstract class Placeable {
         for (int i = 0; i < _size; i++) {
             int newX = x;
             int newY = y;
-            if (orientation == Orientation.HORIZONTAL) {
+            if (orientation == Orientation.VERTICAL) {
                 newX = i + x;
             }
-            if (orientation == Orientation.VERTICAL) {
+            if (orientation == Orientation.HORIZONTAL) {
                 newY = i + y;
             }
             tiles[i] = new int[]{newX, newY};
