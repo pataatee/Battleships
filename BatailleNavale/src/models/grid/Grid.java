@@ -9,6 +9,7 @@ import models.player.ShotResultType;
 import models.weapon.WeaponType;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Grid {
 
@@ -129,6 +130,7 @@ public class Grid {
         return this._size;
     }
 
+
     public void setUpIsland() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -136,7 +138,21 @@ public class Grid {
                 notifyObserver(i + 3, j + 3, _tilesMap[i + 3][j + 3].getStateName());
             }
         }
+
+        Random random = new Random();
+
+        int x1 = random.nextInt(4);
+        int y1 = random.nextInt(4);
+
+        int x2, y2;
+        do {
+            x2 = random.nextInt(4);
+            y2 = random.nextInt(4);
+        } while (x1 == x2 && y1 == y2);
+        ((IslandTile)_tilesMap[x1][y1]).addWeapon(WeaponType.BOMB);
+        ((IslandTile)_tilesMap[x2][y2]).addWeapon(WeaponType.BOMB);
     }
+
 
 
     public void addWeaponToIslandTile(int x, int y, WeaponType wp) {

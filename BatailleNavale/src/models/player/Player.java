@@ -43,12 +43,14 @@ public abstract class Player {
 
     public void addBoat(Boat boat) {
         _boatList.add(boat);
+        this._isAlive=true;
     }
 
     ;
 
     public void addTrap(Trap trap) {
         _trapList.add(trap);
+        this._isTornaded=0;
 
     }
 
@@ -251,6 +253,13 @@ public abstract class Player {
             result[index++] = trap;
         }
         return result;
+    }
+
+    public void resetBoatList() {
+        _boatList.clear();
+    }
+    public void resetTrapList() {
+        this._trapList.clear();
     }
 
     public String getName() {

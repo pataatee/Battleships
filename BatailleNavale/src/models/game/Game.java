@@ -8,6 +8,7 @@ import models.player.AIPlayer;
 import models.player.Attack;
 import models.player.Player;
 import models.player.ShotResult;
+import models.weapon.WeaponType;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -172,6 +173,10 @@ public class Game {
 
     public void confirmConfig(ArrayList<Boat> chosenBoats) {
         PlaceableFactory placeableFactory = new PlaceableFactory();
+        _players[0].resetBoatList();
+        _players[1].resetBoatList();
+        _players[0].resetTrapList();
+        _players[1].resetTrapList();
         for (Boat chosenBoat : chosenBoats) {
             _players[0].addBoat(chosenBoat.clone());
             _players[1].addBoat(chosenBoat.clone());
@@ -180,5 +185,11 @@ public class Game {
         _players[0].addTrap(placeableFactory.createTornado());
         _players[1].addTrap(placeableFactory.createBlackHole());
         _players[1].addTrap(placeableFactory.createTornado());
+        if(_gameMode==GameMode.NORMAL){
+            _players[0].addWeapon(WeaponType.BOMB);
+            _players[0].addWeapon(WeaponType.SONAR);
+            _players[1].addWeapon(WeaponType.BOMB);
+            _players[1].addWeapon(WeaponType.SONAR);
+        }
     }
 }

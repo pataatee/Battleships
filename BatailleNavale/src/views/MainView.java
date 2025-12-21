@@ -54,6 +54,9 @@ public class MainView extends JFrame implements GameObserver {
     public void updateGameState(GameState state) {
         _mainPanel.removeAll();
         switch (state) {
+            case CONFIG -> {
+                _mainPanel.add(config, BorderLayout.CENTER);
+            }
             case PLACEMENT -> {
                 _mainPanel.add(_placementView, BorderLayout.CENTER);
                 _mainPanel.revalidate();
@@ -64,12 +67,14 @@ public class MainView extends JFrame implements GameObserver {
                 this.startGame();
             }
         }
+        _mainPanel.revalidate();
+        _mainPanel.repaint();
     }
 
     @Override
     public void updateGameOver(Player winner) {
         _mainPanel.removeAll();
-        _mainPanel.add(new EndScreenPanel(winner), BorderLayout.CENTER);
+        _mainPanel.add(new EndScreenPanel(winner,_gameController), BorderLayout.CENTER);
         _mainPanel.revalidate();
         _mainPanel.repaint();
     }
