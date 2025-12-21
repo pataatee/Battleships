@@ -1,5 +1,6 @@
 package views;
 
+import controllers.GameController;
 import models.game.GameObserver;
 import models.game.GameState;
 import models.player.Attack;
@@ -14,8 +15,9 @@ public class MainView extends JFrame implements GameObserver {
     private ConfigPanel config;
     private PlayerPanel playerPanel1;
     private PlayerPanel playerPanel2;
+    private GameController _gameController;
 
-    public MainView(PlayerPanel playerPanel1, PlayerPanel playerPanel2) {
+    public MainView(ConfigPanel configPanel, PlacementView PlacementPanel, PlayerPanel playerPanel1, PlayerPanel playerPanel2, GameController gameController) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(854, 480);
@@ -23,15 +25,12 @@ public class MainView extends JFrame implements GameObserver {
 
         this.playerPanel1 = playerPanel1;
         this.playerPanel2 = playerPanel2;
-
+        this._gameController = gameController;
         _mainPanel = new JPanel(new BorderLayout());
         add(_mainPanel);
 
-        JPanel centerPanel = new JPanel(new GridLayout(1, 2));
-        centerPanel.add(playerPanel1);
-        centerPanel.add(playerPanel2);
 
-        _mainPanel.add(centerPanel, BorderLayout.CENTER);
+        _mainPanel.add(PlacementPanel, BorderLayout.CENTER);
     }
 
     public void setConfig(ConfigPanel configPanel) {
@@ -40,6 +39,18 @@ public class MainView extends JFrame implements GameObserver {
         // _mainPanel.add(config, BorderLayout.CENTER);
         // _mainPanel.revalidate();
         // _mainPanel.repaint();
+    }
+
+    public void startGame() {
+        _mainPanel.removeAll();
+        JPanel centerPanel = new JPanel(new GridLayout(1, 2));
+        centerPanel.add(playerPanel1);
+        centerPanel.add(playerPanel2);
+
+        _mainPanel.add(centerPanel, BorderLayout.CENTER);
+        _mainPanel.revalidate();
+        _mainPanel.repaint();
+        this.repaint();
     }
 
     public void displayConfig() {
@@ -84,6 +95,7 @@ public class MainView extends JFrame implements GameObserver {
             }
             case IN_GAME -> {
                 System.out.println("Game state: IN_GAME");
+                this.startGame();
             }
             case ENDGAME -> {
                 System.out.println("Game state: ENDGAME");

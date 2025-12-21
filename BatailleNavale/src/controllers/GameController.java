@@ -1,6 +1,8 @@
 package controllers;
 
 import models.game.Game;
+import models.game.GameMode;
+import models.game.GameState;
 
 public class GameController {
 
@@ -15,4 +17,10 @@ public class GameController {
     }
 
 
+    public void setState(GameState gameState) {
+     _gameModel.setGameState(gameState);
+    }
+    public GameMode getGameMode() {
+        return _gameModel.getGameMode();
+    }
 }

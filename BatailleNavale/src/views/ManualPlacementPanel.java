@@ -2,6 +2,7 @@ package views;
 
 import controllers.PlacementController;
 import models.game.placement.Orientation;
+import models.grid.Grid;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.*;
 public class ManualPlacementPanel extends JPanel {
 
     private PlacementController _pc; // le controller
-    private BordelPanel _pnlGrid; // grid ou sont placés les objets
+    private GridPanel _pnlGrid; // grid ou sont placés les objets
 
     private JPanel _pnlForScrPan; // panel a ajouter au scrollPanel
     private JScrollPane _scrPanLstPlButtons; // le scroll pane ds lequel il y a tous les pl buttons
@@ -30,11 +31,10 @@ public class ManualPlacementPanel extends JPanel {
     private boolean _coSelected; // true if co are selected
 
 
-    public ManualPlacementPanel(PlacementController pc, BordelPanel bp) {
-        bp.addDelegate(this);
+    public ManualPlacementPanel(PlacementController pc, Grid grid) {
         // init with parameters
         this._pc = pc;
-        this._pnlGrid = bp;
+        this._pnlGrid = new GridPanel(grid,false);
 
         // init all
         this.initAttributes();
@@ -45,6 +45,7 @@ public class ManualPlacementPanel extends JPanel {
 
         // init this
         this.initThis();
+        _pnlGrid.createGridCenter(10,(x,y)->getPosOfPos(x,y));
 
     }
 

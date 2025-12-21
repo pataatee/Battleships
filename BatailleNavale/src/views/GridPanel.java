@@ -10,15 +10,29 @@ public class GridPanel extends JPanel {
 
     private final Grid grid;
     private final boolean isPlayerView;
-    private final GameController controller;
+    private final GameController _controller;
 
     private CellPanel cellPanel;
     private ButtonGridPanel buttonPanel;
 
+    public GridPanel(Grid grid, boolean isPlayerView) {
+        this.grid = grid;
+        this.isPlayerView = isPlayerView;
+        _controller =null;
+        int size = grid.getSize();
+
+        setLayout(new BorderLayout(5, 5));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        add(createTopLabels(size), BorderLayout.NORTH);
+        add(createLeftLabels(size), BorderLayout.WEST);
+        createGridCenter(size,null);
+    }
+
     public GridPanel(GameController gc, Grid grid, boolean isPlayerView) {
         this.grid = grid;
         this.isPlayerView = isPlayerView;
-        this.controller = gc;
+        this._controller = gc;
 
         int size = grid.getSize();
 
@@ -27,7 +41,8 @@ public class GridPanel extends JPanel {
 
         add(createTopLabels(size), BorderLayout.NORTH);
         add(createLeftLabels(size), BorderLayout.WEST);
-        add(createGridCenter(size), BorderLayout.CENTER);
+        createGridCenter(size,(x,y)->gc.SendAttack(x,y));
+
     }
 
     private JPanel createTopLabels(int size) {
@@ -53,7 +68,7 @@ public class GridPanel extends JPanel {
         return label;
     }
 
-    private JComponent createGridCenter(int size) {
+    public void createGridCenter(int size,GridButtonDelegate action) {
         JPanel container = new JPanel(new BorderLayout());
         container.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 3),
@@ -66,7 +81,8 @@ public class GridPanel extends JPanel {
         if (isPlayerView) {
             container.add(cellPanel, BorderLayout.CENTER);
         } else {
-            buttonPanel = new ButtonGridPanel(controller, size);
+
+            buttonPanel = new ButtonGridPanel(size, action);
 
             JLayeredPane layeredPane = new JLayeredPane();
             layeredPane.setLayout(new OverlayLayout(layeredPane));
@@ -80,6 +96,7 @@ public class GridPanel extends JPanel {
             container.add(layeredPane, BorderLayout.CENTER);
         }
 
-        return container;
+         add(container,BorderLayout.EAST);
     }
+
 }

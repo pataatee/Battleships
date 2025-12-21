@@ -1,21 +1,22 @@
 package views;
 
 import controllers.PlacementController;
+import models.grid.Grid;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StaticPlacementPanel extends JPanel {
 
-    private BordelPanel _pnlGrid; // grid where placement is gonna be shown
+    private GridPanel _pnlGrid; // grid where placement is gonna be shown
     private PlacementController _pc; // placement controller
 
 
     // constructor ofc
-    public StaticPlacementPanel(BordelPanel gp, PlacementController pc) {
+    public StaticPlacementPanel(PlacementController pc, Grid grid) {
 
         // init attributes with parameters
-        this._pnlGrid = gp;
+        this._pnlGrid = new GridPanel(grid,false);
         this._pc = pc;
 
         this.initGrid();

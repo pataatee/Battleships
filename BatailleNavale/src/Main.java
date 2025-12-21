@@ -1,7 +1,10 @@
+import controllers.ConfigController;
 import controllers.GameController;
+import controllers.PlacementController;
 import controllers.WeaponController;
 import models.game.Game;
 import models.game.GameMode;
+import models.game.placement.ConfigData;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
 import models.game.placement.StaticPlacementStrategy;
@@ -12,9 +15,7 @@ import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
 import models.weapon.WeaponType;
-import views.MainView;
-import views.PlayerPanel;
-import views.WeaponPanel;
+import views.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -78,12 +79,15 @@ public class Main {
         WeaponPanel wp2 = new WeaponPanel(wc2);
         p2.addWeaponObserver(wp2);
 
-        PlayerPanel player1 = new PlayerPanel(gc, g[0], true, wp1);
+        PlayerPanel player1 = new PlayerPanel(g[0], true, wp1);
         PlayerPanel player2 = new PlayerPanel(gc, g[1], false, wp2);
 
-        game.startGame();
 
-        MainView main = new MainView(player1, player2);
+        ConfigController conf = new ConfigController(new ConfigData(g));
+        ConfigPanel configPanel = new ConfigPanel(conf,gc);
+        PlacementController pc = new PlacementController(p,pla1,g[0],gc);
+        PlacementView placementView = new PlacementView(pc,g[0],gc);
+        MainView main = new MainView(configPanel,placementView,player1, player2,gc);
         game.addObserver(main);
         game.setUpGameMode(GameMode.ISLAND);
         g[1].addWeaponToIslandTile(4, 4, WeaponType.BOMB);

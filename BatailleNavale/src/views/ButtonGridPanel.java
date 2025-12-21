@@ -1,46 +1,42 @@
 package views;
 
-import controllers.GameController;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class ButtonGridPanel extends JPanel {
 
-    private JPanel buttonOverlay;
-    private GameController _controller;
-    private int gridSize;
+    private final int _gridSize;
+    private GridButtonDelegate _delegate;
 
-    public ButtonGridPanel(GameController controller, int gridSize) {
-        this._controller = controller;
-        this.gridSize = gridSize;
+    public ButtonGridPanel(int gridSize, GridButtonDelegate delegate) {
+        this._gridSize = gridSize;
+        this._delegate = delegate;
 
         setOpaque(false);
         setLayout(new GridLayout(gridSize, gridSize, 0, 0));
 
-        initAttackButtons();
+        initButtons();
     }
 
-    private void initAttackButtons() {
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                final int x = i;
-                final int y = j;
+    private void initButtons() {
+        for (int x = 0; x < _gridSize; x++) {
+            for (int y = 0; y < _gridSize; y++) {
 
-                JButton attackButton = new JButton();
-                attackButton.setOpaque(false);
-                attackButton.setContentAreaFilled(false);
-                attackButton.setBorderPainted(false);
-                attackButton.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-                attackButton.addActionListener(evt -> onCellAttacked(x, y));
+                JButton button = new JButton();
+                button.setOpaque(false);
+                button.setContentAreaFilled(false);
+                button.setBorderPainted(false);
 
-                add(attackButton);
+                int finalX = x;
+                int finalY = y;
+                button.addActionListener(e -> _delegate.invoke(finalX, finalY));
+
+                add(button);
             }
         }
     }
 
-    private void onCellAttacked(int x, int y) {
-        System.out.println("Attaque sur la case [" + x + ", " + y + "]");
-        _controller.SendAttack(x, y);
+    public void set_delegate(GridButtonDelegate _delegate) {
+        this._delegate = _delegate;
     }
 }

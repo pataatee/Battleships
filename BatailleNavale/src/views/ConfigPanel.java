@@ -1,12 +1,15 @@
 package views;
 
 import controllers.ConfigController;
+import controllers.GameController;
+import models.game.GameState;
 import models.placeable.PlaceableFactory;
 import models.placeable.boat.Boat;
 import models.placeable.boat.BoatType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class ConfigPanel extends JPanel {
 
@@ -20,10 +23,11 @@ public class ConfigPanel extends JPanel {
     private final JSpinner spinnerSub;
     private final JSpinner spinnerTorpedo;
     private final JSpinner spinnerAircraftCarrier;
-
+    private final GameController _gameController;
+    JButton nextBtn;
     private int nbCruiser = 0, nbDestroyer = 0, nbSub = 0, nbTorpedo = 0, nbAircraft = 0;
 
-    public ConfigPanel(ConfigController controller) {
+    public ConfigPanel(ConfigController controller, GameController gameController) {
         this.controller = controller;
 
         spinnerCruiser = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
@@ -32,6 +36,8 @@ public class ConfigPanel extends JPanel {
         spinnerTorpedo = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
         spinnerAircraftCarrier = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
         this.setSize(600, 600);
+        nextBtn = new JButton("Passer au placement");
+        _gameController = gameController;
         initUI();
     }
 
@@ -107,7 +113,7 @@ public class ConfigPanel extends JPanel {
 
         this.add(center, BorderLayout.CENTER);
 
-        JButton nextBtn = new JButton("Passer au placement");
+
         JPanel bottom = new JPanel();
         bottom.add(nextBtn);
         this.add(bottom, BorderLayout.SOUTH);
@@ -120,6 +126,7 @@ public class ConfigPanel extends JPanel {
         spinnerAircraftCarrier.addChangeListener(e -> updateBoatCount(BoatType.AIRCRAFTCARRIER, (int) spinnerAircraftCarrier.getValue(), factory.createAircraftCarrier()));
         nextBtn.addActionListener(e -> {
             System.out.println("placement");
+            _gameController.setState(GameState.PLACEMENT);
         });
     }
 

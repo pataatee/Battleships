@@ -102,6 +102,11 @@ public class Game {
         notifyGameOver(winner);
     }
 
+    public void setGameState(GameState gameState) {
+        _gameState = gameState;
+        notifyGameStateChanged();
+    }
+
 
     public Player getCurrentPlayer() {
         return _players[_currentPlayerIndex];

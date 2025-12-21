@@ -11,14 +11,14 @@ public class PlacementController {
     private Placeable[] _lstToPlace;
     private Coord _toPlace;
     private Grid _grid;
-    private GameMode _gameMode;
+    private GameController _gameController;
 
-    public PlacementController(Placement pl, Placeable[] lst, Coord co, Grid grid, GameMode gm) {
+    public PlacementController(Placement pl, Placeable[] lst, Grid grid, GameController gc) {
         this._pl = pl;
         this._lstToPlace = lst;
-        this._toPlace = co;
-        _grid = grid;
-        this._gameMode = gm;
+        this._toPlace = new Coord(-1,-1,Orientation.HORIZONTAL);//Dummy cord just to avoid Null pointer
+        this._grid = grid;
+        this._gameController = gc;
     }
 
     public Boolean placeObject(Placeable pla) {
@@ -71,7 +71,7 @@ public class PlacementController {
 
         this._grid.resetGrid();
 
-        if (this._gameMode == GameMode.ISLAND) {
+        if (this._gameController.getGameMode() == GameMode.ISLAND) {
             this._grid.setUpIsland();
         }
 
