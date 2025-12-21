@@ -13,10 +13,7 @@ import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
 import models.weapon.WeaponType;
-import views.LogsPanel;
-import views.MainView;
-import views.PlayerPanel;
-import views.WeaponPanel;
+import views.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,7 +29,7 @@ public class Main {
         Game game = new Game(p1, p2);
 
 
-        var p = new Placement(new StaticPlacementStrategy());
+        var p = new Placement(new RandomPlacementStrategy());
         var fac = new PlaceableFactory();
 
         var pla1 = new Placeable[10];
@@ -67,8 +64,8 @@ public class Main {
 //        p2.addPlaceable(pla1);
 //        p1.addPlaceable(pla2);
 
-        p1.addPlaceable(pla1);
-        p2.addPlaceable(pla2);
+//        p1.addPlaceable(pla1);
+//        p2.addPlaceable(pla2);
 
         GameController gc = new GameController(game);
 
@@ -87,9 +84,13 @@ public class Main {
         PlayerPanel player2 = new PlayerPanel(gc, g[1], false, wp2);
         LogsPanel logs = new LogsPanel(lc);
 
-        game.startGame();
+//        game.startGame();
 
-        MainView main = new MainView(player1, player2, logs);
+        StatsPanel stats1 = new StatsPanel();
+        StatsPanel stats2 = new StatsPanel();
+
+
+        MainView main = new MainView(player1, player2, logs, stats1, stats2);
         game.addObserver(main);
         game.setUpGameMode(GameMode.ISLAND);
         g[1].addWeaponToIslandTile(4, 4, WeaponType.BOMB);
@@ -97,6 +98,15 @@ public class Main {
         p.setStrat(new RandomPlacementStrategy());
         p.placeObject(pla1, g[0], null);
         p.placeObject(pla2, g[1], null);
+
+        p1.addPlaceable(pla1);
+        p2.addPlaceable(pla2);
+
+        p1.getStats().addObserver(stats1);
+        p2.getStats().addObserver(stats2);
+
+        game.startGame();
+
         main.setVisible(true);
 
 

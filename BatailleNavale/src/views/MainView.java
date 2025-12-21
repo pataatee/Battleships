@@ -16,7 +16,7 @@ public class MainView extends JFrame implements GameObserver {
     private PlayerPanel playerPanel2;
     private LogsPanel _pnlLogs;
 
-    public MainView(PlayerPanel playerPanel1, PlayerPanel playerPanel2, LogsPanel logPan) {
+    public MainView(PlayerPanel playerPanel1, PlayerPanel playerPanel2, LogsPanel logPan, StatsPanel stats1, StatsPanel stats2) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(854, 480);
@@ -28,12 +28,26 @@ public class MainView extends JFrame implements GameObserver {
         _mainPanel = new JPanel(new BorderLayout());
         add(_mainPanel);
 
-        JPanel centerPanel = new JPanel(new GridLayout(1, 3));
-        centerPanel.add(playerPanel1);
+        // Conteneur pour joueur 1 : PlayerPanel + StatsPanel
+        JPanel playerContainer1 = new JPanel();
+        playerContainer1.setLayout(new BoxLayout(playerContainer1, BoxLayout.Y_AXIS));
+        playerContainer1.add(playerPanel1);
+        playerContainer1.add(stats1);
+
+        // Conteneur pour joueur 2 : PlayerPanel + StatsPanel
+        JPanel playerContainer2 = new JPanel();
+        playerContainer2.setLayout(new BoxLayout(playerContainer2, BoxLayout.Y_AXIS));
+        playerContainer2.add(playerPanel2);
+        playerContainer2.add(stats2);
+
+        // Centre : player1+stats | logs | player2+stats
+        JPanel centerPanel = new JPanel(new GridLayout(1,3));
+        centerPanel.add(playerContainer1);
         centerPanel.add(logPan);
-        centerPanel.add(playerPanel2);
+        centerPanel.add(playerContainer2);
 
         _mainPanel.add(centerPanel, BorderLayout.CENTER);
+
     }
 
     public void setConfig(ConfigPanel configPanel) {
