@@ -2,6 +2,7 @@ package models.game;
 
 import models.game.logs.GameLogs;
 import models.game.logs.Log;
+import models.placeable.boat.Boat;
 import models.player.AIPlayer;
 import models.player.Attack;
 import models.player.Player;
@@ -53,7 +54,10 @@ public class Game {
         Player opponent = getOpponent();
 
         ShotResult[] results = opponent.getAttacked(attack);
-        attacker.handelShotResult(results, this._logs, opponent);
+
+        this.updateStatsFromAttack(attacker, opponent, results);
+
+        attacker.handelShotResult(results, this._logs);
 
         this._logs.addLog(new Log(attacker.getName() + " attacked " + opponent.getName() + " at (" + attack.getX() + "," + attack.getY() + ") with " + attack.weaponToString()));
 
@@ -69,6 +73,32 @@ public class Game {
 
         if (isAITurn()) {
             scheduleAITurn();
+        }
+    }
+
+    // Nouvelle méthode dans Game pour gérer les stats
+    private void updateStatsFromAttack(Player attacker, Player opponent, ShotResult[] results) {
+        for (ShotResult res : results) {
+            switch (res.get_type()) {
+                case HIT -> {
+                    // Chercher le bateau dans la grille de l'opponent
+                    Boat boat = opponent.getBoatAt(res.get_x(), res.get_y());
+                    if (boat != null && boat.getIsFirstHit()) {
+                        attacker.getStats().updateNbHitBoats();
+                        boat.setIsFirstHit(false);
+                    }
+                    attacker.getStats().updateNbHitBoatTiles();
+                }
+                case SUNK -> {
+                    attacker.getStats().updateNbSunkBoats();
+                }
+                case ISLANDHIT, DISCOVERBOMB, DISCOVERSONAR -> {
+                    attacker.getStats().updateIslandTilesLeft();
+                }
+                case MISS -> {
+                    attacker.getStats().updateMissShots();
+                }
+            }
         }
     }
 

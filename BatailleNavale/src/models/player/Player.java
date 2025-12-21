@@ -205,69 +205,54 @@ public abstract class Player {
     }
 
 
-    public void handelShotResult(ShotResult[] resultTypes, GameLogs logs, Player opponent) {
+    public void handelShotResult(ShotResult[] resultTypes, GameLogs logs) {
         int sonarResult = 0;
         for (ShotResult res : resultTypes) {
             switch (res.get_type()) {
                 case HIT -> {
-                    System.out.println("Add to log Hit");
                     logs.addLog(new Log(this, "Hit boat at (" + res.get_x() + "," + res.get_y() + ") !"));
-                    Boat boat = opponent.getBoatAt(res.get_x(), res.get_y());
-                    if (boat.getIsFirstHit()) {
-                        this._stats.updateNbHitBoats();
-                        boat.setIsFirstHit(false);
-                    }
-                    this._stats.updateNbHitBoatTiles();
                 }
                 case SUNK -> {
-                    System.out.println("Add to log Sunk");
                     logs.addLog(new Log(this, "Hit and sunk boat at (" + res.get_x() + "," + res.get_y() + ") !"));
-                    this._stats.updateNbSunkBoats();
                 }
                 case SONAR -> {
                     sonarResult++;
                     logs.addLog(new Log(this, "Scanned boat(s) around (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case TORNAD -> {
-                    System.out.println("Add to log Tornadoed");
                     logs.addLog(new Log(this, "Triggered Tornado trap at (" + res.get_x() + "," + res.get_y() + ") ! The next 3 attacks are scrambled."));
                     _isTornaded = 3;
                     this._stats.updateTriggeredTornado();
                 }
                 case BLACKHOLE -> {
-                    System.out.println("Add to log BlackHole");
                     logs.addLog(new Log(this, "Triggered Blackhole trap at (" + res.get_x() + "," + res.get_y() + ") ! Attack backfired."));
                     this.getAttacked(createAttack(res.get_x(), res.get_y()));
                     this._stats.updateTriggeredBlackHole();
                 }
                 case ISLANDHIT -> {
-                    System.out.println("Add to log IslandHit");
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Nothing has been discovered."));
-                    this._stats.updateIslandTilesLeft();
                 }
                 case DISCOVERBOMB -> {
-                    System.out.println("Add to log DiscoverBomb");
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the Bomb weapon!"));
                     this.addWeapon(WeaponType.BOMB);
-                    this._stats.updateIslandTilesLeft();
                     this._stats.updateDiscoveredWeapons(new Bomb());
                 }
                 case DISCOVERSONAR -> {
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the sonar!"));
                     this.addWeapon(WeaponType.SONAR);
-                    this._stats.updateIslandTilesLeft();
                     this._stats.updateDiscoveredWeapons(new Sonar());
                 }
                 default -> {
                     logs.addLog(new Log(this, "Shot at (" + res.get_x() + "," + res.get_y() + ") ! There's nothing on this tile."));
-                    System.out.println("Add to log Miss");
-                    this._stats.updateMissShots();
                 }
             }
         }
+
         if (sonarResult != 0) {
-            System.out.println("Sonar" + sonarResult);
+            System.out.println("Sonar " + sonarResult);
         }
+
+        // Gestion de l'arme utilisée
         this._stats.updateUsedWeapon(this._currentWeapon);
         removeWeapon(_currentWeapon.get_type());
     }
