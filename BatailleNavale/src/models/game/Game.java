@@ -60,7 +60,6 @@ public class Game {
 
         this._logs.addLog(new Log(attacker.getName() + " attacked " + opponent.getName() + " at (" + attack.getX() + "," + attack.getY() + ") with " + attack.weaponToString()));
 
-        notifyAttackExecuted(attack, opponent);
 
         if (!opponent.isAlive()) {
             this._logs.addLog(new Log("All boats destroyed - Game ended !"));
@@ -100,8 +99,6 @@ public class Game {
     public void nextTurn() {
         _currentTurn++;
         _currentPlayerIndex = (_currentPlayerIndex + 1) % NB_PLAYER;
-        notifyNextTurn();
-        notifyNextPlayer();
     }
 
     private Player getOpponent() {
@@ -157,23 +154,6 @@ public class Game {
     }
 
 
-    private void notifyNextTurn() {
-        for (GameObserver ob : _observers) {
-            ob.updateNewTurn(_currentTurn);
-        }
-    }
-
-    private void notifyNextPlayer() {
-        for (GameObserver ob : _observers) {
-            ob.updateCurrentPlayerIndex(_currentPlayerIndex);
-        }
-    }
-
-    private void notifyAttackExecuted(Attack attack, Player target) {
-        for (GameObserver ob : _observers) {
-            ob.updateAttackExecuted(attack, target);
-        }
-    }
 
     private void notifyGameStateChanged() {
         for (GameObserver ob : _observers) {

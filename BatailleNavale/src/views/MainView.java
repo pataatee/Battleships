@@ -38,14 +38,6 @@ public class MainView extends JFrame implements GameObserver {
         _mainPanel.add(configPanel, BorderLayout.CENTER);
     }
 
-    public void setConfig(ConfigPanel configPanel) {
-        this.config = configPanel;
-        // _mainPanel.removeAll();
-        // _mainPanel.add(config, BorderLayout.CENTER);
-        // _mainPanel.revalidate();
-        // _mainPanel.repaint();
-    }
-
     public void startGame() {
         _mainPanel.removeAll();
         JPanel centerPanel = new JPanel(new GridLayout(1, 2));
@@ -57,37 +49,6 @@ public class MainView extends JFrame implements GameObserver {
         _mainPanel.revalidate();
         _mainPanel.repaint();
         this.repaint();
-    }
-
-    public void displayConfig() {
-        setVisible(true);
-    }
-
-    @Override
-    public void updateNewTurn(int turnNumber) {
-        System.out.println("New turn: " + turnNumber);
-
-    }
-
-    @Override
-    public void updateCurrentPlayerIndex(int playerIndex) {
-        System.out.println("Current player index: " + playerIndex);
-//        if(playerIndex == 0) {
-//            playerPanel1.setBackground(Color.GREEN);
-//            playerPanel1.updateUI();
-//            playerPanel2.updateUI();
-//        }
-//        if(playerIndex == 1) {
-//            playerPanel2.setBackground(Color.GREEN);
-//            playerPanel1.updateUI();
-//            playerPanel2.updateUI();
-//        }
-
-    }
-
-    @Override
-    public void updateAttackExecuted(Attack attack, Player target) {
-        System.out.println("Attack executed on player: " + target);
     }
 
     @Override

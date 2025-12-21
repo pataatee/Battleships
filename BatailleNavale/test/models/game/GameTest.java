@@ -114,48 +114,6 @@ class GameTest {
     }
 
 
-    @Test
-    void testObserverNotifications() {
-        TestGameObserver observer = new TestGameObserver();
-        game.addObserver(observer);
-
-        game.startGame();
-        assertTrue(observer.gameStateChanged);
-
-        game.nextTurn();
-        assertTrue(observer.turnChanged);
-        assertTrue(observer.playerChanged);
-    }
-
-    @Test
-    void testAttackNotifiesObservers() {
-        TestGameObserver observer = new TestGameObserver();
-        game.addObserver(observer);
-        game.startGame();
-
-        game.executeHumanAttack(5, 5);
-
-        assertTrue(observer.attackExecuted);
-        assertNotNull(observer.lastAttack);
-        assertNotNull(observer.lastTarget);
-    }
-
-
-    @Test
-    void testFullGameFlow() {
-        TestGameObserver observer = new TestGameObserver();
-        game.addObserver(observer);
-
-        game.startGame();
-        assertEquals(GameState.IN_GAME, game.getGameState());
-        assertTrue(observer.gameStateChanged);
-
-        assertTrue(game.isHumanTurn());
-        game.executeHumanAttack(5, 5);
-        assertEquals(1, game.getCurrentTurn());
-        assertTrue(observer.attackExecuted);
-
-    }
 
     @Test
     void testMultipleConsecutiveTurns() {
@@ -192,17 +150,6 @@ class GameTest {
         Player lastTarget = null;
         Player winner = null;
 
-        @Override
-        public void updateNewTurn(int turnNumber) {
-            turnChanged = true;
-        }
-
-        @Override
-        public void updateCurrentPlayerIndex(int playerIndex) {
-            playerChanged = true;
-        }
-
-        @Override
         public void updateAttackExecuted(Attack attack, Player target) {
             attackExecuted = true;
             lastAttack = attack;
