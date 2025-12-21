@@ -8,10 +8,7 @@ import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
 import models.placeable.trap.Trap;
-import models.weapon.Effect;
-import models.weapon.Missile;
-import models.weapon.Weapon;
-import models.weapon.WeaponType;
+import models.weapon.*;
 
 import java.util.ArrayList;
 
@@ -27,6 +24,7 @@ public abstract class Player {
     private PlayerType _type;
     private ArrayList<WeaponObserver> _wpObserverList;
     private int _isTornaded;
+    private Stats _stats;
 
 
     public Player(String name, int id, Grid grid, PlayerType type) {
@@ -39,6 +37,8 @@ public abstract class Player {
         _WeaponList = new ArrayList<>();
         _type = type;
         _wpObserverList = new ArrayList<>();
+
+        this._stats = new Stats();
     }
 
     public void addBoat(Boat boat) {
@@ -160,8 +160,12 @@ public abstract class Player {
 
 
     public void addPlaceable(Placeable[] placeable) {
+        int totalBoatTiles = 0;
+        int totalBoats = 0;
         for (Placeable pl : placeable) {
             if (pl.getPlaceableType() == PlaceableType.BOAT) {
+                totalBoats++;
+                totalBoatTiles += pl.getSize();
                 this.addBoat((Boat) pl);
             }
             if (pl.getPlaceableType() == PlaceableType.TRAP) {
@@ -169,6 +173,9 @@ public abstract class Player {
             }
 
         }
+
+        this._stats.setNbBoats(totalBoats);
+        this._stats.setNbBoatTiles(totalBoatTiles);
 
     }
 
@@ -215,10 +222,12 @@ public abstract class Player {
                 case TORNAD -> {
                     logs.addLog(new Log(this, "Triggered Tornado trap at (" + res.get_x() + "," + res.get_y() + ") ! The next 3 attacks are scrambled."));
                     _isTornaded = 3;
+                    this._stats.updateTriggeredTornado();
                 }
                 case BLACKHOLE -> {
                     logs.addLog(new Log(this, "Triggered Blackhole trap at (" + res.get_x() + "," + res.get_y() + ") ! Attack backfired."));
                     this.getAttacked(createAttack(res.get_x(), res.get_y()));
+                    this._stats.updateTriggeredBlackHole();
                 }
                 case ISLANDHIT -> {
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Nothing has been discovered."));
@@ -226,18 +235,25 @@ public abstract class Player {
                 case DISCOVERBOMB -> {
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the Bomb weapon!"));
                     this.addWeapon(WeaponType.BOMB);
+                    this._stats.updateDiscoveredWeapons(new Bomb());
                 }
                 case DISCOVERSONAR -> {
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the sonar!"));
                     this.addWeapon(WeaponType.SONAR);
+                    this._stats.updateDiscoveredWeapons(new Sonar());
                 }
                 default -> {
                     logs.addLog(new Log(this, "Shot at (" + res.get_x() + "," + res.get_y() + ") ! There's nothing on this tile."));
                 }
             }
         }
+
         if (sonarResult != 0) {
+            System.out.println("Sonar" + sonarResult);
         }
+
+        // Gestion de l'arme utilisée
+        this._stats.updateUsedWeapon(this._currentWeapon);
         removeWeapon(_currentWeapon.get_type());
     }
 
@@ -275,5 +291,51 @@ public abstract class Player {
 
     public void clearWeapon() {
         _wpObserverList.clear();
+    }
+
+    public Boat getBoatAt(int x, int y) {
+        System.out.println("=== DEBUG getBoatAt(" + x + ", " + y + ") ===");
+        System.out.println("Total boats in list: " + this._boatList.size());
+
+        for (Boat boat : this._boatList) {
+            System.out.println("Checking boat: " + boat);
+            int[][] positions = boat.getPosition();
+            System.out.println("Boat has " + (positions != null ? positions.length : "null") + " positions");
+
+            if (positions != null) {
+                for (int i = 0; i < positions.length; i++) {
+                    int[] pos = positions[i];
+                    if (pos != null) {
+                        System.out.println("  Position[" + i + "]: (" + pos[0] + ", " + pos[1] + ")");
+                        if (pos[0] == x && pos[1] == y) {
+                            System.out.println("  FOUND MATCH!");
+                            return boat;
+                        }
+                    } else {
+                        System.out.println("  Position[" + i + "]: null");
+                    }
+                }
+            }
+        }
+
+        System.out.println("NO BOAT FOUND at (" + x + ", " + y + ")");
+        System.out.println("Grid tile state: " + _grid.getTileTileState(x, y));
+        return null;
+    }
+
+    public Stats getStats() {
+        return this._stats;
+    }
+
+    public int getNbBoats() {
+        return this._boatList.size();
+    }
+
+    public int getNbBoatTiles() {
+        int total = 0;
+        for (Boat boat : this._boatList) {
+            total += boat.getSize();
+        }
+        return total;
     }
 }

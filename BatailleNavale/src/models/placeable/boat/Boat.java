@@ -11,13 +11,17 @@ public abstract class Boat extends Placeable {
     private int[][] _position;
     private BoatType _type;
     private int _positionIndex;
+    private boolean _isFirstHit;
+    private int _size;
 
     public Boat(String name, BoatType type) {
         super(name, type.getSize(), PlaceableType.BOAT);
         this._isDead = false;
         this._pvs = type.getSize();
+        this._size = type.getSize();
         this._type = type;
         _position = new int[type.getSize()][2];
+        this._isFirstHit = false;
     }
 
     public Boat(Boat other) {
@@ -31,6 +35,9 @@ public abstract class Boat extends Placeable {
     public abstract Boat clone();
 
     public ShotResult onHit(int x, int y) {
+        if (this._size == this._pvs) {
+            this._isFirstHit = true;
+        }
         this._pvs--;
         if (_pvs <= 0) {
             _isDead = true;
@@ -67,4 +74,13 @@ public abstract class Boat extends Placeable {
             this._position[i] = null;
         }
     }
+
+    public boolean getIsFirstHit() {
+        return this._isFirstHit;
+    }
+
+    public void setIsFirstHit(boolean is) {
+        this._isFirstHit = is;
+    }
+
 }

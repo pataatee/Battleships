@@ -2,8 +2,8 @@ package models.player;
 
 public class ShotResult {
 
-    int _x;
-    int _y;
+    private int _x;
+    private int _y;
     ShotResultType _type;
 
     public ShotResult(int x, int y, ShotResultType type) {
