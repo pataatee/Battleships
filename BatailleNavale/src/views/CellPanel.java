@@ -56,7 +56,7 @@ public class CellPanel extends JPanel implements GridObserver {
 
     private Color getTileColor(TileState tileState) {
 
-        if (true) {
+        if (isPlayerView) {
             switch (tileState) {
                 case EMPTY -> {
                     return Color.CYAN;

@@ -4,6 +4,7 @@ import models.game.GameMode;
 import models.game.placement.*;
 import models.grid.Grid;
 import models.placeable.Placeable;
+import models.player.Player;
 
 public class PlacementController {
 
@@ -12,13 +13,19 @@ public class PlacementController {
     private Coord _toPlace;
     private Grid _grid;
     private GameController _gameController;
+    private Player _player;
 
-    public PlacementController(Placement pl, Placeable[] lst, Grid grid, GameController gc) {
+    public PlacementController(Placement pl, Player player, GameController gc) {
         this._pl = pl;
-        this._lstToPlace = lst;
+        this._lstToPlace = player.getPlaceableList();
         this._toPlace = new Coord(-1,-1,Orientation.HORIZONTAL);//Dummy cord just to avoid Null pointer
-        this._grid = grid;
+        this._grid = player.getGrid();
         this._gameController = gc;
+        this._player = player;
+    }
+    public void refreshList(){
+        this._lstToPlace = _player.getPlaceableList();
+        System.out.println("rese");
     }
 
     public Boolean placeObject(Placeable pla) {

@@ -1,5 +1,6 @@
 package models.game;
 
+import models.placeable.boat.Boat;
 import models.player.AIPlayer;
 import models.player.Attack;
 import models.player.Player;
@@ -32,6 +33,8 @@ public class Game {
 
     public void setUpGameMode(GameMode gameMode) {
         _gameMode = gameMode;
+        _players[0].getGrid().resetGrid();
+        _players[1].getGrid().resetGrid();
         if (_gameMode == GameMode.ISLAND) {
             _players[0].setUpIsland();
             _players[1].setUpIsland();
@@ -170,5 +173,13 @@ public class Game {
         for (GameObserver ob : _observers) {
             ob.updateGameOver(winner);
         }
+    }
+
+    public void confirmConfig(ArrayList<Boat> chosenBoats) {
+        for (Boat chosenBoat : chosenBoats) {
+            _players[0].addBoat(chosenBoat.clone());
+            _players[1].addBoat(chosenBoat.clone());
+        }
+
     }
 }

@@ -6,6 +6,7 @@ import models.grid.Grid;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ManualPlacementPanel extends JPanel {
 
@@ -14,7 +15,7 @@ public class ManualPlacementPanel extends JPanel {
 
     private JPanel _pnlForScrPan; // panel a ajouter au scrollPanel
     private JScrollPane _scrPanLstPlButtons; // le scroll pane ds lequel il y a tous les pl buttons
-    private JButton[] _lstBtnPl; // liste des buttons
+    private ArrayList<JButton> _lstBtnPl; // liste des buttons
 
     private JPanel _pnlOrientation; // panel contenant le btn pour l'orientation/...
     private ImageButton _btnOrientation; // btn switch rotation
@@ -34,7 +35,7 @@ public class ManualPlacementPanel extends JPanel {
     public ManualPlacementPanel(PlacementController pc, Grid grid) {
         // init with parameters
         this._pc = pc;
-        this._pnlGrid = new GridPanel(grid,false);
+        this._pnlGrid = new GridPanel(grid, true);
 
         // init all
         this.initAttributes();
@@ -45,15 +46,15 @@ public class ManualPlacementPanel extends JPanel {
 
         // init this
         this.initThis();
-        _pnlGrid.createGridCenter(10,(x,y)->getPosOfPos(x,y));
 
+        _pnlGrid.createGridCenterPlayerViewWithButtons(grid.getSize(), (x, y) -> getPosOfPos(x, y));
     }
 
     // init all attributes, place them nicely in different panels
     private void initAttributes() {
 
         // init pl button list
-        this._lstBtnPl = new JButton[this._pc.getNbPlaceables()];
+        this._lstBtnPl = new ArrayList<>();
 
         // init pnl for the scrollable one
         this._pnlForScrPan = new JPanel();
@@ -98,18 +99,14 @@ public class ManualPlacementPanel extends JPanel {
         this._pnlRight = new JPanel(new BorderLayout());
         this._pnlRight.add(this._pan, BorderLayout.WEST);
         this._pnlRight.add(this._pnlGrid, BorderLayout.EAST);
-
-
     }
 
 
     public void initThis() {
-
         this.setLayout(new BorderLayout());
 
         this.add(this._pnlLeft, BorderLayout.WEST);
         this.add(this._pnlRight, BorderLayout.CENTER);
-
     }
 
 
@@ -136,7 +133,7 @@ public class ManualPlacementPanel extends JPanel {
             if (placed) {
 
                 System.out.println("Boat/Trap " + this._pc.getPlNameFromIndex(this._currentIndexPlToPlace) + " successfully placed !");
-                JButton btnToDisable = this._lstBtnPl[this._currentIndexPlToPlace];
+                JButton btnToDisable = this._lstBtnPl.get(this._currentIndexPlToPlace);
                 btnToDisable.setEnabled(false);
 
                 // reset labels, coordinates, placeable selected after placing a pl
@@ -201,7 +198,7 @@ public class ManualPlacementPanel extends JPanel {
 
             JButton btn = new JButton(this._pc.getPlName(i));
             this._pnlForScrPan.add(btn);
-            this._lstBtnPl[i] = btn;
+            this._lstBtnPl.add(btn);
             final String k = this._pc.getPlName(i);
             int finalI = i;
             btn.addActionListener(act -> {
@@ -219,9 +216,17 @@ public class ManualPlacementPanel extends JPanel {
     // useful stuff
     // resets the placeable buttons
     public void resetPlaceableButtons() {
+
+        this._lstBtnPl.clear();
+        this._pnlForScrPan.removeAll();
+
+        initLstButtonsPl();
         for (JButton btn : this._lstBtnPl) {
             btn.setEnabled(true);
         }
+
+        this._pnlForScrPan.revalidate();
+        this._pnlForScrPan.repaint();
     }
 
     // positions magie noire
@@ -236,6 +241,4 @@ public class ManualPlacementPanel extends JPanel {
     public void showManualPlacementPanel(Boolean show) {
         this.setVisible(show);
     }
-
-
 }

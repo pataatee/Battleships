@@ -33,7 +33,7 @@ public class PlacementView extends JPanel {
 
 
     // constructor ofc
-    public PlacementView(PlacementController pc, Grid grid, GameController _gc) {
+    public PlacementView(PlacementController pc,PlacementController placementControllerAi, Grid grid, GameController _gc) {
 
         this._pc = pc;
         this._pnlManualPlacement = new ManualPlacementPanel(pc,grid);
@@ -44,6 +44,11 @@ public class PlacementView extends JPanel {
 
         actionsChangeCbo();
         _btnNext.addActionListener(e->_gc.setState(GameState.IN_GAME));
+        _btnNext.addActionListener(e-> {
+            placementControllerAi.changeStrat(PlacementStrategies.RANDOM);
+            placementControllerAi.refreshList();
+            placementControllerAi.placeAllObjects();
+        });
 
     }
 
@@ -113,12 +118,13 @@ public class PlacementView extends JPanel {
     }
 
     public void actionsChangeCbo() {
-
         this._cboSelectPlacementStrategy.addActionListener(act -> {
 
             int index = this._cboSelectPlacementStrategy.getSelectedIndex();
 
             this._pc.resetPlacement();
+            _pc.refreshList();
+            System.out.println("rese");
             switch (index) {
                 case 0:
                     this._lytPnlPlacement.show(this._pnlPlacement, "NONE");

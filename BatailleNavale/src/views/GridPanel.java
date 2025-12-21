@@ -18,7 +18,7 @@ public class GridPanel extends JPanel {
     public GridPanel(Grid grid, boolean isPlayerView) {
         this.grid = grid;
         this.isPlayerView = isPlayerView;
-        _controller =null;
+        _controller = null;
         int size = grid.getSize();
 
         setLayout(new BorderLayout(5, 5));
@@ -26,7 +26,7 @@ public class GridPanel extends JPanel {
 
         add(createTopLabels(size), BorderLayout.NORTH);
         add(createLeftLabels(size), BorderLayout.WEST);
-        createGridCenter(size,null);
+        createGridCenterCellsOnly(size);
     }
 
     public GridPanel(GameController gc, Grid grid, boolean isPlayerView) {
@@ -41,8 +41,7 @@ public class GridPanel extends JPanel {
 
         add(createTopLabels(size), BorderLayout.NORTH);
         add(createLeftLabels(size), BorderLayout.WEST);
-        createGridCenter(size,(x,y)->gc.SendAttack(x,y));
-
+        createGridCenterWithButtons(size, (x, y) -> gc.SendAttack(x, y));
     }
 
     private JPanel createTopLabels(int size) {
@@ -68,7 +67,7 @@ public class GridPanel extends JPanel {
         return label;
     }
 
-    public void createGridCenter(int size,GridButtonDelegate action) {
+    private void createGridCenterCellsOnly(int size) {
         JPanel container = new JPanel(new BorderLayout());
         container.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.BLACK, 3),
@@ -78,25 +77,44 @@ public class GridPanel extends JPanel {
         cellPanel = new CellPanel(grid, isPlayerView);
         grid.addObserver(cellPanel);
 
-        if (isPlayerView) {
-            container.add(cellPanel, BorderLayout.CENTER);
-        } else {
-
-            buttonPanel = new ButtonGridPanel(size, action);
-
-            JLayeredPane layeredPane = new JLayeredPane();
-            layeredPane.setLayout(new OverlayLayout(layeredPane));
-
-            JPanel gridWrapper = new JPanel(new BorderLayout());
-            gridWrapper.add(cellPanel, BorderLayout.CENTER);
-
-            layeredPane.add(buttonPanel);
-            layeredPane.add(gridWrapper);
-
-            container.add(layeredPane, BorderLayout.CENTER);
-        }
-
-         add(container,BorderLayout.EAST);
+        container.add(cellPanel, BorderLayout.CENTER);
+        add(container, BorderLayout.EAST);
     }
 
+    private void createGridCenterWithButtons(int size, GridButtonDelegate action) {
+        JPanel container = new JPanel(new BorderLayout());
+        container.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.BLACK, 3),
+                BorderFactory.createLineBorder(Color.DARK_GRAY, 1)
+        ));
+
+        cellPanel = new CellPanel(grid, isPlayerView);
+        grid.addObserver(cellPanel);
+
+        buttonPanel = new ButtonGridPanel(size, action);
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setLayout(new OverlayLayout(layeredPane));
+
+        JPanel gridWrapper = new JPanel(new BorderLayout());
+        gridWrapper.add(cellPanel, BorderLayout.CENTER);
+
+        layeredPane.add(buttonPanel);
+        layeredPane.add(gridWrapper);
+
+        container.add(layeredPane, BorderLayout.CENTER);
+        add(container, BorderLayout.EAST);
+    }
+
+    public void createGridCenterPlayerViewWithButtons(int size, GridButtonDelegate action) {
+        createGridCenterWithButtons(size, action);
+    }
+
+    public void createGridCenter(int size, GridButtonDelegate action) {
+        if (action == null) {
+            createGridCenterCellsOnly(size);
+        } else {
+            createGridCenterWithButtons(size, action);
+        }
+    }
 }

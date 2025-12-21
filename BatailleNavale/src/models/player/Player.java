@@ -41,6 +41,7 @@ public abstract class Player {
 
     public void addBoat(Boat boat) {
         _boatList.add(boat);
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
     ;
@@ -240,4 +241,21 @@ public abstract class Player {
 
 
     public abstract void notifyDeath();
+
+    public Placeable[] getPlaceableList() {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa");
+        int totalSize = _boatList.size() + _trapList.size();
+        Placeable[] result = new Placeable[totalSize];
+        int index = 0;
+        for (Boat boat : _boatList) {
+            result[index++] = boat;
+            System.out.println(boat);
+        }
+
+        for (Trap trap : _trapList) {
+            result[index++] = trap;
+        }
+        return result;
+    }
+
 }

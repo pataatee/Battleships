@@ -20,6 +20,16 @@ public abstract class Boat extends Placeable {
         _position = new int[type.getSize()][2];
     }
 
+    public Boat(Boat other) {
+        super(other.getName(), other.getSize(), PlaceableType.BOAT);
+        this._isDead = false;
+        this._pvs = other._type.getSize();
+        this._type = other._type;
+        this._position = new int[other._type.getSize()][2];
+        this._positionIndex = 0;
+    }
+    public abstract Boat clone();
+
     public ShotResult onHit(int x, int y) {
         this._pvs--;
         if (_pvs <= 0) {

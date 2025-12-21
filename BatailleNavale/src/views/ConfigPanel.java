@@ -2,6 +2,7 @@ package views;
 
 import controllers.ConfigController;
 import controllers.GameController;
+import controllers.PlacementController;
 import models.game.GameState;
 import models.placeable.PlaceableFactory;
 import models.placeable.boat.Boat;
@@ -24,7 +25,7 @@ public class ConfigPanel extends JPanel {
     private final JSpinner spinnerTorpedo;
     private final JSpinner spinnerAircraftCarrier;
     private final GameController _gameController;
-    JButton nextBtn;
+    private final JButton nextBtn;
     private int nbCruiser = 0, nbDestroyer = 0, nbSub = 0, nbTorpedo = 0, nbAircraft = 0;
 
     public ConfigPanel(ConfigController controller, GameController gameController) {
@@ -127,6 +128,7 @@ public class ConfigPanel extends JPanel {
         nextBtn.addActionListener(e -> {
             System.out.println("placement");
             _gameController.setState(GameState.PLACEMENT);
+            _gameController.confirmConfig();
         });
     }
 

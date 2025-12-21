@@ -1,55 +1,60 @@
 package models.game.placement;
 
+import controllers.GameController;
 import models.game.GameMode;
-import models.grid.Grid;
 import models.placeable.boat.Boat;
 import models.placeable.boat.BoatType;
+import models.player.Player;
 
 import java.util.ArrayList;
 
 public class ConfigData {
+
     private static final int MAXCELL = 35;
 
-    private int _gridSize;
-    private ArrayList<Boat> _boatList;
-    private Grid[] _grids;
-    private int _sumCell;
-    private GameMode _gm;
+    private int gridSize;
+    private int sumCell;
+    private GameMode gameMode;
 
-    public ConfigData(Grid[] grid) {
-        _grids = grid;
-        _sumCell = 0;
-        _gm = GameMode.NORMAL;
-        _boatList = new ArrayList<Boat>();
+    private final Player _player1;
+    private final Player _player2;
+
+    private final ArrayList<Boat> boatList;
+
+    public ConfigData(Player player1, Player player2) {
+        this._player1 = player1;
+        this._player2 = player2;
+        this.sumCell = 0;
+        this.gameMode = GameMode.NORMAL;
+        this.boatList = new ArrayList<>();
     }
+
 
     public void setGridSize(int gridSize) {
-        for (Grid grid : _grids) {
-            grid.setSize(gridSize);
-        }
-        _gridSize = gridSize;
-    }
+        this.gridSize = gridSize;
 
-    public int getGridSize() {
-        return _gridSize;
+        _player1.getGrid().setSize(gridSize);
+        _player2.getGrid().setSize(gridSize);
     }
 
     public boolean addBoat(Boat boat) {
-        _sumCell += boat.getSize();
-        if (_sumCell > MAXCELL) {
-            _sumCell -= boat.getSize();
+        int newTotal = sumCell + boat.getSize();
+
+        if (newTotal > MAXCELL) {
             return false;
         }
-        _boatList.add(boat);
+
+        sumCell = newTotal;
+        boatList.add(boat);
         return true;
     }
 
     public boolean removeBoat(BoatType boatType) {
-        for (int i = _boatList.size() - 1; i >= 0; i--) {
-            Boat boat = _boatList.get(i);
+        for (int i = boatList.size() - 1; i >= 0; i--) {
+            Boat boat = boatList.get(i);
             if (boat.getType() == boatType) {
-                _boatList.remove(i);
-                _sumCell -= boat.getSize();
+                boatList.remove(i);
+                sumCell -= boat.getSize();
                 return true;
             }
         }
@@ -57,12 +62,12 @@ public class ConfigData {
     }
 
     public int getTotalCells() {
-        return _sumCell;
+        return sumCell;
     }
 
     public int getBoatCountByType(BoatType boatType) {
         int count = 0;
-        for (Boat boat : _boatList) {
+        for (Boat boat : boatList) {
             if (boat.getType() == boatType) {
                 count++;
             }
@@ -71,14 +76,14 @@ public class ConfigData {
     }
 
     public ArrayList<Boat> getChosenBoats() {
-        return _boatList;
+        return boatList;
     }
 
-    public void setGameMode(GameMode gm) {
-        _gm = gm;
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
     }
 
     public GameMode getGameMode() {
-        return _gm;
+        return gameMode;
     }
 }
