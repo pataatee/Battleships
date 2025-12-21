@@ -31,6 +31,5 @@ public class AIPlayer extends Player {
     @Override
     public void notifyDeath(GameLogs logs) {
         logs.addLog(new Log("Player " + super.getName() + ", ID: " + super.getId() + " has been defeated !"));
-        System.out.println("Ai est morte");
     }
 }

@@ -124,7 +124,6 @@ public class PlacementView extends JPanel {
 
             this._pc.resetPlacement();
             _pc.refreshList();
-            System.out.println("rese");
             switch (index) {
                 case 0:
                     this._lytPnlPlacement.show(this._pnlPlacement, "NONE");

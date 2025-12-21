@@ -13,6 +13,5 @@ public class HumanPlayer extends Player {
     @Override
     public void notifyDeath(GameLogs log) {
         log.addLog(new Log("Player " + super.getName() + ", ID: " + super.getId() + " has been defeated !"));
-        System.out.println("Human player has been death");
     }
 }

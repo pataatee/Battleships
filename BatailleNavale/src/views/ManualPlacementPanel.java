@@ -132,7 +132,6 @@ public class ManualPlacementPanel extends JPanel {
 
             if (placed) {
 
-                System.out.println("Boat/Trap " + this._pc.getPlNameFromIndex(this._currentIndexPlToPlace) + " successfully placed !");
                 JButton btnToDisable = this._lstBtnPl.get(this._currentIndexPlToPlace);
                 btnToDisable.setEnabled(false);
 
@@ -148,7 +147,6 @@ public class ManualPlacementPanel extends JPanel {
 
             } else {
 
-                System.out.println("Error: couldn't place Boat/Trap.");
                 this._pnlInfos.setLblErrorText("Couldn't place Boat/Trap. Please try again.");
                 this._pnlInfos.getLblError().setVisible(true);
 
@@ -185,7 +183,6 @@ public class ManualPlacementPanel extends JPanel {
                 }
             }
 
-            System.out.println("Orientation: " + this._pc.getCoordOr());
         });
 
     }
@@ -232,8 +229,6 @@ public class ManualPlacementPanel extends JPanel {
     // positions magie noire
     public void getPosOfPos(int x, int y) {
         this._pnlInfos.getLblError().setVisible(false);
-        System.out.println("Veut poser en " + x + " " + y + " ");
-        this._pnlInfos.setLblPosition("x:" + x + " y:" + y);
         this._pc.setCoordXY(x, y);
         this._coSelected = true;
     }

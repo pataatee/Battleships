@@ -126,7 +126,6 @@ public class ConfigPanel extends JPanel {
         spinnerTorpedo.addChangeListener(e -> updateBoatCount(BoatType.TORPEDOBOAT, (int) spinnerTorpedo.getValue(), factory.createTorpedoBoat()));
         spinnerAircraftCarrier.addChangeListener(e -> updateBoatCount(BoatType.AIRCRAFTCARRIER, (int) spinnerAircraftCarrier.getValue(), factory.createAircraftCarrier()));
         nextBtn.addActionListener(e -> {
-            System.out.println("placement");
             _gameController.setState(GameState.PLACEMENT);
             _gameController.confirmConfig();
         });

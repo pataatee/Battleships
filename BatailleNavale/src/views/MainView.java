@@ -54,22 +54,14 @@ public class MainView extends JFrame implements GameObserver {
     public void updateGameState(GameState state) {
         _mainPanel.removeAll();
         switch (state) {
-            case CONFIG -> {
-                System.out.println("Game state: CONFIG");
-            }
             case PLACEMENT -> {
-                System.out.println("Game state: PLACEMENT");
                 _mainPanel.add(_placementView, BorderLayout.CENTER);
                 _mainPanel.revalidate();
                 _mainPanel.repaint();
                 this.repaint();
             }
             case IN_GAME -> {
-                System.out.println("Game state: IN_GAME");
                 this.startGame();
-            }
-            case ENDGAME -> {
-                System.out.println("Game state: ENDGAME");
             }
         }
     }

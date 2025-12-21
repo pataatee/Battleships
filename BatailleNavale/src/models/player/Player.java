@@ -43,7 +43,6 @@ public abstract class Player {
 
     public void addBoat(Boat boat) {
         _boatList.add(boat);
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
     ;
@@ -105,7 +104,6 @@ public abstract class Player {
     public void setWeapon(Weapon weapon) {
         if (_WeaponList.contains(weapon.get_type())) {
             _currentWeapon = weapon;
-            System.out.println("new weapon added" + weapon);
 
         } else {
             _currentWeapon = new Missile();
@@ -115,7 +113,6 @@ public abstract class Player {
 
     public void addWeapon(WeaponType wt) {
         _WeaponList.add(wt);
-        System.out.println(wt);
         notifyWeaponUnlocked(wt, true);
     }
 
@@ -204,11 +201,9 @@ public abstract class Player {
         for (ShotResult res : resultTypes) {
             switch (res.get_type()) {
                 case HIT -> {
-                    System.out.println("Add to log Hit");
                     logs.addLog(new Log(this, "Hit boat at (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case SUNK -> {
-                    System.out.println("Add to log Sunk");
                     logs.addLog(new Log(this, "Hit and sunk boat at (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case SONAR -> {
@@ -216,21 +211,17 @@ public abstract class Player {
                     logs.addLog(new Log(this, "Scanned boat(s) around (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case TORNAD -> {
-                    System.out.println("Add to log Tornadoed");
                     logs.addLog(new Log(this, "Triggered Tornado trap at (" + res.get_x() + "," + res.get_y() + ") ! The next 3 attacks are scrambled."));
                     _isTornaded = 3;
                 }
                 case BLACKHOLE -> {
-                    System.out.println("Add to log BlackHole");
                     logs.addLog(new Log(this, "Triggered Blackhole trap at (" + res.get_x() + "," + res.get_y() + ") ! Attack backfired."));
                     this.getAttacked(createAttack(res.get_x(), res.get_y()));
                 }
                 case ISLANDHIT -> {
-                    System.out.println("Add to log IslandHit");
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Nothing has been discovered."));
                 }
                 case DISCOVERBOMB -> {
-                    System.out.println("Add to log DiscoverBomb");
                     logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the Bomb weapon!"));
                     this.addWeapon(WeaponType.BOMB);
                 }
@@ -240,24 +231,20 @@ public abstract class Player {
                 }
                 default -> {
                     logs.addLog(new Log(this, "Shot at (" + res.get_x() + "," + res.get_y() + ") ! There's nothing on this tile."));
-                    System.out.println("Add to log Miss");
                 }
             }
         }
         if (sonarResult != 0) {
-            System.out.println("Sonar" + sonarResult);
         }
         removeWeapon(_currentWeapon.get_type());
     }
 
     public Placeable[] getPlaceableList() {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa");
         int totalSize = _boatList.size() + _trapList.size();
         Placeable[] result = new Placeable[totalSize];
         int index = 0;
         for (Boat boat : _boatList) {
             result[index++] = boat;
-            System.out.println(boat);
         }
 
         for (Trap trap : _trapList) {

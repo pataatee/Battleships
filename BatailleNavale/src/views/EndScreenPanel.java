@@ -16,7 +16,6 @@ public class EndScreenPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = y;
         this.add(new JLabel(winner.toString()), gbc);
-        System.out.println("winner" + winner);
     }
 
 }

@@ -25,7 +25,6 @@ public class PlacementController {
     }
     public void refreshList(){
         this._lstToPlace = _player.getPlaceableList();
-        System.out.println("rese");
     }
 
     public Boolean placeObject(Placeable pla) {
