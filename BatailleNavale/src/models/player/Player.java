@@ -272,4 +272,8 @@ public abstract class Player {
 
 
     public abstract void notifyDeath(GameLogs logs);
+
+    public void clearWeapon() {
+        _wpObserverList.clear();
+    }
 }

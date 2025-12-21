@@ -44,6 +44,8 @@ public class Game {
         if (_gameMode == GameMode.ISLAND) {
             _players[0].setUpIsland();
             _players[1].setUpIsland();
+            _players[0].clearWeapon();
+            _players[1].clearWeapon();
         }
     }
 
