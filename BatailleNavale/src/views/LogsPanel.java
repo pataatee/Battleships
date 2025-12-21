@@ -46,7 +46,7 @@ public class LogsPanel extends JPanel implements LogsObserver {
     public void updateOnLogAdded(Log log) {
 
         JLabel lbl = new JLabel();
-        if (log.getPlayer() == null) {
+        if (log.getPlayerType() == null) {
             lbl.setText("<html>" + "[Game]: " + log.getLogDesc() + "</html>");
             lbl.setForeground(new Color(0));
         }

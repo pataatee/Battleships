@@ -7,6 +7,7 @@ import models.grid.TileState;
 import models.placeable.Placeable;
 import models.placeable.PlaceableType;
 import models.placeable.boat.Boat;
+import models.placeable.boat.BoatType;
 import models.placeable.trap.Trap;
 import models.weapon.*;
 
@@ -151,6 +152,9 @@ public abstract class Player {
                 for (int[] pos : positions) {
                     _grid.changeStateOfTile(pos[0], pos[1], TileState.BOATDEAD);
                 }
+                if(boat.getType()== BoatType.SUBMARINE){
+                    removeWeapon(WeaponType.SONAR);
+                }
             }
         }
         if (i == _boatList.size()) {
@@ -210,49 +214,48 @@ public abstract class Player {
         for (ShotResult res : resultTypes) {
             switch (res.get_type()) {
                 case HIT -> {
-                    logs.addLog(new Log(this, "Hit boat at (" + res.get_x() + "," + res.get_y() + ") !"));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Hit boat at (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case SUNK -> {
-                    logs.addLog(new Log(this, "Hit and sunk boat at (" + res.get_x() + "," + res.get_y() + ") !"));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Hit and sunk boat at (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case SONAR -> {
                     sonarResult++;
-                    logs.addLog(new Log(this, "Scanned boat(s) around (" + res.get_x() + "," + res.get_y() + ") !"));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Scanned boat(s) around (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case TORNAD -> {
-                    logs.addLog(new Log(this, "Triggered Tornado trap at (" + res.get_x() + "," + res.get_y() + ") ! The next 3 attacks are scrambled."));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Triggered Tornado trap at (" + res.get_x() + "," + res.get_y() + ") ! The next 3 attacks are scrambled."));
                     _isTornaded = 3;
                     this._stats.updateTriggeredTornado();
                 }
                 case BLACKHOLE -> {
-                    logs.addLog(new Log(this, "Triggered Blackhole trap at (" + res.get_x() + "," + res.get_y() + ") ! Attack backfired."));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Triggered Blackhole trap at (" + res.get_x() + "," + res.get_y() + ") ! Attack backfired."));
                     this.getAttacked(createAttack(res.get_x(), res.get_y()));
                     this._stats.updateTriggeredBlackHole();
                 }
                 case ISLANDHIT -> {
-                    logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Nothing has been discovered."));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Nothing has been discovered."));
                 }
                 case DISCOVERBOMB -> {
-                    logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the Bomb weapon!"));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the Bomb weapon!"));
                     this.addWeapon(WeaponType.BOMB);
                     this._stats.updateDiscoveredWeapons(new Bomb());
                 }
                 case DISCOVERSONAR -> {
-                    logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the sonar!"));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the sonar!"));
                     this.addWeapon(WeaponType.SONAR);
                     this._stats.updateDiscoveredWeapons(new Sonar());
                 }
                 default -> {
-                    logs.addLog(new Log(this, "Shot at (" + res.get_x() + "," + res.get_y() + ") ! There's nothing on this tile."));
+                    logs.addLog(new Log(getId(),getName(),getType(), "Shot at (" + res.get_x() + "," + res.get_y() + ") ! There's nothing on this tile."));
                 }
             }
         }
 
         if (sonarResult != 0) {
-            System.out.println("Sonar" + sonarResult);
+            logs.addLog(new Log(getId(),getName(),getType(),"The sonar discover" + sonarResult +"tiles to be boat around him" ));
         }
 
-        // Gestion de l'arme utilisée
         this._stats.updateUsedWeapon(this._currentWeapon);
         removeWeapon(_currentWeapon.get_type());
     }

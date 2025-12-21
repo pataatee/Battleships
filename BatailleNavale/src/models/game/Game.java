@@ -223,5 +223,7 @@ public class Game {
             _players[1].addWeapon(WeaponType.BOMB);
             _players[1].addWeapon(WeaponType.SONAR);
         }
+        _players[0].getStats().setOpponentBoatStats(_players[1].getNbBoats(), _players[1].getNbBoatTiles());
+        _players[1].getStats().setOpponentBoatStats(_players[0].getNbBoats(), _players[0].getNbBoatTiles());
     }
 }

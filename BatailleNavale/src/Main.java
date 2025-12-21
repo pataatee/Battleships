@@ -1,6 +1,5 @@
 import controllers.*;
 import models.game.Game;
-import models.game.GameMode;
 import models.game.placement.ConfigData;
 import models.game.placement.Placement;
 import models.game.placement.RandomPlacementStrategy;
@@ -8,7 +7,6 @@ import models.grid.Grid;
 import models.player.AIPlayer;
 import models.player.HumanPlayer;
 import models.player.Player;
-import models.weapon.WeaponType;
 import views.*;
 
 public class Main {
@@ -66,8 +64,13 @@ public class Main {
                 gameController
         );
 
+        StatsPanel stats1 = new StatsPanel();
+        StatsPanel stats2 = new StatsPanel();
+        humanPlayer.getStats().addObserver(stats1);
+        aiPlayer.getStats().addObserver(stats2);
 
         LogsPanel logs = new LogsPanel(lc);
+
 
         MainView mainView = new MainView(
                 configPanel,
@@ -75,15 +78,12 @@ public class Main {
                 humanPlayerPanel,
                 aiPlayerPanel,
                 logs,
+                stats1,
+                stats2,
                 gameController
         );
 
         game.addObserver(mainView);
-        //game.setUpGameMode(GameMode.ISLAND);
-
-        player2Grid.addWeaponToIslandTile(4, 4, WeaponType.BOMB);
-        player2Grid.addWeaponToIslandTile(5, 4, WeaponType.SONAR);
-
 
         mainView.setVisible(true);
 

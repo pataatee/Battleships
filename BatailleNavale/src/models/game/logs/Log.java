@@ -1,48 +1,41 @@
 package models.game.logs;
 
-import models.player.Player;
 import models.player.PlayerType;
 
 public class Log {
 
-    private Player _player;
-    private String _logDesc;
+    private final int playerId;
+    private final String playerName;
+    private final PlayerType playerType;
+    private final String logDesc;
 
-    public Log(Player pl, String desc) {
-
-        this._player = pl;
-        this._logDesc = desc;
-
+    public Log(int playerId, String playerName, PlayerType playerType, String desc) {
+        this.playerId = playerId;
+        this.playerName = playerName;
+        this.playerType = playerType;
+        this.logDesc = desc;
     }
 
     public Log(String desc) {
-        this._logDesc = desc;
-    }
-
-    public String getPlayerName() {
-        if (this._player == null) {
-            return null;
-        }
-        return this._player.getName();
+        this.playerId = -1;
+        this.playerName = null;
+        this.playerType = null;
+        this.logDesc = desc;
     }
 
     public int getPlayerId() {
-        if (this._player == null) {
-            return -1;
-        }
-        return this._player.getId();
+        return playerId;
     }
 
-    public String getLogDesc() {
-        return this._logDesc;
-    }
-
-    public Player getPlayer() {
-        return this._player;
+    public String getPlayerName() {
+        return playerName;
     }
 
     public PlayerType getPlayerType() {
-        return this._player.getType();
+        return playerType;
     }
 
+    public String getLogDesc() {
+        return logDesc;
+    }
 }
