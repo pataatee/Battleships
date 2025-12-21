@@ -42,16 +42,6 @@ public class ConfigController {
     }
 
     /**
-     * Get the number of boats of a specific type
-     *
-     * @param boatType The type of boat
-     * @return The count of boats of this type
-     */
-    public int getBoatCount(BoatType boatType) {
-        return _mdData.getBoatCountByType(boatType);
-    }
-
-    /**
      * Set the game mode
      *
      * @param gameMode The game mode to set
@@ -61,12 +51,37 @@ public class ConfigController {
     }
 
     /**
-     * Set the grid size
+     * Get the current grid size
      *
-     * @param size The size of the grid
+     * @return The grid size
      */
-    public void setGridSize(int size) {
-        _mdData.setGridSize(size);
+    public int getGridSize() {
+        return _mdData.getGridSize();
+    }
+
+    /**
+     * Get the current game mode
+     *
+     * @return The game mode
+     */
+    public GameMode getGameMode() {
+        return _mdData.getGameMode();
+    }
+
+    /**
+     * Reset all configuration to default values
+     */
+    public void resetConfiguration() {
+        _mdData.reset();
+    }
+
+    /**
+     * Get the list of selected boats
+     *
+     * @return Array of selected boats
+     */
+    public Boat[] getSelectedBoats() {
+        return _mdData.getChosenBoats().toArray(new Boat[0]);
     }
 
 }

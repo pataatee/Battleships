@@ -229,6 +229,7 @@ public class ManualPlacementPanel extends JPanel {
     // positions magie noire
     public void getPosOfPos(int x, int y) {
         this._pnlInfos.getLblError().setVisible(false);
+        this._pnlInfos.setLblPosition("x:" + x + " y:" + y);
         this._pc.setCoordXY(x, y);
         this._coSelected = true;
     }

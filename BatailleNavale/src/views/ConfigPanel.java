@@ -2,7 +2,7 @@ package views;
 
 import controllers.ConfigController;
 import controllers.GameController;
-import controllers.PlacementController;
+import models.game.GameMode;
 import models.game.GameState;
 import models.placeable.PlaceableFactory;
 import models.placeable.boat.Boat;
@@ -10,12 +10,12 @@ import models.placeable.boat.BoatType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class ConfigPanel extends JPanel {
 
     private final ConfigController controller;
     private final PlaceableFactory factory = new PlaceableFactory();
+    private final GameController _gameController;
 
     private final JLabel lblCasesUsed = new JLabel("Cases utilisées : 0");
 
@@ -24,26 +24,35 @@ public class ConfigPanel extends JPanel {
     private final JSpinner spinnerSub;
     private final JSpinner spinnerTorpedo;
     private final JSpinner spinnerAircraftCarrier;
-    private final GameController _gameController;
+
+    private final JCheckBox islandBox;
+
     private final JButton nextBtn;
+
     private int nbCruiser = 0, nbDestroyer = 0, nbSub = 0, nbTorpedo = 0, nbAircraft = 0;
 
     public ConfigPanel(ConfigController controller, GameController gameController) {
         this.controller = controller;
+        this._gameController = gameController;
 
         spinnerCruiser = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
         spinnerDestroyer = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
         spinnerSub = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
         spinnerTorpedo = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
         spinnerAircraftCarrier = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
-        this.setSize(600, 600);
+
+        islandBox = new JCheckBox("Activer le mode île");
+
         nextBtn = new JButton("Passer au placement");
-        _gameController = gameController;
+
+        this.setSize(600, 600);
         initUI();
     }
 
     private void initUI() {
+        this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
         JLabel title = new JLabel("Configuration de la partie", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 24));
         this.add(title, BorderLayout.NORTH);
@@ -56,17 +65,7 @@ public class ConfigPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = y;
-        center.add(new JLabel("Taille de la grille :"), gbc);
-        String[] gridSizes = {"6", "7", "8", "9", "10"};
-        JComboBox<String> gridBox = new JComboBox<>(gridSizes);
-        gbc.gridx = 1;
-        center.add(gridBox, gbc);
-        y++;
-
-        gbc.gridx = 0;
-        gbc.gridy = y;
         gbc.gridwidth = 2;
-        JCheckBox islandBox = new JCheckBox("Activer le mode île");
         center.add(islandBox, gbc);
         y++;
 
@@ -110,30 +109,48 @@ public class ConfigPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = y;
         gbc.gridwidth = 2;
+        lblCasesUsed.setFont(new Font("Arial", Font.BOLD, 14));
+        lblCasesUsed.setForeground(Color.BLUE);
         center.add(lblCasesUsed, gbc);
 
         this.add(center, BorderLayout.CENTER);
 
-
         JPanel bottom = new JPanel();
+        nextBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        nextBtn.setBackground(new Color(70, 130, 180));
+        nextBtn.setForeground(Color.WHITE);
         bottom.add(nextBtn);
         this.add(bottom, BorderLayout.SOUTH);
-
 
         spinnerCruiser.addChangeListener(e -> updateBoatCount(BoatType.CRUISER, (int) spinnerCruiser.getValue(), factory.createCruiser()));
         spinnerDestroyer.addChangeListener(e -> updateBoatCount(BoatType.DESTROYER, (int) spinnerDestroyer.getValue(), factory.createDestroyer()));
         spinnerSub.addChangeListener(e -> updateBoatCount(BoatType.SUBMARINE, (int) spinnerSub.getValue(), factory.createSubmarine()));
         spinnerTorpedo.addChangeListener(e -> updateBoatCount(BoatType.TORPEDOBOAT, (int) spinnerTorpedo.getValue(), factory.createTorpedoBoat()));
         spinnerAircraftCarrier.addChangeListener(e -> updateBoatCount(BoatType.AIRCRAFTCARRIER, (int) spinnerAircraftCarrier.getValue(), factory.createAircraftCarrier()));
-        nextBtn.addActionListener(e -> {
-            _gameController.setState(GameState.PLACEMENT);
-            _gameController.confirmConfig();
-        });
+
+        islandBox.addActionListener(e -> updateGameMode());
+
+        nextBtn.addActionListener(e -> validateAndProceed());
+
+        updateGameMode();
+        updateAllBoatCounts();
+    }
+
+    private void updateAllBoatCounts() {
         updateBoatCount(BoatType.CRUISER, (int) spinnerCruiser.getValue(), factory.createCruiser());
+        updateBoatCount(BoatType.DESTROYER, (int) spinnerDestroyer.getValue(), factory.createDestroyer());
         updateBoatCount(BoatType.SUBMARINE, (int) spinnerSub.getValue(), factory.createSubmarine());
         updateBoatCount(BoatType.TORPEDOBOAT, (int) spinnerTorpedo.getValue(), factory.createTorpedoBoat());
         updateBoatCount(BoatType.AIRCRAFTCARRIER, (int) spinnerAircraftCarrier.getValue(), factory.createAircraftCarrier());
-        updateBoatCount(BoatType.DESTROYER, (int) spinnerDestroyer.getValue(), factory.createDestroyer());
+    }
+
+    private void updateGameMode() {
+        if (islandBox.isSelected()) {
+            controller.SelectGameMode(GameMode.ISLAND);
+        } else {
+            controller.SelectGameMode(GameMode.NORMAL);
+        }
+        updateCasesUsedDisplay();
     }
 
     private void updateBoatCount(BoatType type, int newValue, Boat boatTemplate) {
@@ -145,7 +162,9 @@ public class ConfigPanel extends JPanel {
                 boolean ok = controller.selectBoat(boatTemplate);
                 if (!ok) {
                     JOptionPane.showMessageDialog(this,
-                            "Impossible d'ajouter ce bateau : limite de cases dépassée !");
+                            "Impossible d'ajouter ce bateau : limite de cases dépassée !",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
                     setSpinnerValue(type, currentCount);
                     return;
                 }
@@ -160,7 +179,46 @@ public class ConfigPanel extends JPanel {
             }
         }
 
-        updateCasesUsed();
+        updateCasesUsedDisplay();
+    }
+
+    private void updateCasesUsedDisplay() {
+        int totalCases = controller.getTotalCases();
+        int maxCells = 35;
+
+        String text = String.format("Cases utilisées : %d / %d", totalCases, maxCells);
+        lblCasesUsed.setText(text);
+
+        if (totalCases > maxCells * 0.8) {
+            lblCasesUsed.setForeground(Color.RED);
+        } else if (totalCases > maxCells * 0.6) {
+            lblCasesUsed.setForeground(Color.ORANGE);
+        } else {
+            lblCasesUsed.setForeground(Color.BLUE);
+        }
+    }
+
+    private void validateAndProceed() {
+        updateGameMode();
+
+        if (controller.getTotalCases() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Vous devez sélectionner au moins un bateau !",
+                    "Configuration incomplète",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (nbAircraft > 3 || nbCruiser > 3 || nbDestroyer > 3 || nbSub > 3 || nbTorpedo > 3) {
+            JOptionPane.showMessageDialog(this,
+                    "Vous ne pouvez pas sélectionner plus de 3 bateaux de chaque type !",
+                    "Limite dépassée",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        _gameController.setState(GameState.PLACEMENT);
+        _gameController.confirmConfig();
     }
 
     private int getCurrentCount(BoatType type) {
@@ -238,10 +296,5 @@ public class ConfigPanel extends JPanel {
                 spinnerAircraftCarrier.setValue(value);
                 break;
         }
-    }
-
-    private void updateCasesUsed() {
-        int totalCases = controller.getTotalCases();
-        lblCasesUsed.setText("Cases utilisées : " + totalCases);
     }
 }

@@ -15,7 +15,6 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Initialisation de la Bataille Navale...");
 
-        // ========== 1. CRÉATION DES GRILLES ==========
         Grid player1Grid = new Grid(10);
         Grid player2Grid = new Grid(10);
 
@@ -80,7 +79,7 @@ public class Main {
         );
 
         game.addObserver(mainView);
-        game.setUpGameMode(GameMode.ISLAND);
+        //game.setUpGameMode(GameMode.ISLAND);
 
         player2Grid.addWeaponToIslandTile(4, 4, WeaponType.BOMB);
         player2Grid.addWeaponToIslandTile(5, 4, WeaponType.SONAR);
