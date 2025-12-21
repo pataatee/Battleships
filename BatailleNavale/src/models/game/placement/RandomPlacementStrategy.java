@@ -5,7 +5,7 @@ import models.placeable.Placeable;
 
 import java.util.Random;
 
-public class RandomPlacementStrategy extends PlacementStrategy {
+public class RandomPlacementStrategy implements PlacementStrategy {
 
     public RandomPlacementStrategy() {
 

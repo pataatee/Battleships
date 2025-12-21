@@ -1,6 +1,5 @@
 package models.player;
 
-import models.placeable.trap.Trap;
 import models.weapon.Weapon;
 import models.weapon.WeaponType;
 
@@ -121,11 +120,6 @@ public class Stats {
 
     public void updateDiscoveredWeapons(Weapon wpn) {
         this._availableItems.add(wpn.toString());
-        this.notifyObservers();
-    }
-
-    public void updateDiscoveredWeapons(Trap t) {
-        this._usedItems.add(t.getName());
         this.notifyObservers();
     }
 

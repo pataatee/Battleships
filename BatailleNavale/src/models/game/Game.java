@@ -83,7 +83,6 @@ public class Game {
         }
     }
 
-    // Nouvelle méthode dans Game pour gérer les stats
     private void updateStatsFromAttack(Player attacker, Player opponent, ShotResult[] results) {
         for (ShotResult res : results) {
             switch (res.get_type()) {

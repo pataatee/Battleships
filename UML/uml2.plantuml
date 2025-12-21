@@ -1,0 +1,731 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+skinparam Padding 3
+skinparam ClassFontSize 11
+skinparam PackageFontSize 13
+
+package models{
+
+    package game{
+
+        package logs{
+            class GameLogs{
+                +<<create>>GameLogs()
+                +addLog(log:Log)
+                +getLogs():log[*]
+                +notifyObservers(log:Log)
+                +addObserver(obs:LogObserver)
+            }
+            GameLogs "1" *-->"0..* -gameLogs" Log : has for logs
+            GameLogs "1..*" o--> "0..* -observers"LogObserver : is being observed by
+
+            class Log{
+                -playerId:Integer
+                -playerName:String
+                -logDesc:String
+                +<<create>>Log(playerId:Integer,playerName:String,playerType:PlayerType,desc:String)
+                +<create>>Log(des:String)
+                +getPlayerId():Integer
+                +getPlayerName():String
+                +getPlayerType():PlayerType
+                +getLogDesc():String
+
+            }
+            Log "0..*"o--> "1-playerType"models.player.PlayerType
+
+            interface LogObserver{
+                +updateOnLogAdded(log:Log)
+            }
+        }
+
+        package placement{
+            class ConfigData{
+                -gridSize:Integer
+                -sumCell:Integer
+                +<<create>>ConfigData(player1:Player,player2:Player)
+                +getMaxAllowedCells():Integer
+                +set_gridSize(gridSize:Integer)
+                +addBoat(boat:Boat):Boolean
+                +canAddBoat(boatBoat):Boolean
+                +removeBoat(boat:Boat):Boolean
+                +getTotalCells():Integer
+                +getChosenBoats():Boat[*]
+                +set_gameMode(gameMode:GameMode)
+                +get_gameMode():GameMode
+                +get_gridSize():Integer
+                -clearExcessBoats()
+                +reset()
+            }
+            ConfigData "0..*"*-->"1 -gameMode" models.game.GameMode
+            ConfigData "1" o-->"1 -player1 "models.player.Player
+            ConfigData "1" o-->"1 -player1 "models.player.Player
+            ConfigData "1" *--> "* -boatList" models.placeable.boat.Boat
+            ConfigData ..> models.placeable.boat.BoatType:<<use>>
+
+            class Coord{
+                -x:Integer
+                -y:Integer
+                +<<create>>Coord(x:Integer,y:Integer,or:Orientation)
+                +getX():Integer
+                +getY():Integer
+                +getOrientation():Orientation
+                +setOrientation(or:Orientation)
+                +setX(x:Integer)
+                +setY(y:Integer)
+                +toString()String
+            }
+            Coord "*" o-->"1 or" Orientation
+
+            class ManualPlacementStrategy implements PlacementStrategies{
+                +<<create>>ManualPlacementStrategy()
+                +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
+                +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
+            }
+            ManualPlacementStrategy ..>models.grid.Grid:<<use>>
+            ManualPlacementStrategy ..>models.placeable.Placeable:<<uses>>
+            ManualPlacementStrategy ..>Coord:<<use>>
+
+            enum Orientation{
+                HORIZONTAL,
+                VERTICAL
+            }
+            class Placement{
+                +<<create>>Placement(strat:PlacementStrategy)
+                +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
+                +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
+                +getPlacementStrategy():PlacementStrategy
+                +setStrat(strat:PlacementStrategy)
+
+            }
+            Placement "1"-->"1 -placementStrategy" PlacementStrategy
+
+            interface PlacementStrategy{
+               +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
+               +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
+            }
+            enum PlacementStrategies{
+                    STATIC,
+                    RANDOM,
+                    MANUAL
+
+            }
+            class RandomPlacementStrategy{
+                +<<create>>RandomPlacementStrategy()
+                +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
+                +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
+            }
+            RandomPlacementStrategy ..>models.grid.Grid:<<use>>
+            RandomPlacementStrategy ..>models.placeable.Placeable:<<uses>>
+            RandomPlacementStrategy ..>Coord:<<use>>
+
+            class StaticPlacementStrategy{
+                +<<create>>StaticPlacementStrategy()
+                +placeObjects(placeable:Placeable[*],grid:Grid,co:Coord):Boolean
+                +placeOneObject(placeable:Placeable,grid:Grid,co:Coord):Boolean
+            }
+            StaticPlacementStrategy ..>models.grid.Grid:<<use>>
+            StaticPlacementStrategy ..>models.placeable.Placeable:<<uses>>
+            StaticPlacementStrategy ..>Coord:<<use>>
+            StaticPlacementStrategy ..>StaticPositions:<<use>>
+
+
+            enum StaticPositions{
+                CRUISERDEFAULTPOS,
+                SUBMARINEDEFAULTPOS,
+                TORPEDOBOATDEFAULTPOS,
+                AIRCRAFTCARRIERDEFAULTPOS,
+                DESTROYERDEFAULTPOS,
+                BLACKHOLEDEFAULTPOS,
+                TORNADODEFAULTPOS,
+            }
+
+        }
+        class Game{
+            -currentPlayerIndex:Integer
+            -currentTurn:Integer
+            +<<create>>Game(player1:Player,player2:Player)
+            +setUpGameMode(gameMode:GameMode)
+            +startGame()
+            +processAttack(attack:Attack)
+            +updateStatsFromAttack(player:Player,opponent:Player,results:ShotResult[*])
+            +executeHumanAttack(x:Integer,y:Integer)
+            +executeAITurn()
+            +scheduleAITurn()
+            +nextTurn()
+            +getOpponent():Player
+            +setGameState()
+            +getCurrentPlayer():Player
+            +isHumanTurn():Boolean
+            +isAITurn():Boolean
+            +getGameMode():GameMode
+            +getCurrentTurn():Integer
+            +getCurrentPlayerIndex():Integer
+            +getGameState():GameState
+            +getGameLogs():GameLogs
+            +addObserver(observer:GameObserver)
+            +notifyGameStateChanged()
+            +notifyGameOver(winner:Player)
+            +confirmConfig(chosenBoats:Boat[*])
+        }
+        Game "1"o-->"* -players" models.player.Player:has for player
+        Game "1"*-->"1 -gameState "GameState
+        Game "1"*-->"1 -gameMode" GameMode
+        Game "1"o-->"* -observers" GameObserver
+        Game "1"*-->"1 -logs":GameLogs
+        Game ..> models.placeable.PlaceableFactory :<<use>>
+        Game ..> models.placeable.boat.Boat :<<use>>
+        Game ..> models.player.AIPlayer:<<use>>
+        Game ..> models.player.Attack:<<use>>
+        Game ..> models.player.Player:<<use>>
+        Game ..> models.player.ShotResult:<<use>>
+        Game ..> models.weapon.WeaponType:<<use>>
+
+
+        class GameMode{
+            NORMAL,
+            ISLAND
+        }
+        class GameObserver{
+            updateGameState(state:GameState)
+            updateGameOver(winner:Player )
+        }
+        class GameState{
+            CONFIG,
+            PLACEMENT,
+            IN_GAME,
+            ENDGAME
+        }
+
+    }
+    package grid{
+        class Grid{
+            -size:Integer
+            +<<create>>Grid(size:Integer)
+            +setSize(size:Integer)
+            +generateGrid()
+            +changeStateOfTile(x:Integer,y:Integer,newState:TileState)
+            +hitTile(x:Integer,y:Integer):ShotResult
+            +isTileFree(x:Integer,y:Integer):Boolean
+            +addObserver(ob:GridObserver)
+            +notifyObserver(x:Integer,y:Integer,state:TileState)
+            +placeObject(object:Placeable,x:Integer,y:Integer,orientation:Orientation):Boolean
+            +getSize():Integer
+            +setUpIsland()
+            +getTileTileState(x:Integer,y:Integer):TileState
+            +resetGrid()
+            +notifyReset()
+        }
+        Grid "1"-->"** -tilesMap" Tile
+        Grid "1"-->"* -observers" : GridObserver
+        Grid ..>models.game.placement.Orientation:<<use>>
+        Grid ..>models.placeable.Placeable:<<use>>
+        Grid ..>models.placeable.PlaceableType:<<use>>
+        Grid ..>models.placeable.boat.Boat:<<use>>
+        Grid ..>models.player.ShotResult:<<use>>
+        Grid ..>models.player.ShotResultType:<<use>>
+        Grid ..>models.weapon.WeaponType:<<use>>
+
+        interface GridObserver{
+            updateTileState(x:Integer,y:Integer, state:TileState )
+        }
+        class IslandTile extends Tile{
+            +<<create>>IslandTile()
+            +onHit(x:Integer,y:Integer):ShotResult
+            +addWeapon(weaponType:Weapon)
+            +getWeapon():WeaponType
+        }
+        IslandTile "1"-->"1 -weapon" models.weapon.WeaponType
+        IslandTile ..> models.player.ShotResult
+
+        class SeaTile extends Tile{
+            +<<create>>SeaTile()
+            +onHit(x:Integer,y:Integer):ShotResult
+        }
+        SeaTile ..> models.player.ShotResult
+
+        abstract class Tile{
+            +<<create>>Tile(def:TileState)
+            +setState(state:TileState)
+            +isFree():Boolean
+            +{abstract}onHit(x:Integer,y:Integer):Boolean
+            +setObject(object:Placeable)
+            +getObject():Placeable
+
+        }
+        Tile "1"-->"1 -currentState" TileState
+        Tile "1"-->"1 -obj" models.placeable.Placeable
+        Tile ..>models.placeable.EmptyObject:<<use>>
+        Tile ..>models.player.ShotResult:<<use>>
+
+        enum TileState{
+            EMPTY,
+            MISS,
+            BOAT,
+            BOATHIT,
+            BOATDEAD,
+            TRAP,
+            TRAPHIT,
+            SEARCHED,
+            NOTSEARCHED,
+            ISLAND,
+            ISLANDHIT
+        }
+    }
+    package placeable{
+        package boat{
+            class AircraftCarrier extends Boat{
+                +<<create>>AircraftCarrier()
+                +<<create>>AircraftCarrier(other:AircraftCarrier)
+                +clone():Boat
+            }
+            abstract class Boat extends models.placeable.Placeable{
+                -isDead:Boolean
+                -pv:Integer
+                -positions:Integer[*][*]
+                -positionIndex:Integer
+                -isFirstHit:Boolean
+                size:Integer
+                +<<create>>Boat(name:String,type:BoatType)
+                +<<create>>Boat(other:Boat)
+                +{abstract}clone:Boat()
+                +onHit(x:Integer,y:Integer):ShotResult
+                +addPosition(pos:Integer[*])
+                +getPosition():Integer[*][*]
+                +getType():BoatType
+                +isDead():Boolean
+                +resetPositions()
+                +getIsFirstHit():Boolean
+                +setIsFirstHit(is:Boolean)
+
+            }
+            Boat "1"*-->"1 -boatType" BoatType
+            Boat ..>models.placeable.PlaceableType:<<use>>
+            Boat ..>models.player.ShotResult:<<init>>
+            Boat ..>models.player.ShotResultType:<<use>>
+
+            enum BoatType{
+                AIRCRAFTCARRIER,
+                CRUISER,
+                DESTROYER,
+                SUBMARINE,
+                TORPEDOBOAT
+            }
+            class Cruiser extends Boat{
+                +<<create>>Cruiser()
+                +<<create>>Cruiser(other:Cruiser)
+                +clone():Boat
+            }
+            class Destroyer extends Boat{
+                +<<create>>Destroyer()
+                +<<create>>Destroyer(other:Destroyer)
+                +clone():Boat
+            }
+            class Submarine extends Boat{
+                +<<create>>Submarine()
+                +<<create>>Submarine(other:Submarine)
+                +clone():Boat
+            }
+            class TorpedoBoat extends Boat{
+                +<<create>>TorpedoBoat()
+                +<<create>>TorpedoBoat(other:TorpedoBoat)
+                +clone():Boat
+            }
+        }
+        package trap{
+            class BlackHole extends Trap{
+                +<<create>>BlackHole()
+                +onHit(x:Integer,y:Integer):ShotResult
+            }
+            class Tornado extends Trap{
+                +<<create>>Trap()
+                +onHit(x:Integer,y:Integer):ShotResult
+            }
+            class Trap extends Placeable{
+                -hasBeenActivated:Boolean
+                -hasBeenUsed:Boolean
+                +<<create>>Trap(name:String,size:Integer)
+                +{abstract}onHit(x:Integer,y:Integer):ShotResult
+                +setUsed(used:Boolean)
+                +setActivated(activation:Boolean)
+                +getActivation():Boolean
+                +resetPositions()
+            }
+            Trap ..>models.player.ShotResult:<<init>>
+            Trap ..>models.player.ShotResultType:<use>>
+            enum TrapType{
+                TORNADO,
+                BLACKHOLE
+             }
+
+        }
+        class EmptyObject extends Placeable{
+            +<<create>>EmptyObject()
+            +onHit(x:Integer,y:Integer):ShotResult
+            +resetPositions()
+        }
+        EmptyObject ..>models.player.ShotResult:<<init>>
+        EmptyObject ..>models.player.ShotResultType:<use>>
+
+
+        class Placeable{
+            -size:Integer
+            -name:String
+            +<<create>>Placeable(name:String,type:Placeable)
+            +{abstract}onHit(x:Integer,y:Integer):ShotResult
+            +getSize():Integer
+            +getName():String
+            +getPlaceableType():PlaceableType
+            +skibidiRizzler(x:Integer,y:Integer,orientation:Orientation):Integer[*][*]
+            +{abstract}resetPositions()
+        }
+        Placeable "1"*-->"1 -type" PlaceableType
+        Placeable ..>models.game.placement.Orientation:<<use>>
+        Placeable ..>models.player.ShotResult:<<use>>
+
+
+
+        class PlaceableFactory{
+           +<<create>>PlaceableFactory()
+           +createCruiser():Boat
+           +createDestroyer():Boat
+           +createAircraftCarrier():Boat
+           +createSubmarine():Boat
+           +createTorpedoBoat():Boat
+           +createBlackHole() :Trap
+           +createTornado() :Trap
+           +createEmptyObject():Placeable {
+        }
+        PlaceableFactory ..> models.placeable.boat.Cruiser : <<init>>
+        PlaceableFactory ..> models.placeable.boat.Destroyer : <<init>>
+        PlaceableFactory ..> models.placeable.boat.AircraftCarrier : <<init>>
+        PlaceableFactory ..> models.placeable.boat.Submarine : <<init>>
+        PlaceableFactory ..> models.placeable.boat.TorpedoBoat : <<init>>
+        PlaceableFactory ..> models.placeable.trap.BlackHole : <<init>>
+        PlaceableFactory ..> models.placeable.trap.Tornado : <<init>>
+        PlaceableFactory ..> models.placeable.EmptyObject : <<init>>
+
+        enum PlaceableType{
+            BOAT,
+            TRAP,
+            EMPTY
+        }
+    }
+
+    package player{
+        class AIPlayer extends Player{
+            -size:Integer
+            -lasthitCell : Integer[2]
+            -firstHitCell: Integer[2]
+            -pendingTargets:Integer[*][2]
+            -currentDirection:Integer[2]
+            +<<create>>AIPlayer(name:String,id:Integer,grd:Grid)
+            +generateAttackCoordinates():Integer[]
+            -getRandomCoordinate():Integer[]
+            -getNextTargetCoordinate():Integer[]
+            -getNextDestroyCoordinate():Integer[]
+            +processAttackResult(x:Integer,y:Integer,result:ShotResultType)
+            -onHit(x:Integer,y:Integer)
+            -onSunk(x:Integer,y:Integer)
+            -onMiss(x:Integer,y:Integer)
+            -addAdjacentTargets(x:Integer,y:Integer)
+            -determineDirection()
+            -reverseDirection()
+            -isValidCoordinate(x:Integer,y:Integer):Boolean
+            +generateAttack():Attack
+            +notifyDeath(logs:GameLogs)
+        }
+
+        AIPlayer ..> models.game.logs.GameLogs:<<uses>>
+        AIPlayer ..> models.game.logs.Log:<<uses>>
+        AIPlayer ..> models.grid.Grid:<<uses>>
+        AIPlayer ..> models.weapon.Missile:<<uses>>
+
+
+        class Attack{
+            -x:Integer
+            -y:Integer
+            +getWeapon():Weapon
+            +getX:Integer
+            +getY:Integer
+            +weaponToString():String
+        }
+            Attack "*"o-->"1 -weapon"Weapon
+
+        class HumanPlayer extends Player{
+            +<<create>>HumanPlayer(name:String)
+            +notifyDeath(logs:GameLogs)
+        }
+        HumanPlayer..> models.game.logs.GameLogs:<<uses>>
+        HumanPlayer ..>models.game.logs.Log:<<uses>>
+        HumanPlayer ..>models.grid.Grid:<<uses>>
+
+
+
+        class Player{
+            -id:Integer
+            -name:String
+            -isAlive:Boolean
+            +<<create>>Player(name:String,id:Integer,grid:Grid,type:PlayerType)
+            +addBoat(boat:Boat)
+            +addTrap(trap:Trap)
+            +createAttack(x:Integer,y:Integer):Attack
+            +getAttacked(attack:Attack):ShotResult[]
+            +setWeapon(weapon:Weapon)
+            +addWeapon(wt:WeaponType)
+            +removeWeapon(wt:WeaponType)
+            +getWeapon():Weapon
+            +isAlive():Boolean
+            +getType():PlayerType
+            +reactToSunk()
+            +addPlaceable(placeable:Placeable[*])
+            +setUpIsland()
+            +getGrid():Grid
+            +addWeaponObserver(wo:WeaponObserver)
+            +notifyWeaponSelected(wp:WeaponType)
+            +notifyWeaponUnlocked(wp:WeaponType)
+            +handelShotResult(resultTypes:ShotResult[*],logs:GameLogs)
+            +getPlaceableList():Placeable[*]
+            +resetBoatList()
+            +resetTrapList()
+            +getName():String
+            +getId():Integer
+            +{abstract}notifyDeath(logs:GameLogs)
+            +clearWeapon()
+            +getBoatAt(x:Integer,y:Integer):Boat
+            +getStats():Stats
+            +getNbBoats():Integer
+            +getNbBoatTiles():Integer
+
+        }
+        Player "1"*-->"* -boatList" models.placeable.boat.Boat
+        Player "1"*-->"* -trapList" models.placeable.trap.Trap
+        Player "1"o-->"1 -grid" models.grid.Grid
+        Player "1"*-->"1 -currentWeapon" models.weapon.Weapon
+        Player "1"*-->"* -WeaponList" models.weapon.WeaponType
+        Player "1"*-->"* -type" models.player.PlayerType
+        Player "1"*-->"* -wpObserverList" models.player.WeaponObserver
+        Player "1"*-->"* -stats" Stats
+        Player ..> models.game.logs.GameLogs:<<use>>
+        Player ..>models.game.logs.Log:<<use>>
+        Player ..>models.grid.Grid:<<use>>
+        Player ..>models.grid.TileState:<<use>>
+        Player ..>models.placeable.PlaceableType:<<use>>
+        Player ..>models.placeable.boat.BoatType:<<use>>
+
+        enum PlayerType{
+          HUMAN,
+            AI
+        }
+        class ShotResult{
+            -x:Integer
+            -y:Integer
+            +<<create>>ShotResult(x:Integer,y:Integer,type:ShotResultType)
+            +get_x():Integer
+            +get_y():Integer
+            +get_type():ShotResultType
+        }
+        ShotResult "1"*-->"1 -type" ShotResultType: had for ShotType
+
+        enum ShotResultType{
+            MISS,
+            HIT,
+            SUNK,
+            SONAR,
+            TORNAD,
+            BLACKHOLE,
+            ISLANDHIT,
+            DISCOVERBOMB,
+            DISCOVERSONAR
+        }
+        class Stats{
+            -nbIntactBoats:Integer
+            -nbHitBoats:Integer
+            -nbSunkBoats:Integer
+            -missShots:Integer
+            -nbHitBoatTiles:Integer
+            -nbBoatTilesLeft:Integer
+            -triggeredTornado:Boolean
+            -triggeredBlackHole:Boolean
+            -nbIslandTilesLeft:Integer
+            -usedItems:String
+            -availableItems:String
+            +<<create>>Stats()
+            +setNbBoats(nb:Integer)
+            +setNbBoatTiles(nb:Integer)
+            +addObserver(obs:StatsObserver)
+            +notifyObservers()
+            +updateNbHitBoatTiles()
+            +updateNbHitBoats()
+            +updateNbSunkBoats()
+            +updateUsedWeapon()
+            +updateTriggeredBlackHole()
+            +updateTriggeredTornado()
+            +updateIslandTilesLeft()
+            +updateDiscoveredWeapons(wpn:Weapon)
+            +updateMissShots()
+            +setOpponentBoatStats()
+            +getNbIntactBoats():Integer
+            +getNbHitBoats():Integer
+            +getNbSunkBoats():Integer
+            +getNbMissedShots():Integer
+            +getNbHitBoatTiles():Integer
+            +getNbBoatTilesLeft():Integer
+            +getNbIslandTilesLeft():Integer
+            +getUsedItems():String[]
+            +getAvailableItems():String[]
+        }
+        Stats ..> models.weapon.Weapon:<<use>>
+        import ..>models.weapon.WeaponType:<<use>>
+
+        interface StatsObserver{
+            +updateStats(stats Stats);
+        }
+        interface WeaponObserver{
+            +notifySelected(wp:WeaponType);
+            +notifyUnlocked(wp:WeaponType , unlocked:boolean );
+        }
+    }
+    package weapon{
+        class Bomb extends Weapon{
+            +<<create>>Bomb()
+            +use(x:Integer,y:Integer):Effect[*]
+        }
+        Bomb ..> Effect :<<init>>
+
+        class Effect{
+            -x:Integer
+            -y:Integer
+            +<<create>>Effect(x:Integer,y:Integer,effect:EffectType)
+            +getpos():Integer[]
+            +getEffectType():EffectType
+        }
+        Effect "1"*-->"1 effectType" EffectType
+
+        enum EffectType{
+            HIT,
+            SCAN,
+            BOMB
+        }
+        class Missile{
+           +<<create>>Missile()
+            +use(x:Integer,y:Integer):Effect[*]
+
+        }
+        Missile ..> Effect :<<init>>
+
+        class Sonar{
+          +<<create>>Sonar()
+            +use(x:Integer,y:Integer):Effect[*]
+
+        }
+        Sonar ..> Effect :<<init>>
+
+        class Weapon{
+            +<<create>>Weapon(type:WeaponType)
+            +use(x:Integer,y:Integer):Effect[*]
+            +get_type():WeaponType
+            +toString():String
+        }
+        Weapon "1"*-->"1 -type" WeaponType : is a weapon of
+        class WeaponFactory{
+            +<<create>>WeaponFactory()
+            +createBomb():Weapon
+            +createMissile():Weapon
+            +createSonar():Weapon
+        }
+        WeaponFactory ..> Bomb:<<init>>
+        WeaponFactory ..> Sonar:<<init>>
+        WeaponFactory ..> Missile:<<init>>
+
+        enum WeaponType{
+           MISSILE,
+            BOMB,
+            SONAR
+        }
+    }
+}
+package controllers{
+
+    class ConfigController{
+
+    }
+    class GameController{
+
+    }
+    class LogsController{
+
+    }
+    class PlacementController{
+
+    }
+    class StatsController{
+
+    }
+    class WeaponController{
+
+    }
+}
+
+
+
+package views{
+    class ButtonBox{
+
+    }
+    class ButtonGridPanel{
+
+    }
+    class CellPanel{
+
+    }
+    class ConfigPanel{
+    }
+    class EndScreenPanel{
+    }
+    interface GridButtonDelegate{
+    }
+    class GridPanel{
+    }
+    class ImageButton{
+    }
+    class LogsPanel{
+
+    }
+    class MainView{
+
+    }
+    class ManualPlacementPanel{
+
+    }
+    class PlacementInfoPanel{
+
+    }
+    class PlacementView{
+
+    }
+    class PlayerPanel{
+
+    }
+    class RandomPlacementPanel{
+
+    }
+    class StaticPlacementPanel{
+
+    }
+    class StatsPanel{
+
+    }
+    class WeaponBox{
+
+    }
+    class WeaponPanel{
+
+    }
+
+}
+
+
+
+@enduml

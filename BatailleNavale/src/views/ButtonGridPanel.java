@@ -35,8 +35,4 @@ public class ButtonGridPanel extends JPanel {
             }
         }
     }
-
-    public void set_delegate(GridButtonDelegate _delegate) {
-        this._delegate = _delegate;
-    }
 }

@@ -14,7 +14,6 @@ public class ButtonBox extends JPanel {
         this._desc = new JLabel(text, SwingConstants.CENTER);
 
         this.initButtonBox();
-        // this.createGrayOverlay();
     }
 
     public void initButtonBox() {
@@ -63,32 +62,5 @@ public class ButtonBox extends JPanel {
     public void deactivateButton(boolean state) {
         _btnImg.setEnabled(state);
     }
-
-
-
-    /*public void setActivatedLabel(Boolean layer) {
-        this._layer=layer;
-        if (this._layer) {
-            this._desc.setForeground(new Color(104, 16, 163));
-            this._desc.setBackground(new Color(0xB6B8B8));
-            this._desc.setOpaque(true);
-        }
-        else{
-            this._desc.setOpaque(false);
-            this._desc.setForeground(new Color(0));
-        }
-    }*/
-
-
-    /*public void createGrayOverlay() {
-        this._pan = new JPanel();
-        this._pan.setBackground(Color.lightGray);
-        this._pan.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this._pan.setAlignmentY(Component.CENTER_ALIGNMENT);
-        this._pan.setVisible(false);
-        this._pan.setOpaque(true);
-        this.add(this._pan);
-    }*/
-
 
 }

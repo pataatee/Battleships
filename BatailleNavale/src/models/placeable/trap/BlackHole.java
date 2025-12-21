@@ -12,12 +12,8 @@ public class BlackHole extends Trap {
 
     @Override
     public ShotResult onHit(int x, int y) {
-        //TODO: code BlackHole's effect
         super.setActivated(true);
         return new ShotResult(x, y, ShotResultType.BLACKHOLE);
     }
 
-    public void updateTile(Tile tile) {
-        //TODO: complete this
-    }
 }

@@ -12,12 +12,8 @@ public class Tornado extends Trap {
 
     @Override
     public ShotResult onHit(int x, int y) {
-        //TODO: code tornado's effect
         super.setActivated(true);
         return new ShotResult(x, y, ShotResultType.TORNAD);
     }
 
-    public void updateTile(Tile tile) {
-        //TODO: complete this method
-    }
 }

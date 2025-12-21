@@ -47,7 +47,7 @@ public class ConfigController {
      * @param gameMode The game mode to set
      */
     public void SelectGameMode(GameMode gameMode) {
-        _mdData.setGameMode(gameMode);
+        _mdData.set_gameMode(gameMode);
     }
 
     /**
@@ -56,7 +56,7 @@ public class ConfigController {
      * @return The grid size
      */
     public int getGridSize() {
-        return _mdData.getGridSize();
+        return _mdData.get_gridSize();
     }
 
     /**
@@ -65,7 +65,7 @@ public class ConfigController {
      * @return The game mode
      */
     public GameMode getGameMode() {
-        return _mdData.getGameMode();
+        return _mdData.get_gameMode();
     }
 
     /**
