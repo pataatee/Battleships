@@ -50,8 +50,8 @@ class RandomPlacementStrategyTest {
         var boat5 = fac.createSubmarine();
         var boat6 = fac.createAircraftCarrier();
         var boat7 = fac.createTorpedoBoat();
-        var boat8 = fac.createBlackHole(0);
-        var boat9 = fac.createTornado(0);
+        var boat8 = fac.createBlackHole();
+        var boat9 = fac.createTornado();
         var boat10 = fac.createTorpedoBoat();
         var pla = new Placeable[10];
 

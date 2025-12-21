@@ -4,20 +4,21 @@ import models.placeable.boat.BoatType;
 
 public enum StaticPositions {
 
-    // AircraftCarrier's default position
-    AIRCRAFTCARRIERDEFAULTPOS(BoatType.AIRCRAFTCARRIER, 1, 5, Orientation.HORIZONTAL),
-
     // Cruiser's default position
     CRUISERDEFAULTPOS(BoatType.CRUISER, 7, 6, Orientation.VERTICAL),
+    // Submarine's default position
+    SUBMARINEDEFAULTPOS(BoatType.SUBMARINE, 7, 2, Orientation.HORIZONTAL),
+    // TorpedoBoat's default position
+    TORPEDOBOATDEFAULTPOS(BoatType.TORPEDOBOAT, 5, 9, Orientation.HORIZONTAL),
+    // AircraftCarrier's default position
+    AIRCRAFTCARRIERDEFAULTPOS(BoatType.AIRCRAFTCARRIER, 1, 5, Orientation.HORIZONTAL),
 
     // Destroyer's default position
     DESTROYERDEFAULTPOS(BoatType.DESTROYER, 1, 1, Orientation.VERTICAL),
 
-    // Submarine's default position
-    SUBMARINEDEFAULTPOS(BoatType.SUBMARINE, 7, 2, Orientation.HORIZONTAL),
 
-    // TorpedoBoat's default position
-    TORPEDOBOATDEFAULTPOS(BoatType.TORPEDOBOAT, 5, 9, Orientation.HORIZONTAL),
+
+
 
     // BlackHole's default position
     BLACKHOLEDEFAULTPOS("Black Hole", 6, 8),

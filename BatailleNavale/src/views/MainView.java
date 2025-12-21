@@ -19,7 +19,6 @@ public class MainView extends JFrame implements GameObserver {
     private GameController _gameController;
     private LogsPanel _logsPanel;
     private PlacementView _placementView;
-    private PlacementController _placementController;
 
     public MainView(ConfigPanel configPanel, PlacementView PlacementPanel, PlayerPanel playerPanel1, PlayerPanel playerPanel2,LogsPanel logsPanel, GameController gameController) {
         super("Bato jeux");

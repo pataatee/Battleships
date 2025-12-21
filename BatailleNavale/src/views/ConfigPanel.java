@@ -130,6 +130,11 @@ public class ConfigPanel extends JPanel {
             _gameController.setState(GameState.PLACEMENT);
             _gameController.confirmConfig();
         });
+        updateBoatCount(BoatType.CRUISER, (int) spinnerCruiser.getValue(), factory.createCruiser());
+        updateBoatCount(BoatType.SUBMARINE, (int) spinnerSub.getValue(), factory.createSubmarine());
+        updateBoatCount(BoatType.TORPEDOBOAT, (int) spinnerTorpedo.getValue(), factory.createTorpedoBoat());
+        updateBoatCount(BoatType.AIRCRAFTCARRIER, (int) spinnerAircraftCarrier.getValue(), factory.createAircraftCarrier());
+        updateBoatCount(BoatType.DESTROYER, (int) spinnerDestroyer.getValue(), factory.createDestroyer());
     }
 
     private void updateBoatCount(BoatType type, int newValue, Boat boatTemplate) {

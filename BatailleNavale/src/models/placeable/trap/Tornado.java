@@ -6,8 +6,8 @@ import models.player.ShotResultType;
 
 public class Tornado extends Trap {
 
-    public Tornado(int ownerId) {
-        super(ownerId, "Tornado", 1);
+    public Tornado() {
+        super("Tornado", 1);
     }
 
     @Override

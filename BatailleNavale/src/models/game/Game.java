@@ -2,6 +2,7 @@ package models.game;
 
 import models.game.logs.GameLogs;
 import models.game.logs.Log;
+import models.placeable.PlaceableFactory;
 import models.placeable.boat.Boat;
 import models.player.AIPlayer;
 import models.player.Attack;
@@ -168,10 +169,14 @@ public class Game {
     }
 
     public void confirmConfig(ArrayList<Boat> chosenBoats) {
+        PlaceableFactory placeableFactory = new PlaceableFactory();
         for (Boat chosenBoat : chosenBoats) {
             _players[0].addBoat(chosenBoat.clone());
             _players[1].addBoat(chosenBoat.clone());
         }
-
+        _players[0].addTrap(placeableFactory.createBlackHole());
+        _players[0].addTrap(placeableFactory.createTornado());
+        _players[1].addTrap(placeableFactory.createBlackHole());
+        _players[1].addTrap(placeableFactory.createTornado());
     }
 }

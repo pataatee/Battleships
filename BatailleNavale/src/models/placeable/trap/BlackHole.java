@@ -6,8 +6,8 @@ import models.player.ShotResultType;
 
 public class BlackHole extends Trap {
 
-    public BlackHole(int ownerId) {
-        super(ownerId, "Black Hole", 1);
+    public BlackHole() {
+        super("Black Hole", 1);
     }
 
     @Override
