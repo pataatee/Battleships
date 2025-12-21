@@ -67,7 +67,9 @@ public class Game {
             endGame(attacker);
             return;
         }
-
+        if(isAITurn()){
+            ((AIPlayer)attacker).processAttackResult(results[0].get_x(),results[0].get_y(),results[0].get_type());
+        }
         nextTurn();
 
         if (isAITurn()) {
