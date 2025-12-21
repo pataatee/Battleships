@@ -20,13 +20,13 @@ package views{
     }
     ButtonGridPanel "1" o-->"1 -GridButtonDelegate" GridButtonDelegate
 
-    class CellPanel implements models.grid.GridObserver{
+    class CellPanel implements .models.grid.GridObserver{
         +<<create>>CellPanel(grid:Grid,isPlayerView:Boolean)
         +initGrid(size:Integer)
         +getTileColor(state:TileState):Color
         +updateTileState(x:Integer,y:Integer,state:TileState)
     }
-    CellPanel "1" o-->"1 -grid" models.grid.Grid : display the grid
+    CellPanel "1" o-->"1 -grid" .models.grid.Grid : display the grid
 
 
    class ConfigPanel{
@@ -47,20 +47,20 @@ package views{
        -decrementCount(type:BoatType)
        -setSpinnerValue(type:BoatType, value:Integer)
    }
-       ConfigPanel "1" o--> "1 -controller" ConfigController
-       ConfigPanel "1" o--> "1 -factory" PlaceableFactory
-       ConfigPanel "1" o--> "1 -_gameController" GameController
-       ConfigPanel ..> GameMode : uses
-       ConfigPanel ..> GameState : uses
-       ConfigPanel ..> BoatType : uses
-       ConfigPanel ..> Boat : uses
+       ConfigPanel "1" o--> "1 -controller" .controllers.ConfigController
+       ConfigPanel "1" o--> "1 -factory" .models.placeable.PlaceableFactory
+       ConfigPanel "1" o--> "1 -_gameController" .controllers.GameController
+       ConfigPanel ..> .models.game.GameMode : uses
+       ConfigPanel ..> .models.game.GameState : uses
+       ConfigPanel ..> .models.placeable.boat.BoatType : uses
+       ConfigPanel ..> .models.placeable.boat.Boat : uses
 
      class EndScreenPanel{
          +<<create>>EndScreenPanel(winner:Player, gameController:GameController)
      }
-     EndScreenPanel ..> Player : uses
-     EndScreenPanel ..> GameController : uses
-     EndScreenPanel ..> GameState : uses
+     EndScreenPanel ..> .models.player.Player : uses
+     EndScreenPanel ..> .controllers.GameController : uses
+     EndScreenPanel ..> .models.game.GameState : uses
 
 
     interface GridButtonDelegate{
@@ -79,8 +79,8 @@ package views{
         +createGridCenter(size:Integer, action:GridButtonDelegate)
     }
 
-    GridPanel "1" o--> "1 -grid" Grid
-    GridPanel "1" o--> "0..1 -controller" GameController
+    GridPanel "1" o--> "1 -grid" .models.grid.Grid
+    GridPanel "1" o--> "0..1 -controller" .controllers.GameController
     GridPanel "1" o--> "0..1 -cellPanel" CellPanel : creates and contains
     GridPanel "1" *--> "0..1 -buttonPanel" ButtonGridPanel : creates and contains
     GridPanel ..> GridButtonDelegate : uses
@@ -90,17 +90,17 @@ package views{
         +initializeButton()
     }
 
-   class LogsPanel implements models.game.logs.LogsObserver{
+   class LogsPanel implements .models.game.logs.LogsObserver{
        +<<create>>LogsPanel(lc:LogsController)
        +updateOnLogAdded(log:Log)
        +showLogs()
    }
 
-   LogsPanel "1" o--> "1 -_lc" LogsController
-   LogsPanel ..> Log : uses
-   LogsPanel ..> PlayerType : uses
+   LogsPanel "1" o--> "1 -_lc" .controllers.LogsController
+   LogsPanel ..> .models.game.logs.Log : uses
+   LogsPanel ..> .models.player.PlayerType : uses
 
-    class MainView implements models.game.GameObserver{
+    class MainView implements .models.game.GameObserver{
     +<<create>>MainView(configPanel:ConfigPanel, PlacementPanel:PlacementView, playerPanel1:PlayerPanel, playerPanel2:PlayerPanel, logsPanel:LogsPanel, stats1:StatsPanel, stats2:StatsPanel, gameController:GameController)
     +startGame()
     +updateGameState(state:GameState)
@@ -115,8 +115,8 @@ package views{
     MainView "1" o--> "1 -_logsPanel" LogsPanel
     MainView "1" o--> "1 -_statsPanel1" StatsPanel
     MainView "1" o--> "1 -_statsPanel2" StatsPanel
-    MainView ..> GameState : uses
-    MainView ..> Player : uses
+    MainView ..> .models.game.GameState : uses
+    MainView ..> .models.player.Player : uses
     MainView ..> EndScreenPanel : creates
 
 
@@ -133,12 +133,12 @@ package views{
         +showManualPlacementPanel(show:Boolean)
     }
 
-    ManualPlacementPanel "1" o--> "1 -_pc" controllers.PlacementController
+    ManualPlacementPanel "1" o--> "1 -_pc" .controllers.PlacementController
     ManualPlacementPanel "1" o--> "1 -_pnlGrid" GridPanel
     ManualPlacementPanel "1" o--> "1 -_pnlInfos" PlacementInfoPanel
     ManualPlacementPanel "1" o--> "1 -_btnOrientation" ImageButton
-    ManualPlacementPanel ..> Grid : uses
-    ManualPlacementPanel ..> Orientation : uses
+    ManualPlacementPanel ..> .models.grid.Grid : uses
+    ManualPlacementPanel ..> .models.game.placement.Orientation : uses
 
    class PlacementInfoPanel{
        +<<create>>PlacementInfoPanel()
@@ -161,10 +161,10 @@ package views{
     PlacementView "1" o--> "1 -_pnlManualPlacement" ManualPlacementPanel
     PlacementView "1" o--> "1 -_pnlRandomPlacement" RandomPlacementPanel
     PlacementView "1" o--> "1 -_pnlStaticPlacement" StaticPlacementPanel
-    PlacementView ..> Grid : uses
-    PlacementView ..> GameController : uses
-    PlacementView ..> GameState : uses
-    PlacementView ..> PlacementStrategies : uses
+    PlacementView ..> .models.grid.Grid : uses
+    PlacementView ..> .controllers.GameController : uses
+    PlacementView ..> .models.game.GameState : uses
+    PlacementView ..> .models.placement.PlacementStrategies : uses
 
 
     class PlayerPanel{
@@ -175,17 +175,17 @@ package views{
 
     PlayerPanel "1" o--> "1 -_weaponPanel" WeaponPanel
     PlayerPanel "1" o--> "1 -_gridPanel" GridPanel
-    PlayerPanel ..> GameController : uses
-    PlayerPanel ..> Grid : uses
+    PlayerPanel ..> .controllers.GameController : uses
+    PlayerPanel ..> .models.grid.Grid : uses
 
 
     class RandomPlacementPanel{
         +<<create>>RandomPlacementPanel(pc:PlacementController, grid:Grid)
     }
 
-    RandomPlacementPanel "1" o--> "1 -_pc" PlacementController
+    RandomPlacementPanel "1" o--> "1 -_pc" .controllers.PlacementController
     RandomPlacementPanel "1" o--> "1 -_pnlGrid" GridPanel
-    RandomPlacementPanel ..> Grid : uses
+    RandomPlacementPanel ..> .models.grid.Grid : uses
 
 
     class StaticPlacementPanel{
@@ -196,8 +196,8 @@ package views{
     }
 
     StaticPlacementPanel "1" o--> "1 -_pnlGrid" GridPanel
-    StaticPlacementPanel "1" o--> "1 -_pc" PlacementController
-    StaticPlacementPanel ..> Grid : uses
+    StaticPlacementPanel "1" o--> "1 -_pc" .controllers.PlacementController
+    StaticPlacementPanel ..> .models.grid.Grid : uses
 
 
     class StatsPanel implements StatsObserver{
@@ -205,7 +205,7 @@ package views{
         +updateStats(stats:Stats)
     }
 
-    StatsPanel ..> Stats : uses
+    StatsPanel ..> .models.player.Stats : uses
 
 
     class WeaponBox{
@@ -216,11 +216,130 @@ package views{
 
     WeaponBox "1" o--> "1 -_btnWeapon" ImageButton
 
-    class WeaponPanel{
+        class WeaponPanel implements models.player.WeaponObserver{
+            +<<create>>WeaponPanel(controller:WeaponController)
+            +initWeaponPanel()
+            +initWeaponButtons()
+            +notifySelected(wp:WeaponType)
+            +notifyUnlocked(wp:WeaponType, unlocked:boolean)
+        }
 
-    }
+        WeaponPanel "1" o--> "1 -_controller" .controllers.WeaponController
+        WeaponPanel ..> .models.weapon.WeaponType : uses
+        WeaponPanel ..> ImageButton : uses
 
 }
 
+package controllers{
+
+    class ConfigController{
+        +<<create>>ConfigController(mdData:ConfigData)
+        +selectBoat(boat:Boat):Boolean
+        +deselectBoat(boatType:BoatType):Boolean
+        +getTotalCases():Integer
+        +SelectGameMode(gameMode:GameMode)
+        +getGridSize():Integer
+        +getGameMode():GameMode
+        +resetConfiguration()
+        +getSelectedBoats():Boat[*]
+    }
+    ConfigController "1" o-->"1 -mdData"models.game.placement.ConfigData:<<use>>
+    ConfigController ..> models.game.GameMode:<<use>>
+    ConfigController ..>models.placeable.boat.Boat:<<use>>
+    ConfigController ..>models.placeable.boat.BoatType:<<use>>
+
+    class GameController{
+        +<<create>>GameController(toControl:GameController,cd:ConfigData)
+        +SendAttack(x:Integer,y:Integer)
+        +setState(gameState:GameState)
+        +getGameMode():GameMode
+        +setGameMode(gameMode:GameMode)
+        +confirmConfig()
+    }
+    GameController "1"o-->"1 -gameModel" models.game.Game
+    GameController "1"o-->"1 -configData" models.game.placement.ConfigData
+    GameController ..>models.game.GameMode:<<use>>
+    GameController ..>models.game.GameState:<<use>>
+
+
+    class LogsController extends models.game.logs.LogObserver{
+        +<<create>>LogsController
+        +notifyObservers()
+        +addObserver(obs:LogObserver)
+        +updateOnLogAdded(log:Log)
+    }
+    LogsController ..> models.game.logs.Log:<<uses>>
+    LogsController "1"o--> "1 -observers" models.game.logs.LogsObserver
+
+
+    class PlacementController{
+        +<<create>>PlacementController(pl:Placement,player:Player,gc:GameController)
+        +refreshList()
+        +placeObject(pla:Placeable)
+        +getNbPlaceables():Integer
+        +getPlName():String
+        +getPl():Placeable
+        +setCoordOr(or:Orientation)
+        +getCoordOr():Orientation
+        +setCoordXY(x:Integer,y:Integer)
+        +setCoord(co:Coord)
+        +showCoord():String
+        +resetPlacement()
+        +getPlFromIndex(i:Integer):Placeable
+        +getPlNameFromIndex(i:Integer):String
+        +setPlaceableAtIndex(pla:Placeable,i:Integer)
+        +placeAllObjects():Boolean
+        +changeStrat(strat:PlacementStrategy)
+
+
+    }
+    PlacementController ..>models.game.GameMode:<<use>>
+    PlacementController "1" *--> "1 -toPlace" models.game.placement.Coord
+    PlacementController "1" o--> "1 -pl" models.game.placement.Placement:<<use>>
+    PlacementController "1"o-->"1 -grid"models.grid.Grid : place On
+    PlacementController "1" o--> "1 -Placeable" models.placeable.Placeable:<<use>>
+    PlacementController "1" o--> "1 -gameController" GameController
+    PlacementController "1" o-->"1 -player" models.player.Player : place for the player
+
+
+
+
+    class StatsController implements models.player.StatsObserver{
+        +updateStats(Stats stats) {
+    }
+    class WeaponController{
+        +<<create>>WeaponController(player:Player)
+        +setBomb()
+        +setSonar()
+        +setMissile()
+    }
+    WeaponController "1" o-->"1" models.player.Player:control the weapon of
+    WeaponController "1"*-->"1"models.weapon.WeaponFactory
+}
+
+
+class Main{
+    +{static} main(args:String[])
+}
+
+Main ..> Grid : creates
+Main ..> .models.player.HumanPlayer : creates
+Main ..> .models.player.AIPlayer : creates
+Main ..> Game : creates
+Main ..> Placement : creates
+Main ..> .models.placement.RandomPlacementStrategy : creates
+Main ..> WeaponController : creates
+Main ..> WeaponPanel : creates
+Main ..> ConfigData : creates
+Main ..> ConfigController : creates
+Main ..> GameController : creates
+Main ..> PlayerPanel : creates
+Main ..> ConfigPanel : creates
+Main ..> LogsController : creates
+Main ..> PlacementController : creates
+Main ..> PlacementView : creates
+Main ..> StatsPanel : creates
+Main ..> LogsPanel : creates
+Main ..> MainView : creates
 
 @enduml

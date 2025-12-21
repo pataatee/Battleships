@@ -6,6 +6,10 @@ skinparam Padding 3
 skinparam ClassFontSize 11
 skinparam PackageFontSize 13
 
+
+
+
+
 package models{
 
     package game{
@@ -948,11 +952,46 @@ package views{
 
     WeaponBox "1" o--> "1 -_btnWeapon" ImageButton
 
-    class WeaponPanel{
-
+    class WeaponPanel implements models.player.WeaponObserver{
+        +<<create>>WeaponPanel(controller:WeaponController)
+        +initWeaponPanel()
+        +initWeaponButtons()
+        +notifySelected(wp:WeaponType)
+        +notifyUnlocked(wp:WeaponType, unlocked:boolean)
     }
 
+    WeaponPanel "1" o--> "1 -_controller" WeaponController
+    WeaponPanel ..> WeaponType : uses
+    WeaponPanel ..> ImageButton : uses
+
 }
+
+
+
+
+class Main{
+    +{static} main(args:String[])
+}
+
+Main ..> Grid : creates
+Main ..> HumanPlayer : creates
+Main ..> AIPlayer : creates
+Main ..> Game : creates
+Main ..> Placement : creates
+Main ..> RandomPlacementStrategy : creates
+Main ..> WeaponController : creates
+Main ..> WeaponPanel : creates
+Main ..> ConfigData : creates
+Main ..> ConfigController : creates
+Main ..> GameController : creates
+Main ..> PlayerPanel : creates
+Main ..> ConfigPanel : creates
+Main ..> LogsController : creates
+Main ..> PlacementController : creates
+Main ..> PlacementView : creates
+Main ..> StatsPanel : creates
+Main ..> LogsPanel : creates
+Main ..> MainView : creates
 
 
 
