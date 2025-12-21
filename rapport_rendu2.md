@@ -3,6 +3,7 @@
 ** **
 
 ## 1 • Introduction
+***
 
 Ce projet a pour objectif de coder le jeu de société **Bataille Navale** en Java, tout en respectant une architecture MVC cohérente. <br>
 Ainsi, nous avions déjà réfléchi à l'organisation de l'architecture du projet et soumis un premier UML lors du premier rendu. <br>
@@ -15,6 +16,7 @@ Nous rendons 3 fichiers UML par souci de lisibilité.
 - Le dernier contient la partie **views & controllers** du projet
 
 ## 2 • Les classes principales
+***
 
 Voici une description des classes les plus importantes dans le projet actuel, ainsi que leurs évolutions par rapport au premier rendu.
 
@@ -65,8 +67,30 @@ Ainsi, pour les Logs, nous avons créé une classe Log contenant l'ID du joueur 
 Nous avons également créé une classe GameLogs, contenant une liste de Log et des LogsObserver. <br>
 Par conséquent, les classes Game et Player contiennent chacun un attribut GameLogs mis à jour en créant un nouveau Log à chaque action du jeu. Les LogsObservers sont le LogsController et la vue LogsPanel, qui vont être actualisés dès qu'un nouveau log est entré dans la liste de Log de GameLogs.
 
+### Package controllers
+Nous souhaitions à l'origine créer de nombreux contrôleurs, liés entre eux, liés grâce à des observateurs, et respectant une architecture claire. Or, nous avons vite compris que cela était plutôt incohérent, et qu'il fallait plutôt créer un contrôleur pour chaque vue principale, permettant ainsi le lien entre celles-ci et les modèles associés. <br>
+Nous avons donc créé 6 contrôleurs, les voici : 
+- ConfigController : 
+  - Permet de lier le modèle ConfigData à l'écran *(vue)* de configuration
+- GameController : 
+  - Permet de faire le lien entre le modèle Game et les différents écrans qu'elle doit manipuler *(la Game orchestre les tours et doit ainsi, par le biais du GameController, gérer les changements d'écrans)*
+- LogsController : 
+  - Permet de lier le modèle GameLogs au panel contenant les logs de la partie
+- PlacementController : 
+  - Permet de lier tous les modèles concernant le placement des objets sur la grille à la vue gérant ce placement
+- StatsController : 
+  - Lie le modèle Stats à la vue StatsPanel
+- WeaponController : 
+  - Permet de lier les modèles gérant la sélection des armes par le joueur à la vue s'en occupant
+
+### Package views
+- Chaque écran principal possède une classe séparée
+- Les panels principaux ont été séparés en plusieurs "sous-panels" dans d'autres classes, permettant la réutilisation du code et la réduction de sa complexité
+- Les vues n'implémentent pas, contrairement à ce que nous avions imaginé, une interface UserScreen ; cela n'était pas cohérent, car chaque vue affiche des choses différentes, regrouper leur code n'aurait pas de sens
+
 
 ## 3 • Choix de conception - Design pattern utilisés
+***
 
 Nous avons employé un certain nombre de design pattern pour répondre à nos besoins de conception dans le cadre de ce projet, mais nous en avons aussi supprimé quelques-uns par rapport à notre structure présentée lors du premier rendu. <br>
 Voici donc les design patterns employés dans notre code actuel : 
@@ -128,4 +152,15 @@ L'utilisation des énumérations facilite l'ajout de nouveaux états sans modifi
 De plus, les énumérations nous permettent de manipuler des valeurs explicites, facilement compréhensibles à la lecture, ce qui rend le code plus lisible et moins sujet aux erreurs. <br>
 Les énumérations nous permettent également de ne pas dépendre du type direct des objets utilisés, ce qui, une fois encore, améliore sa maintenabilité.
 
-## 4 • Déroulement d'une partie
+## 4 • Remarques/Critiques
+***
+
+- Créer une classe abstraite Item dont Trap et Weapon hériteraient aurait pu être utile et cohérent ; en effet, certains de leurs comportements sont similaires *(sont à usage unique...)*
+- Il serait sûrement possible de mieux mutualiser le code en utilisant plus de classes abstraites
+- Il faudrait passer moins d'objets par référence, afin de limiter les interactions entre les classes et faciliter la maintenance du code
+- Tenter de réduire certaines classes importantes en les séparant en plusieurs classes (par exemple Player ou Stats)
+
+***
+
+*Gauthier CLAUDEL & Manon TRANCHANT-BERTHOMIEUX* <br>
+*A2 TP4*
