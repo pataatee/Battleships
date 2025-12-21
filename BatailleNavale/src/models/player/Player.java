@@ -185,6 +185,8 @@ public abstract class Player {
 
     public void setUpIsland() {
         _grid.setUpIsland();
+        this.removeWeapon(WeaponType.SONAR);
+        this.removeWeapon(WeaponType.BOMB);
     }
 
     public Grid getGrid() {
@@ -295,6 +297,8 @@ public abstract class Player {
 
     public void clearWeapon() {
         _wpObserverList.clear();
+        notifyWeaponUnlocked(WeaponType.SONAR,false);
+        notifyWeaponUnlocked(WeaponType.BOMB,false);
     }
 
     public Boat getBoatAt(int x, int y) {

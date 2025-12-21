@@ -57,10 +57,6 @@ public class PlacementView extends JPanel {
         this._btnNext = new JButton("Next");
         this._btnNext.setPreferredSize(new Dimension(90, 70));
 
-        this._btnPrev = new JButton("Previous");
-        this._btnPrev.setPreferredSize(new Dimension(90, 70));
-
-
         // init navigation
         this._pnlNavigate = new JPanel();
         this._pnlNavigate.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -68,7 +64,6 @@ public class PlacementView extends JPanel {
         this._pnlNavigate.setLayout(new BorderLayout());
 
         this._pnlNavigate.add(this._btnNext, BorderLayout.EAST);
-        this._pnlNavigate.add(this._btnPrev, BorderLayout.WEST);
 
 
         // init placement strategy combo box

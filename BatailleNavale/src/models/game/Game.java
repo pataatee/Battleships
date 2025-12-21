@@ -44,8 +44,6 @@ public class Game {
         if (_gameMode == GameMode.ISLAND) {
             _players[0].setUpIsland();
             _players[1].setUpIsland();
-            _players[0].clearWeapon();
-            _players[1].clearWeapon();
         }
     }
 
@@ -219,6 +217,9 @@ public class Game {
             _players[0].addWeapon(WeaponType.SONAR);
             _players[1].addWeapon(WeaponType.BOMB);
             _players[1].addWeapon(WeaponType.SONAR);
+        }else{
+            _players[0].clearWeapon();
+            _players[1].clearWeapon();
         }
         _players[0].getStats().setOpponentBoatStats(_players[1].getNbBoats(), _players[1].getNbBoatTiles());
         _players[1].getStats().setOpponentBoatStats(_players[0].getNbBoats(), _players[0].getNbBoatTiles());
