@@ -1,5 +1,7 @@
 package models.player;
 
+import models.game.logs.GameLogs;
+import models.game.logs.Log;
 import models.grid.Grid;
 import models.grid.TileState;
 import models.placeable.Placeable;
@@ -197,38 +199,47 @@ public abstract class Player {
     }
 
 
-    public void handelShotResult(ShotResult[] resultTypes) {
+    public void handelShotResult(ShotResult[] resultTypes, GameLogs logs) {
         int sonarResult = 0;
         for (ShotResult res : resultTypes) {
             switch (res.get_type()) {
                 case HIT -> {
                     System.out.println("Add to log Hit");
+                    logs.addLog(new Log(this, "Hit boat at (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case SUNK -> {
                     System.out.println("Add to log Sunk");
+                    logs.addLog(new Log(this, "Hit and sunk boat at (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case SONAR -> {
                     sonarResult++;
+                    logs.addLog(new Log(this, "Scanned boat(s) around (" + res.get_x() + "," + res.get_y() + ") !"));
                 }
                 case TORNAD -> {
                     System.out.println("Add to log Tornadoed");
+                    logs.addLog(new Log(this, "Triggered Tornado trap at (" + res.get_x() + "," + res.get_y() + ") ! The next 3 attacks are scrambled."));
                     _isTornaded = 3;
                 }
                 case BLACKHOLE -> {
                     System.out.println("Add to log BlackHole");
+                    logs.addLog(new Log(this, "Triggered Blackhole trap at (" + res.get_x() + "," + res.get_y() + ") ! Attack backfired."));
                     this.getAttacked(createAttack(res.get_x(), res.get_y()));
                 }
                 case ISLANDHIT -> {
                     System.out.println("Add to log IslandHit");
+                    logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Nothing has been discovered."));
                 }
                 case DISCOVERBOMB -> {
                     System.out.println("Add to log DiscoverBomb");
+                    logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the Bomb weapon!"));
                     this.addWeapon(WeaponType.BOMB);
                 }
                 case DISCOVERSONAR -> {
+                    logs.addLog(new Log(this, "Searched the Island at (" + res.get_x() + "," + res.get_y() + ") ! Found the sonar!"));
                     this.addWeapon(WeaponType.SONAR);
                 }
                 default -> {
+                    logs.addLog(new Log(this, "Shot at (" + res.get_x() + "," + res.get_y() + ") ! There's nothing on this tile."));
                     System.out.println("Add to log Miss");
                 }
             }
@@ -258,4 +269,14 @@ public abstract class Player {
         return result;
     }
 
+    public String getName() {
+        return this._name;
+    }
+
+    public int getId() {
+        return this._id;
+    }
+
+
+    public abstract void notifyDeath(GameLogs logs);
 }

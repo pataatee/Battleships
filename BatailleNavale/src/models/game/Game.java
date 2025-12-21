@@ -1,6 +1,7 @@
 package models.game;
 
-import models.placeable.boat.Boat;
+import models.game.logs.GameLogs;
+import models.game.logs.Log;
 import models.player.AIPlayer;
 import models.player.Attack;
 import models.player.Player;
@@ -21,6 +22,7 @@ public class Game {
     private GameState _gameState;
     private GameMode _gameMode;
     private ArrayList<GameObserver> _observers;
+    private GameLogs _logs;
 
     public Game(Player player1, Player player2) {
         _players = new Player[]{player1, player2};
@@ -29,6 +31,7 @@ public class Game {
         _gameState = GameState.CONFIG;
         _gameMode = GameMode.NORMAL;
         _observers = new ArrayList<>();
+        this._logs = new GameLogs();
     }
 
     public void setUpGameMode(GameMode gameMode) {
@@ -43,6 +46,7 @@ public class Game {
 
     public void startGame() {
         _gameState = GameState.IN_GAME;
+        this._logs.addLog(new Log("Game started!"));
         notifyGameStateChanged();
     }
 
@@ -51,11 +55,14 @@ public class Game {
         Player opponent = getOpponent();
 
         ShotResult[] results = opponent.getAttacked(attack);
-        attacker.handelShotResult(results);
+        attacker.handelShotResult(results, this._logs);
+
+        this._logs.addLog(new Log(attacker.getName() + " attacked " + opponent.getName() + " at (" + attack.getX() + "," + attack.getY() + ") with " + attack.weaponToString()));
 
         notifyAttackExecuted(attack, opponent);
 
         if (!opponent.isAlive()) {
+            this._logs.addLog(new Log("All boats destroyed - Game ended !"));
             endGame(attacker);
             return;
         }
@@ -137,6 +144,10 @@ public class Game {
 
     public GameState getGameState() {
         return _gameState;
+    }
+
+    public GameLogs getGameLogs() {
+        return this._logs;
     }
 
 

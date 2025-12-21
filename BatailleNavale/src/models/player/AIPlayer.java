@@ -1,5 +1,7 @@
 package models.player;
 
+import models.game.logs.GameLogs;
+import models.game.logs.Log;
 import models.grid.Grid;
 import models.weapon.Missile;
 
@@ -26,7 +28,8 @@ public class AIPlayer extends Player {
     }
 
     @Override
-    public void notifyDeath() {
+    public void notifyDeath(GameLogs logs) {
+        logs.addLog(new Log("Player " + super.getName() + ", ID: " + super.getId() + " has been defeated !"));
         System.out.println("Ai est morte");
     }
 }
