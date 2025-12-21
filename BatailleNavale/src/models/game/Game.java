@@ -145,6 +145,9 @@ public class Game {
     public void setGameState(GameState gameState) {
         _gameState = gameState;
         notifyGameStateChanged();
+        if(gameState==GameState.IN_GAME) {
+            startGame();
+        }
     }
 
 
@@ -198,6 +201,7 @@ public class Game {
         }
     }
 
+    //spaghetti code at his finest sorry for the reader
     public void confirmConfig(ArrayList<Boat> chosenBoats) {
         PlaceableFactory placeableFactory = new PlaceableFactory();
         _players[0].resetBoatList();

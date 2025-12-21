@@ -158,7 +158,6 @@ public class ManualPlacementPanel extends JPanel {
         // btn erase all action listener
         this._btnEraseAll.addActionListener(act -> {
 
-            this._pc.setPlaceableAtIndex(null, this._currentIndexPlToPlace);
             this._currentIndexPlToPlace = -1;
             this._pnlInfos.resetInfoLabels();
             this._pc.resetPlacement();

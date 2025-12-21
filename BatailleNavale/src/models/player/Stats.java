@@ -134,7 +134,6 @@ public class Stats {
         notifyObservers();
     }
 
-    // === GETTERS ===
 
     public int getNbIntactBoats() {
         return this._nbIntactBoats;

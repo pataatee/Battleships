@@ -44,6 +44,8 @@ public abstract class Player {
 
     public void addBoat(Boat boat) {
         _boatList.add(boat);
+        this._stats.setNbBoats(_stats.getNbIntactBoats()+1);
+        this._stats.setNbBoatTiles(_stats.getNbBoatTilesLeft()+boat.getSize());
         this._isAlive = true;
     }
 
@@ -302,32 +304,20 @@ public abstract class Player {
     }
 
     public Boat getBoatAt(int x, int y) {
-        System.out.println("=== DEBUG getBoatAt(" + x + ", " + y + ") ===");
-        System.out.println("Total boats in list: " + this._boatList.size());
-
         for (Boat boat : this._boatList) {
-            System.out.println("Checking boat: " + boat);
             int[][] positions = boat.getPosition();
-            System.out.println("Boat has " + (positions != null ? positions.length : "null") + " positions");
-
             if (positions != null) {
                 for (int i = 0; i < positions.length; i++) {
                     int[] pos = positions[i];
                     if (pos != null) {
-                        System.out.println("  Position[" + i + "]: (" + pos[0] + ", " + pos[1] + ")");
                         if (pos[0] == x && pos[1] == y) {
-                            System.out.println("  FOUND MATCH!");
                             return boat;
                         }
-                    } else {
-                        System.out.println("  Position[" + i + "]: null");
                     }
                 }
             }
         }
 
-        System.out.println("NO BOAT FOUND at (" + x + ", " + y + ")");
-        System.out.println("Grid tile state: " + _grid.getTileTileState(x, y));
         return null;
     }
 
