@@ -17,13 +17,14 @@ public class MainView extends JFrame implements GameObserver {
     private PlayerPanel playerPanel1;
     private PlayerPanel playerPanel2;
     private GameController _gameController;
+    private LogsPanel _logsPanel;
     private PlacementView _placementView;
     private PlacementController _placementController;
 
-    public MainView(ConfigPanel configPanel, PlacementView PlacementPanel, PlayerPanel playerPanel1, PlayerPanel playerPanel2, GameController gameController) {
+    public MainView(ConfigPanel configPanel, PlacementView PlacementPanel, PlayerPanel playerPanel1, PlayerPanel playerPanel2,LogsPanel logsPanel, GameController gameController) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(854, 480);
+        setSize(1240, 480);
         setLocationRelativeTo(null);
         this.config = configPanel;
         this._placementView = PlacementPanel;
@@ -32,6 +33,7 @@ public class MainView extends JFrame implements GameObserver {
         this._gameController = gameController;
         _mainPanel = new JPanel(new BorderLayout());
         add(_mainPanel);
+        _logsPanel = logsPanel;
 
         _mainPanel.add(configPanel, BorderLayout.CENTER);
     }
@@ -48,6 +50,7 @@ public class MainView extends JFrame implements GameObserver {
         _mainPanel.removeAll();
         JPanel centerPanel = new JPanel(new GridLayout(1, 2));
         centerPanel.add(playerPanel1);
+        centerPanel.add(_logsPanel);
         centerPanel.add(playerPanel2);
 
         _mainPanel.add(centerPanel, BorderLayout.CENTER);

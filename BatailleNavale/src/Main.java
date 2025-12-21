@@ -1,7 +1,4 @@
-import controllers.ConfigController;
-import controllers.GameController;
-import controllers.PlacementController;
-import controllers.WeaponController;
+import controllers.*;
 import models.game.Game;
 import models.game.GameMode;
 import models.game.placement.ConfigData;
@@ -47,6 +44,10 @@ public class Main {
 
         ConfigPanel configPanel = new ConfigPanel(configController, gameController);
 
+        LogsController lc = new LogsController();
+        game.getGameLogs().addObserver(lc);
+
+
         PlacementController placementController = new PlacementController(
                 placementManager,
                 humanPlayer,
@@ -66,11 +67,15 @@ public class Main {
                 gameController
         );
 
+
+        LogsPanel logs = new LogsPanel(lc);
+
         MainView mainView = new MainView(
                 configPanel,
                 placementView,
                 humanPlayerPanel,
                 aiPlayerPanel,
+                logs,
                 gameController
         );
 
