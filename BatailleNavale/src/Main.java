@@ -102,6 +102,9 @@ public class Main {
         p1.addPlaceable(pla1);
         p2.addPlaceable(pla2);
 
+        p1.getStats().setOpponentBoatStats(p2.getNbBoats(), p2.getNbBoatTiles());
+        p2.getStats().setOpponentBoatStats(p1.getNbBoats(), p1.getNbBoatTiles());
+
         p1.getStats().addObserver(stats1);
         p2.getStats().addObserver(stats2);
 

@@ -86,13 +86,16 @@ public class Stats {
 
     public void updateNbSunkBoats() {
         this._nbSunkBoats++;
+        this._nbHitBoats--;
+        this._nbHitBoatTiles++;
+        this._nbBoatTilesLeft--;
+        this.notifyObservers();
     }
 
     public void updateUsedWeapon(Weapon wpn) {
 
-        this._usedItems.add(wpn.toString());
-
         if (wpn.get_type() != WeaponType.MISSILE) {
+            this._usedItems.add(wpn.toString());
             this._availableItems.remove(wpn.toString());
         }
 
@@ -101,7 +104,7 @@ public class Stats {
 
     public void updateTriggeredBlackHole() {
         this._triggeredBlackHole = true;
-        this._usedItems.add("Bomb");
+        this._usedItems.add("Black Hole");
         this.notifyObservers();
     }
 
@@ -128,6 +131,12 @@ public class Stats {
     public void updateMissShots() {
         this._missShots++;
         this.notifyObservers();
+    }
+
+    public void setOpponentBoatStats(int nbBoats, int nbBoatTiles) {
+        this._nbIntactBoats = nbBoats;
+        this._nbBoatTilesLeft = nbBoatTiles;
+        notifyObservers();
     }
 
     // === GETTERS ===

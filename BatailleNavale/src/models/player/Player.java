@@ -205,14 +205,14 @@ public abstract class Player {
     }
 
 
-    public void handelShotResult(ShotResult[] resultTypes, GameLogs logs) {
+    public void handelShotResult(ShotResult[] resultTypes, GameLogs logs, Player opponent) {
         int sonarResult = 0;
         for (ShotResult res : resultTypes) {
             switch (res.get_type()) {
                 case HIT -> {
                     System.out.println("Add to log Hit");
                     logs.addLog(new Log(this, "Hit boat at (" + res.get_x() + "," + res.get_y() + ") !"));
-                    Boat boat = getBoatAt(res.get_x(), res.get_y());
+                    Boat boat = opponent.getBoatAt(res.get_x(), res.get_y());
                     if (boat.getIsFirstHit()) {
                         this._stats.updateNbHitBoats();
                         boat.setIsFirstHit(false);
@@ -227,7 +227,6 @@ public abstract class Player {
                 case SONAR -> {
                     sonarResult++;
                     logs.addLog(new Log(this, "Scanned boat(s) around (" + res.get_x() + "," + res.get_y() + ") !"));
-                    this._stats.updateUsedWeapon(new Sonar());
                 }
                 case TORNAD -> {
                     System.out.println("Add to log Tornadoed");
@@ -286,18 +285,48 @@ public abstract class Player {
     public abstract void notifyDeath(GameLogs logs);
 
     public Boat getBoatAt(int x, int y) {
+        System.out.println("=== DEBUG getBoatAt(" + x + ", " + y + ") ===");
+        System.out.println("Total boats in list: " + this._boatList.size());
+
         for (Boat boat : this._boatList) {
+            System.out.println("Checking boat: " + boat);
             int[][] positions = boat.getPosition();
-            for (int[] pos : positions) {
-                if (pos != null && pos[0] == x && pos[1] == y) {
-                    return boat;
+            System.out.println("Boat has " + (positions != null ? positions.length : "null") + " positions");
+
+            if (positions != null) {
+                for (int i = 0; i < positions.length; i++) {
+                    int[] pos = positions[i];
+                    if (pos != null) {
+                        System.out.println("  Position[" + i + "]: (" + pos[0] + ", " + pos[1] + ")");
+                        if (pos[0] == x && pos[1] == y) {
+                            System.out.println("  FOUND MATCH!");
+                            return boat;
+                        }
+                    } else {
+                        System.out.println("  Position[" + i + "]: null");
+                    }
                 }
             }
         }
+
+        System.out.println("NO BOAT FOUND at (" + x + ", " + y + ")");
+        System.out.println("Grid tile state: " + _grid.getTileTileState(x, y));
         return null;
     }
 
     public Stats getStats() {
         return this._stats;
+    }
+
+    public int getNbBoats() {
+        return this._boatList.size();
+    }
+
+    public int getNbBoatTiles() {
+        int total = 0;
+        for (Boat boat : this._boatList) {
+            total += boat.getSize();
+        }
+        return total;
     }
 }

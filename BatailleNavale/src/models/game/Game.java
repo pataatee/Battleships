@@ -53,7 +53,7 @@ public class Game {
         Player opponent = getOpponent();
 
         ShotResult[] results = opponent.getAttacked(attack);
-        attacker.handelShotResult(results, this._logs);
+        attacker.handelShotResult(results, this._logs, opponent);
 
         this._logs.addLog(new Log(attacker.getName() + " attacked " + opponent.getName() + " at (" + attack.getX() + "," + attack.getY() + ") with " + attack.weaponToString()));
 

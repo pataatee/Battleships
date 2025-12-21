@@ -26,9 +26,9 @@ public class StatsPanel extends JPanel implements StatsObserver {
 
         JPanel pnlStats = new JPanel(new GridLayout(0,1));
 
-        this._lblNbIntactBoats = new JLabel("Intact Boats: 0");
-        this._lblNbHitBoats = new JLabel("Hit Boats: 0");
-        this._lblNbSunkBoats = new JLabel("Sunk Boats: 0");
+        this._lblNbIntactBoats = new JLabel("Enemy's Intact Boats: 0");
+        this._lblNbHitBoats = new JLabel("Enemy's Hit Boats: 0");
+        this._lblNbSunkBoats = new JLabel("Enemy's Sunk Boats: 0");
         this._lblNbShotsMissed = new JLabel("Missed Shots: 0");
         this._lblNbBoatTilesHit = new JLabel("Boat Tiles Hit: 0");
         this._lblNbBoatTilesLeft = new JLabel("Boat Tiles Left: 0");
@@ -65,9 +65,9 @@ public class StatsPanel extends JPanel implements StatsObserver {
     @Override
     public void updateStats(Stats stats) {
 
-        this._lblNbIntactBoats.setText("Intact Boats: " + stats.getNbIntactBoats());
-        this._lblNbHitBoats.setText("Hit Boats: " + stats.getNbHitBoats());
-        this._lblNbSunkBoats.setText("Sunk Boats: " + stats.getNbSunkBoats());
+        this._lblNbIntactBoats.setText("Enemy's Intact Boats: " + stats.getNbIntactBoats());
+        this._lblNbHitBoats.setText("Enemy's Hit Boats: " + stats.getNbHitBoats());
+        this._lblNbSunkBoats.setText("Enemy's Sunk Boats: " + stats.getNbSunkBoats());
         this._lblNbShotsMissed.setText("Missed Shots: " + stats.getNbMissedShots());
         this._lblNbBoatTilesHit.setText("Boat Tiles Hit: " + stats.getNbHitBoatTiles());
         this._lblNbBoatTilesLeft.setText("Boat Tiles Left: " + stats.getNbBoatTilesLeft());
@@ -85,8 +85,8 @@ public class StatsPanel extends JPanel implements StatsObserver {
 
         this._pnlAvailableItems.revalidate();
         this._pnlAvailableItems.repaint();
-        this._pnlAvailableItems.revalidate();
-        this._pnlAvailableItems.repaint();
+        this._pnlUsedItems.revalidate();
+        this._pnlUsedItems.repaint();
 
     }
 

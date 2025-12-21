@@ -19,7 +19,7 @@ public class MainView extends JFrame implements GameObserver {
     public MainView(PlayerPanel playerPanel1, PlayerPanel playerPanel2, LogsPanel logPan, StatsPanel stats1, StatsPanel stats2) {
         super("Bato jeux");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(854, 480);
+        setSize(1000, 580);
         setLocationRelativeTo(null);
 
         this.playerPanel1 = playerPanel1;
