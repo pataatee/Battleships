@@ -18,12 +18,13 @@ public class PlacementController {
     public PlacementController(Placement pl, Player player, GameController gc) {
         this._pl = pl;
         this._lstToPlace = player.getPlaceableList();
-        this._toPlace = new Coord(-1,-1,Orientation.HORIZONTAL);//Dummy cord just to avoid Null pointer
+        this._toPlace = new Coord(-1, -1, Orientation.HORIZONTAL);//Dummy cord just to avoid Null pointer
         this._grid = player.getGrid();
         this._gameController = gc;
         this._player = player;
     }
-    public void refreshList(){
+
+    public void refreshList() {
         this._lstToPlace = _player.getPlaceableList();
     }
 

@@ -149,10 +149,9 @@ public class Grid {
             x2 = random.nextInt(4);
             y2 = random.nextInt(4);
         } while (x1 == x2 && y1 == y2);
-        ((IslandTile)_tilesMap[x1+3][y1+3]).addWeapon(WeaponType.BOMB);
-        ((IslandTile)_tilesMap[x2+3][y2+3]).addWeapon(WeaponType.BOMB);
+        ((IslandTile) _tilesMap[x1 + 3][y1 + 3]).addWeapon(WeaponType.BOMB);
+        ((IslandTile) _tilesMap[x2 + 3][y2 + 3]).addWeapon(WeaponType.BOMB);
     }
-
 
 
     public void addWeaponToIslandTile(int x, int y, WeaponType wp) {

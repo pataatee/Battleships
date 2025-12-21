@@ -49,14 +49,12 @@ public class LogsPanel extends JPanel implements LogsObserver {
         if (log.getPlayerType() == null) {
             lbl.setText("<html>" + "[Game]: " + log.getLogDesc() + "</html>");
             lbl.setForeground(new Color(0));
-        }
-        else {
+        } else {
             lbl.setText("<html>" + "[Player ID]: " + log.getPlayerId() + "<br>" + "[Player]: " + log.getPlayerName() + "<br>" + "[Action]: " + log.getLogDesc() + "</html>");
 
             if (log.getPlayerType() == PlayerType.AI) {
                 lbl.setForeground(new Color(0x43066C));
-            }
-            else if (log.getPlayerType() == PlayerType.HUMAN) {
+            } else if (log.getPlayerType() == PlayerType.HUMAN) {
                 lbl.setForeground(new Color(0x2D6045));
             }
         }

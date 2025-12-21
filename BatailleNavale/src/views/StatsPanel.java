@@ -24,7 +24,7 @@ public class StatsPanel extends JPanel implements StatsObserver {
 
         this.setLayout(new BorderLayout());
 
-        JPanel pnlStats = new JPanel(new GridLayout(0,1));
+        JPanel pnlStats = new JPanel(new GridLayout(0, 1));
 
         this._lblNbIntactBoats = new JLabel("Enemy's Intact Boats: 0");
         this._lblNbHitBoats = new JLabel("Enemy's Hit Boats: 0");
@@ -52,7 +52,7 @@ public class StatsPanel extends JPanel implements StatsObserver {
         this._pnlAvailableItems.setLayout(new BoxLayout(this._pnlAvailableItems, BoxLayout.Y_AXIS));
         this._pnlAvailableItems.setBorder(BorderFactory.createTitledBorder("Available items"));
 
-        JPanel pnlItems = new JPanel(new GridLayout(2,1));
+        JPanel pnlItems = new JPanel(new GridLayout(2, 1));
         pnlItems.add(this._pnlAvailableItems);
         pnlItems.add(this._pnlUsedItems);
 

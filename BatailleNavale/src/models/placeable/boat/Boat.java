@@ -32,6 +32,7 @@ public abstract class Boat extends Placeable {
         this._position = new int[other._type.getSize()][2];
         this._positionIndex = 0;
     }
+
     public abstract Boat clone();
 
     public ShotResult onHit(int x, int y) {

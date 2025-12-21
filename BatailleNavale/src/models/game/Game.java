@@ -2,7 +2,6 @@ package models.game;
 
 import models.game.logs.GameLogs;
 import models.game.logs.Log;
-import models.placeable.boat.Boat;
 import models.placeable.PlaceableFactory;
 import models.placeable.boat.Boat;
 import models.player.AIPlayer;
@@ -74,8 +73,8 @@ public class Game {
             endGame(attacker);
             return;
         }
-        if(isAITurn()){
-            ((AIPlayer)attacker).processAttackResult(results[0].get_x(),results[0].get_y(),results[0].get_type());
+        if (isAITurn()) {
+            ((AIPlayer) attacker).processAttackResult(results[0].get_x(), results[0].get_y(), results[0].get_type());
         }
         nextTurn();
 
@@ -190,7 +189,6 @@ public class Game {
     }
 
 
-
     private void notifyGameStateChanged() {
         for (GameObserver ob : _observers) {
             ob.updateGameState(_gameState);
@@ -217,7 +215,7 @@ public class Game {
         _players[0].addTrap(placeableFactory.createTornado());
         _players[1].addTrap(placeableFactory.createBlackHole());
         _players[1].addTrap(placeableFactory.createTornado());
-        if(_gameMode==GameMode.NORMAL){
+        if (_gameMode == GameMode.NORMAL) {
             _players[0].addWeapon(WeaponType.BOMB);
             _players[0].addWeapon(WeaponType.SONAR);
             _players[1].addWeapon(WeaponType.BOMB);

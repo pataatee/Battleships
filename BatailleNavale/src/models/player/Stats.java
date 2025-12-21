@@ -123,6 +123,7 @@ public class Stats {
         this._availableItems.add(wpn.toString());
         this.notifyObservers();
     }
+
     public void updateDiscoveredWeapons(Trap t) {
         this._usedItems.add(t.getName());
         this.notifyObservers();

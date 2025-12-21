@@ -21,8 +21,9 @@ public class GameController {
 
 
     public void setState(GameState gameState) {
-     _gameModel.setGameState(gameState);
+        _gameModel.setGameState(gameState);
     }
+
     public GameMode getGameMode() {
         return _gameModel.getGameMode();
     }
@@ -31,7 +32,7 @@ public class GameController {
         this._gameModel.setUpGameMode(gameMode);
     }
 
-    public void confirmConfig(){
+    public void confirmConfig() {
         _gameModel.confirmConfig(_configData.getChosenBoats());
         _gameModel.setUpGameMode(_configData.getGameMode());
     }

@@ -8,8 +8,6 @@ import models.grid.Grid;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PlacementView extends JPanel {
 
@@ -33,18 +31,18 @@ public class PlacementView extends JPanel {
 
 
     // constructor ofc
-    public PlacementView(PlacementController pc,PlacementController placementControllerAi, Grid grid, GameController _gc) {
+    public PlacementView(PlacementController pc, PlacementController placementControllerAi, Grid grid, GameController _gc) {
 
         this._pc = pc;
-        this._pnlManualPlacement = new ManualPlacementPanel(pc,grid);
-        this._pnlStaticPlacement = new StaticPlacementPanel(pc,grid);
-        this._pnlRandomPlacement = new RandomPlacementPanel(pc,grid);
+        this._pnlManualPlacement = new ManualPlacementPanel(pc, grid);
+        this._pnlStaticPlacement = new StaticPlacementPanel(pc, grid);
+        this._pnlRandomPlacement = new RandomPlacementPanel(pc, grid);
         this.initAttributes();
         this.initThis();
 
         actionsChangeCbo();
-        _btnNext.addActionListener(e->_gc.setState(GameState.IN_GAME));
-        _btnNext.addActionListener(e-> {
+        _btnNext.addActionListener(e -> _gc.setState(GameState.IN_GAME));
+        _btnNext.addActionListener(e -> {
             placementControllerAi.changeStrat(PlacementStrategies.RANDOM);
             placementControllerAi.refreshList();
             placementControllerAi.placeAllObjects();

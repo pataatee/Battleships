@@ -1,6 +1,5 @@
 package models.game;
 
-import models.player.Attack;
 import models.player.Player;
 
 public interface GameObserver {

@@ -17,9 +17,6 @@ public enum StaticPositions {
     DESTROYERDEFAULTPOS(BoatType.DESTROYER, 1, 1, Orientation.VERTICAL),
 
 
-
-
-
     // BlackHole's default position
     BLACKHOLEDEFAULTPOS("Black Hole", 6, 8),
 
