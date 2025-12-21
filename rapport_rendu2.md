@@ -8,6 +8,12 @@ Ce projet a pour objectif de coder le jeu de société **Bataille Navale** en Ja
 Ainsi, nous avions déjà réfléchi à l'organisation de l'architecture du projet et soumis un premier UML lors du premier rendu. <br>
 Cependant, nos choix de conception ont évolué au fur et à mesure de l'avancement du projet ; voici donc les changements, améliorations et évolutions de la structure du projet depuis le premier rendu. <br>
 
+Précision concernant l'**UML** rendu : <br>
+Nous rendons 3 fichiers UML par souci de lisibilité. 
+- Le premier contient **l'UML complet du projet**
+- Le second ne contient que la partie **models** du projet
+- Le dernier contient la partie **views & controllers** du projet
+
 ## 2 • Les classes principales
 
 Voici une description des classes les plus importantes dans le projet actuel, ainsi que leurs évolutions par rapport au premier rendu.
@@ -60,9 +66,66 @@ Nous avons également créé une classe GameLogs, contenant une liste de Log et 
 Par conséquent, les classes Game et Player contiennent chacun un attribut GameLogs mis à jour en créant un nouveau Log à chaque action du jeu. Les LogsObservers sont le LogsController et la vue LogsPanel, qui vont être actualisés dès qu'un nouveau log est entré dans la liste de Log de GameLogs.
 
 
-## 
+## 3 • Choix de conception - Design pattern utilisés
 
-## deroulement d'une partie avec quels appels a quelles classes etc
+Nous avons employé un certain nombre de design pattern pour répondre à nos besoins de conception dans le cadre de ce projet, mais nous en avons aussi supprimé quelques-uns par rapport à notre structure présentée lors du premier rendu. <br>
+Voici donc les design patterns employés dans notre code actuel : 
 
-## choix conception
-beaucoup d'enums car maintenable, expansible etc
+### Factory
+
+Nous utilisons le design pattern Factory à plusieurs reprises dans notre code. <br>
+Tout comme lors du premier rendu, nous utilisons une PlaceableFactory permettant d'instancier tous les différents types de Boat et Trap *(AircraftCarrier, Cruiser, Destroyer, Submarine, TorpedoBoat, BlackHole et Tornado)* tout en gardant un code facilement maintenable et en limitant les dépendances à ces sous-classes. <br>
+Nous avons choisi d'utiliser une WeaponFactory pour instancier les armes pour les mêmes raisons. <br>
+Cependant, nous avions, lors du premier rapport, voulu créer un ControllerFactory pour instancier les contrôleurs créés par un autre contrôleur que nous avions appelé ApplicationController. Or, cet ApplicationController n'avait pas lieu d'exister, et nous l'avons donc supprimé. La ControllerFactory associée a donc également été supprimée, car il n'y a aucun intérêt à utiliser un design pattern Factory pour créer des contrôleurs, qui ne sont là que pour faire un lien entre les modèles et les vues.
+
+### Observer
+
+Le design pattern Observer est très utile dans notre cas pour synchroniser les données principalement entre le modèle et les vues. <br>
+Il permet aux classes les implémentant de réagir automatiquement à certains changements d'état d'autres objets. <br>
+Ainsi, comme prévu dès le premier rendu, nous avons implémenté un GridObserver, permettant de mettre l'affichage de la grille à jour selon l'état de ses cases *(hit, miss, island...)*, mais aussi un GameObserver, qui quant à lui permet de changer l'affichage des écrans selon l'état de la partie *(configuration, placement, en cours...)*. <br>
+Lors du premier rendu, nous souhaitions également implémenter un BoatObserver, un TileObserver, un PlayerObserver ainsi qu'un ControllerObserver, mais nous ne les avons pas créés ; voici pourquoi : 
+- BoatObserver : 
+  - Servait à notifier le joueur lorsqu'un de ses bateaux est coulé
+  - Le Player lui-même n'a pas besoin de le savoir directement, la Game s'en occupe
+  - Remplacé dans les Stats, qui elles informent le joueur sur l'état de ses bateaux
+- TileObserver : 
+  - Servait à mettre à jour l'état des cases 
+  - Peut être fait grâce à des getters/setters 
+  - Mise à jour graphique par le biais du GridObserver, rajouter un TileObserver en plus est inutile et incorrect
+- PlayerObserver : 
+  - Servait à la mise à jour des données du joueur
+  - Peut être réalisé par le biais de getters/setters
+  - Observateur inutile dans ce cas-là
+- ControllerObserver : 
+  - Servait à changer de vue dès que nécessaire
+  - Les changements d'écran ont lieu en fonction de la Game, rajouter un observateur supplémentaire n'est pas adapté
+  - Tout se déroule grâce au GameController
+
+Nous avons tout de même rajouté quelques observateurs pour que tout se déroule correctement. Les voici : 
+- WeaponObserver : 
+  - Sert à actualiser la vue WeaponPanel en fonction de l'arme sélectionnée par le joueur et lorsqu'une nouvelle arme est débloquée *(mode île)*
+  - Le Player notifie la vue lorsque sa *_currentWeapon* change
+  - Le Player notifie la vue lorsqu'une nouvelle arme est ajoutée à la liste des armes disponibles du joueur *(après sa découverte sur l'île)*
+- StatsObserver : 
+  - Sert à actualiser la vue StatsPanel, mettant ainsi à jour les statistiques des joueurs après chaque action
+  - Les Stats notifient la vue dès lors qu'une nouvelle case est touchée sur la grille adverse, et permettent ainsi la mise à jour en temps réel des statistiques *(nombre de bateaux touchés, nombre de bateaux coulés, cases d'île non découvertes...)* de chaque joueur
+- LogsObserver : 
+  - Sert à actualiser la vue LogsPanel, mettant ainsi à jour l'historique des actions réalisées après chaque coup
+  - Les GameLogs notifient la vue dès qu'un nouveau Log est créé, permettant l'actualisation de l'historique des coups joués en temps réel
+
+### Strategy
+Nous utilisons, conformément à ce que nous avions annoncé lors du premier rendu, un design pattern Strategy pour la sélection du mode de placement des objets *(Boat, Trap)*. <br>
+Cela permet de conserver un code facilement maintenable, et permet de changer simplement le comportement des actions de placement selon le choix du joueur. <br>
+Nous avons cependant abandonné l'idée de créer une stratégie pour le mode de jeu *(Normal/Île)*.
+
+### State
+Nous utilisions à l'origine un design pattern State pour gérer les changements d'état des cases de la grille. <br>
+Or, ces changements d'états n'étant quasiment que visuels, utiliser ce design pattern n'était pas utile, et trop compliqué pour ce que nous en faisons. Ainsi, nous avons préféré passer par le biais d'une **énumération** TileState, stockée en tant qu'attribut de chaque Tile. Nous modifions ensuite la valeur de cet attribut en fonction de l'état de la case, et adaptons le comportement des cases en fonction de ce TileState.
+
+### Énumérations
+Nous utilisons de nombreuses énumérations dans notre code pour pouvoir adapter le comportement de certaines fonctions selon l'état d'un objet. <br>
+L'utilisation des énumérations facilite l'ajout de nouveaux états sans modifier la logique existante du code, ce qui améliore sa maintenabilité. <br>
+De plus, les énumérations nous permettent de manipuler des valeurs explicites, facilement compréhensibles à la lecture, ce qui rend le code plus lisible et moins sujet aux erreurs. <br>
+Les énumérations nous permettent également de ne pas dépendre du type direct des objets utilisés, ce qui, une fois encore, améliore sa maintenabilité.
+
+## 4 • Déroulement d'une partie
