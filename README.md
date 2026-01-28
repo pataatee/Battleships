@@ -46,6 +46,6 @@ Voici une liste non-exhaustive des fonctionnalités implémentées lors de la r�
 - **Affichage**
 
 ## ⚙️ Installation
-Pour installer notre jeu, vous pouvez suivre les étapes détaillées dans le fichier [INSTALL.mc](https://github.com/pataatee/Battleships/blob/main/INSTALL.md) situé à la racine du projet ! <br>
+Pour installer notre jeu, vous pouvez suivre les étapes détaillées dans le fichier [INSTALL.md](https://github.com/pataatee/Battleships/blob/main/INSTALL.md) situé à la racine du projet ! <br>
 
 ### 🎉 Amusez-vous bien !
