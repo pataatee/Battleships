@@ -1,5 +1,9 @@
 # 🛥️ Bataille Navale
 
+<p align="center">
+  <img src="./img/batailleNavale3.jpg" width="500">
+</p>
+
 ## 🛈 A propos du projet
 ### Contexte
 Ce jeu a fait l'objet d'un projet supervisé réalisé dans le cadre de ma formation (BUT Informatique). 
